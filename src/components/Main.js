@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import { Button } from 'antd-mobile';
 import {Actions} from 'react-native-router-flux'
+import Playground from './Playground';
 
 const styles = StyleSheet.create({
   view: {
@@ -14,6 +15,7 @@ const styles = StyleSheet.create({
 
 const Main = () => {
   return <View style={styles.view}>
+    <Playground/>
     <Text>
       Nomii
     </Text>
