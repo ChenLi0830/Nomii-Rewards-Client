@@ -1,8 +1,20 @@
 {
-  "presets": ["babel-preset-exponent"],
-  "env": {
-    "development": {
-      "plugins": ["transform-react-jsx-source"]
+    "presets": [
+        "babel-preset-exponent"
+    ],
+    "plugins": [
+        [
+            "import",
+            {
+                "libraryName": "antd-mobile"
+            }
+        ]
+    ],
+    "env": {
+        "development": {
+            "plugins": [
+                "transform-react-jsx-source"
+            ]
+        }
     }
-  }
 }
