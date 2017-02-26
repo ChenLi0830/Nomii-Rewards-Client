@@ -34,7 +34,7 @@ class Playground extends React.Component {
                 {
                   translateY: this.state.bounceValue.interpolate({
                     inputRange: [0, 1.5],
-                    outputRange: [0, 100]  // 0 : 150, 0.5 : 75, 1 : 0
+                    outputRange: [100, 0]  // 0 : 150, 0.5 : 75, 1 : 0
                   }),
                 }
               ]

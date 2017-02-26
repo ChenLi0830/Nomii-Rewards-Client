@@ -5,6 +5,8 @@ import Main from './components/Main';
 import Swiper from './components/Swiper';
 import AddCards from './components/AddCards';
 import CardList from './components/CardList';
+// import PanAnimation from './components/animations/PanAnimation';
+import AnimatableExample from './components/animations/AnimatableExample';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -15,7 +17,8 @@ const styles = StyleSheet.create({
 const RouterComponent = () => {
   return <Router hideNavBar={Platform.OS !== 'ios'}>
     <Scene key="auth" initial>
-      <Scene key="login" component={Main} title="Login"/>
+      <Scene key="animated" component={AnimatableExample} hideNavBar/>
+      <Scene key="login" component={Main} title="Login" hideNavBar initial/>
     </Scene>
   
     <Scene key="intro" component={Swiper} hideNavBar/>
