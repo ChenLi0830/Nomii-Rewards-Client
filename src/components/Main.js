@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
-import { Button } from 'antd-mobile';
-import {Actions} from 'react-native-router-flux'
+import {Text, View, StyleSheet, Image, Linking, Dimensions} from 'react-native';
+import {Button} from './common';
+import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
 // import Playground from './animations/Playground';
 
@@ -21,17 +21,27 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "300",
     textAlign: "center",
+    letterSpacing: 2,
   },
   image: {
-    width: 200,
+    width: 150,
   },
-  btnExplain:{
-    color: "gray",
+  textExplain: {
+    color: "#9b9b9b",
     fontWeight: "700",
+    marginTop: 20,
+    textAlign: "center"
+  },
+  textPolicy: {
+    textAlign: "center",
+    fontSize: 10,
+    color: "#b0b3b4",
+    width: Dimensions.get("window").width * 0.7,
+  },
+  textPolicyLink: {
+    color: "#505354",
   },
 });
-
-const AnimatableBtn = Animatable.createAnimatableComponent(Button);
 
 const Main = () => {
   return <View style={styles.view}>
@@ -50,16 +60,32 @@ const Main = () => {
                       animation="bounceInDown"
                       delay={300}
                       resizeMode={Image.resizeMode.contain}
-           source={require('../../public/images/card-icons-onboarding.png')}/>
+                      source={require('../../public/images/card-icons-onboarding.png')}/>
     
     
-    <AnimatableBtn animation="fadeInUp" duration={300} delay={1000} type="primary" onPress={() => Actions.intro()}>
-      Continue with facebook
-    </AnimatableBtn>
+    <Animatable.View animation="fadeInUp" duration={500} delay={1000}>
+      <Button onPress={() => Actions.intro()} style={{minWidth: Dimensions.get("window").width * 0.8}}>
+        {"Continue with facebook".toUpperCase()}
+      </Button>
+      
+      <Text style={styles.textExplain}>
+        We don't post anything on Facebook.
+      </Text>
+    </Animatable.View>
     
-    <Text style={styles.btnExplain}>
-      We don't post anything on Facebook.
-    </Text>
+    <Animatable.Text style={styles.textPolicy} animation="fadeInUp" duration={500} delay={1300}>
+      By signing up, I agree to Nomii's
+      <Text style={styles.textPolicyLink}
+            onPress={() => Linking.openURL("http://nomiiapp.com")}>
+        {" Terms of Service "}
+      </Text>
+      and
+      <Text style={styles.textPolicyLink}
+            onPress={() => Linking.openURL("http://nomiiapp.com")}>
+            {" Privacy Policy"}
+      </Text>
+    </Animatable.Text>
+  
   </View>
 };
 
