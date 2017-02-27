@@ -32,7 +32,7 @@ export const userSubmitPromo = () => {
     setTimeout(() => {
       Toast.hide();
       if (getState().promoCode.code === "CODE") Actions.main();
-      else dispatch(submitPromoFailed("Invalid Code"))
+      else dispatch(submitPromoFailed("Invalid Code"));
     }, 1000);
   }
 };

@@ -11,21 +11,18 @@ import AnimatableExample from './components/animations/AnimatableExample';
 import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
 import SimpleExample from './components/animations/lottie/SimpleExample';
 
-
 const styles = StyleSheet.create({
   wrapper: {
     paddingTop: (Platform.OS === 'ios') ? 0 : 50,
   }
 });
 
-console.log("This should be shown in exponent XDE");
-
 const RouterComponent = () => {
   return <Router hideNavBar={Platform.OS !== 'ios'}>
     <Scene key="auth" initial>
       <Scene key="lottie" component = {LottieAnimatedExample} hideNavBar/>
       <Scene key="animated" component={AnimatableExample} hideNavBar/>
-      <Scene key="login" component={Main} title="Login" hideNavBar initial />
+      <Scene key="login" component={Main} title="Login" hideNavBar initial/>
     </Scene>
   
     <Scene key="intro" >

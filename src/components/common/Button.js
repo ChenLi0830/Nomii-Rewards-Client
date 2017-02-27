@@ -3,7 +3,7 @@ import {Text, TouchableHighlight, StyleSheet} from 'react-native';
 
 const Button = ({onPress, children, style}) => {
   return <TouchableHighlight underlayColor="#37447f" style={[styles.button, style]}
-                           onPress={() => onPress()}>
+                             onPress={() => onPress()}>
     <Text style={styles.text}>
       {children}
     </Text>
@@ -16,12 +16,16 @@ const styles = new StyleSheet.create({
     alignSelf: 'stretch',
     borderRadius: 50,
     backgroundColor: "#3b5998",
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 35,
   },
   text: {
     fontWeight: "700",
     textAlign: "center",
     color: "white",
-    lineHeight: 35,
+    // lineHeight: 35,
+    // textAlignVertical: "center"
   },
 });
 
