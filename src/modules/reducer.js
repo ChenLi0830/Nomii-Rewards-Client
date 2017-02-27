@@ -1,9 +1,6 @@
 import {combineReducers} from 'redux';
-
-const placeholder = (state = {}, action) => {
-  return state;
-};
+import promoCodeReducer from './promoCode';
 
 export default combineReducers({
-  placeholder,
+  promoCode: promoCodeReducer,
 });
