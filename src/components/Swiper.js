@@ -5,6 +5,7 @@ import {Button} from 'antd-mobile';
 import {Actions} from 'react-native-router-flux';
 import SwiperContent1 from './SwiperContent1';
 import SwiperContent2 from './SwiperContent2';
+import SwiperContent3 from './SwiperContent3';
 import SwiperDots from './SwiperDots';
 
 const {width, height} = Dimensions.get('window');
@@ -57,10 +58,7 @@ const SwiperComponent = () => {
       <Swiper style={styles.wrapper} loop={false} renderPagination={renderPagination}>
         <SwiperContent1/>
         <SwiperContent2/>
-        <View style={styles.slide3}>
-          <Text style={styles.text}>Nomii Swiper 3</Text>
-          <Button type="ghost" onClick={() => Actions.promoCode()}>GET STARTED</Button>
-        </View>
+        <SwiperContent3/>
       </Swiper>
   )
 };

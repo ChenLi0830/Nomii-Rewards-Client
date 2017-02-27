@@ -1,5 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
+import {Button} from './common';
+import {Actions} from 'react-native-router-flux';
 
 const {width,height} = Dimensions.get('window');
 
@@ -20,23 +22,32 @@ const styles = StyleSheet.create({
   image: {
     width: width * 0.7,
     marginTop: - height * 0.1
+  },
+  button: {
+    width: width * 0.8,
+    height: 40,
+    backgroundColor: "#4586ce",
+    marginTop: Platform.OS === "ios" ? -30 : 0,
+    bottom: Platform.OS === "ios" ? 10 : -40,
+    alignSelf: "center",
+    borderWidth: 0,
   }
 });
 
-const SwiperContent2 = () => {
+const SwiperContent3 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          Visit the Store
+          Get Rewarded
           {'\n'}
-          Earn Your Stamp
+          Instantly
         </Text>
         <Image resizeMode={Image.resizeMode.contain}
                style={styles.image}
-               source = {require('../../public/images/Hand-over-icon-onboarding.png')}/>
-        <Text/>
+               source = {require('../../public/images/reward-icon-onboarding.png')}/>
+        <Button style={styles.button} onPress={() => Actions.promoCode()}>GET STARTED</Button>
       </View>
   )
 };
 
-export default SwiperContent2;
+export default SwiperContent3;
