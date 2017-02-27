@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, Linking, Dimensions} from 'react-native';
+import {Text, View, StyleSheet, Image, Linking, Dimensions, Platform} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   logo: {
-    width: width * 0.3,
+    width: width * 0.4,
     marginTop: 60,
   },
   slogan: {
@@ -31,17 +31,24 @@ const styles = StyleSheet.create({
     marginTop: -30,
     width: 150,
   },
+  loginBtn: {
+    width: Dimensions.get("window").width * 0.8,
+    height: 40,
+    marginTop: Platform.OS === "ios" ? -30 : 0,
+  },
   textExplain: {
     color: "#9b9b9b",
     fontWeight: "900",
+    fontSize: 16,
     marginTop: 20,
     textAlign: "center"
   },
   textPolicy: {
     textAlign: "center",
-    fontSize: 10,
-    color: "#9B9B9B",
+    fontSize: 13,
+    color: "#9b9b9b",
     width: Dimensions.get("window").width * 0.7,
+    marginBottom: 20,
   },
   textPolicyLink: {
     color: "#505354",
@@ -74,7 +81,7 @@ const Main = () => {
                       source={require('../../public/images/card-icons-onboarding.png')}/>
     
     <Animatable.View animation="fadeInUp" duration={500} delay={1000}>
-      <Button onPress={() => Actions.intro()} style={{minWidth: Dimensions.get("window").width * 0.8}}>
+      <Button onPress={() => Actions.intro()} style={styles.loginBtn}>
         {"Continue with facebook".toUpperCase()}
       </Button>
       
