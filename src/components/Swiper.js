@@ -1,8 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {Button} from 'antd-mobile';
 import {Actions} from 'react-native-router-flux';
+import SwiperContent1 from './SwiperContent1';
+import SwiperDots from './SwiperDots';
+
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -28,15 +32,29 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
-  }
-})
+  },
+  // pagination:{
+  //   bottom: - height * 0.2, //left: null, right: 10,
+  //   alignSelf: "center",
+  // },
+  paginationView: {
+    alignSelf: "center",
+    bottom: height * 0.2,
+  },
+});
+
+const renderPagination = (index, total, context) => {
+  return (
+      <View style={styles.paginationView}>
+        <SwiperDots index={index} />
+      </View>
+  )
+};
 
 const SwiperComponent = () => {
   return (
-      <Swiper style={styles.wrapper} loop={false}>
-        <View style={styles.slide1}>
-          <Text style={styles.text}>Nomii Swiper 1</Text>
-        </View>
+      <Swiper style={styles.wrapper} loop={false} renderPagination={renderPagination}>
+        <SwiperContent1/>
         <View style={styles.slide2}>
           <Text style={styles.text}>Nomii Swiper 2</Text>
         </View>
