@@ -42,7 +42,7 @@ const SwiperComponent = () => {
         </View>
         <View style={styles.slide3}>
           <Text style={styles.text}>Nomii Swiper 3</Text>
-          <Button type="ghost" onClick={() => Actions.main()}>GET STARTED</Button>
+          <Button type="ghost" onClick={() => Actions.promoCode()}>GET STARTED</Button>
         </View>
       </Swiper>
   )

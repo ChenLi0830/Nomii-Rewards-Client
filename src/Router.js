@@ -5,10 +5,12 @@ import Main from './components/Main';
 import Swiper from './components/Swiper';
 import AddCards from './components/AddCards';
 import CardList from './components/CardList';
+import PromoCodeContainer from './components/PromoCodeContainer';
 // import PanAnimation from './components/animations/PanAnimation';
 import AnimatableExample from './components/animations/AnimatableExample';
 import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
 import SimpleExample from './components/animations/lottie/SimpleExample';
+
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -21,12 +23,15 @@ console.log("This should be shown in exponent XDE");
 const RouterComponent = () => {
   return <Router hideNavBar={Platform.OS !== 'ios'}>
     <Scene key="auth" initial>
+      <Scene key="lottie" component = {LottieAnimatedExample} hideNavBar/>
       <Scene key="animated" component={AnimatableExample} hideNavBar/>
-      <Scene key="login" component={Main} title="Login" hideNavBar/>
-      <Scene key="lottie" component = {LottieAnimatedExample} initial hideNavBar/>
+      <Scene key="login" component={Main} title="Login" hideNavBar initial />
     </Scene>
   
-    <Scene key="intro" component={Swiper} hideNavBar/>
+    <Scene key="intro" >
+      <Scene key="swiper" component={Swiper} hideNavBar initial/>
+      <Scene key="promoCode" component={PromoCodeContainer} hideNavBar title="Promo Code" />
+    </Scene>
     
     <Scene key="main">
       <Scene key="home" sceneStyle={{paddingTop: 65}} component={AddCards} title="Nomii" initial/>
