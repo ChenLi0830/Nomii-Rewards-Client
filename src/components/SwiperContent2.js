@@ -17,32 +17,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '400',
   },
-  annotation: {
-    color: '#b6b6b6',
-    fontSize: 16,
-    textAlign: 'center',
-    bottom: Platform.OS === "ios" ? 10 : -40,
-  },
   image: {
     width: width * 0.7,
     marginTop: - height * 0.1
   }
 });
 
-const SwiperContent1 = () => {
+const SwiperContent2 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          Collect Three
+          Visit the Store
           {'\n'}
-          Digital Stamps
+          Earn Your Stamp
         </Text>
         <Image resizeMode={Image.resizeMode.contain}
                style={styles.image}
-               source = {require('../../public/images/card-icons-onboarding.png')}/>
-        <Text style = {styles.annotation}>swipe left to the next page</Text>
+               source = {require('../../public/images/Hand-over-icon-onboarding.png')}/>
       </View>
   )
 };
 
-export default SwiperContent1;
+export default SwiperContent2;
