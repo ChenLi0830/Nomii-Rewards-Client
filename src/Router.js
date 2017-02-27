@@ -7,6 +7,8 @@ import AddCards from './components/AddCards';
 import CardList from './components/CardList';
 // import PanAnimation from './components/animations/PanAnimation';
 import AnimatableExample from './components/animations/AnimatableExample';
+import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
+import SimpleExample from './components/animations/lottie/SimpleExample';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -14,11 +16,14 @@ const styles = StyleSheet.create({
   }
 });
 
+console.log("This should be shown in exponent XDE");
+
 const RouterComponent = () => {
   return <Router hideNavBar={Platform.OS !== 'ios'}>
     <Scene key="auth" initial>
       <Scene key="animated" component={AnimatableExample} hideNavBar/>
-      <Scene key="login" component={Main} title="Login" hideNavBar initial/>
+      <Scene key="login" component={Main} title="Login" hideNavBar/>
+      <Scene key="lottie" component = {LottieAnimatedExample} initial hideNavBar/>
     </Scene>
   
     <Scene key="intro" component={Swiper} hideNavBar/>
