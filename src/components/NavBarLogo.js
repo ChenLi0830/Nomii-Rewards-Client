@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Platform} from 'react-native';
 import {Image} from 'react-native-animatable';
 
 // const {width, height} = Dimensions.get("window");
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: "center",
     flexDirection: "row",
-    top: 20
+    top: (Platform.OS === 'ios') ? 20 : 10,
   }
 });
 

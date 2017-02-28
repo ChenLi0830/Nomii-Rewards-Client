@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     backgroundColor: null,
     //justifyContent: "flex-end",
     //flexDirection: "column",
+    marginTop: 20,
     borderBottomWidth: 0,
   }
 });
@@ -41,12 +42,10 @@ const RouterComponent = () => {
     <Scene key="main"  sceneStyle={{paddingTop: 65}} initial>
       <Scene key="home" component={AddCards}
              navigationBarStyle={styles.homeNavBar}
-             //renderLeftButton = {() => <Image source={require('../public/images/promo.png')}
-             // style={{top:(Platform.OS === 'ios') ? 0 : 20}}/>}
              leftButtonImage={require('../public/images/promo.png')}
-             leftButtonIconStyle={{top: (Platform.OS === 'ios') ? 0 : 20}}
+             leftButtonIconStyle={{}}
+             rightButtonIconStyle={{}}
              rightButtonImage={require('../public/images/insight-icon.png')}
-             rightButtonIconStyle={{top: (Platform.OS === 'ios') ? 0 : 20}}
              onLeft={()=>{}} onRight={()=>{}}
              renderTitle={() => <NavBarLogo/>} initial/>
       <Scene key="cardList" component={CardList} title="Nomii"/>
