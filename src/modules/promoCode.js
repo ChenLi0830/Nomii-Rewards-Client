@@ -31,7 +31,7 @@ export const userSubmitPromo = () => {
     // Todo: add promo validation logic
     setTimeout(() => {
       Toast.hide();
-      if (getState().promoCode.code === "CODE") Actions.main();
+      if (getState().promoCode.code === "code") Actions.main();
       else dispatch(submitPromoFailed("Invalid Code"));
     }, 1000);
   }
