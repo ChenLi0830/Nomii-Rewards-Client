@@ -1,34 +1,63 @@
 import React from 'react';
-import {Text, TouchableHighlight, StyleSheet} from 'react-native';
+import {Dimensions, Text, TouchableHighlight, StyleSheet} from 'react-native';
 
-const Button = ({onPress, children, style}) => {
-  return <TouchableHighlight underlayColor="#37447f" style={[styles.button, style]}
+const {width, height} = Dimensions.get("window");
+
+const Button = ({onPress, children, style, type}) => {
+  const underlayColor = {
+      default: "#37447f",
+      ghost: "#FFF",
+    };
+  
+  return <TouchableHighlight underlayColor={underlayColor[type || "default"]}
+                             style={[styles.buttonBase, styles[type || "default"], style]}
                              onPress={() => onPress()}>
-    <Text style={styles.text}>
+    <Text style={[styles.textBase, styles[type ? type+"Text" : "defaultText"]]}>
       {children}
     </Text>
   </TouchableHighlight>
 };
 
 const styles = new StyleSheet.create({
-  button: {
+  buttonBase: {
     overflow: "hidden",
-    alignSelf: 'stretch',
+    alignSelf: 'center',
     borderRadius: 50,
-    backgroundColor: "#3A5998",
     justifyContent: 'center',
     alignItems: 'center',
-    height: 35,
+    height: 45,
+    width: width * 0.9
+  },
+  default: {
+    backgroundColor: "#3A5998",
     borderWidth:1,
     borderColor: "#979797",
   },
-  text: {
-    fontWeight: "900",
+  ghost: {
+    borderWidth:1,
+    borderColor: "#979797",
+  },
+  primary:{
+    backgroundColor: "#4A90E2",
+    borderWidth:1,
+    borderColor: "#979797",
+  },
+  textBase: {
     textAlign: "center",
-    color: "white",
     fontSize: 16,
-    // lineHeight: 35,
-    // textAlignVertical: "center"
+  },
+  defaultText: {
+    color: "white",
+    fontWeight: "900",
+  },
+  ghostText: {
+    color: "#262626",
+    // fontWeight: "",
+  },
+  primaryText: {
+    color: "#FFF",
+    fontWeight: "900",
+    // fontWeight: "",
   },
 });
 
