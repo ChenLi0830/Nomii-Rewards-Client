@@ -30,8 +30,16 @@ const styles = new StyleSheet.create({
   },
   default: {
     backgroundColor: "#3A5998",
-    borderWidth:1,
-    borderColor: "#979797",
+    elevation: 1,
+    // shadowColor: "#000000",
+    // shadowOpacity: 0.8,
+    // shadowRadius: 20,
+    // shadowOffset: {
+    //   height: 4,
+    //   width: -4
+    // },
+    // borderWidth:1,
+    // borderColor: "#979797",
   },
   ghost: {
     borderWidth:1,
@@ -39,8 +47,7 @@ const styles = new StyleSheet.create({
   },
   primary:{
     backgroundColor: "#4A90E2",
-    borderWidth:1,
-    borderColor: "#979797",
+    elevation: 1,
   },
   textBase: {
     textAlign: "center",

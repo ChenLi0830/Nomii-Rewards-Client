@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     fontSize: 20,
   },
-  message:{
+  message: {
     color: "#262626",
     fontSize: 25,
     fontWeight: "300",
@@ -47,7 +47,7 @@ const PromoCode = ({code, loading, message, userSubmitPromo, userChangePromo, us
   console.log(width, height);
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
-    <Image style = {styles.image} resizeMode={Image.resizeMode.contain}
+    <Image style={styles.image} resizeMode={Image.resizeMode.contain}
            source={require('../../public/images/Promocode-placeholder.png')}/>
     <TextInput
         style={styles.inputText}
@@ -58,21 +58,21 @@ const PromoCode = ({code, loading, message, userSubmitPromo, userChangePromo, us
         placeholder="Promo Code"
         value={code}
         onChangeText={(text) => userChangePromo(text)}
-        underlineColorAndroid ='rgba(0,0,0,0)'
+        underlineColorAndroid='rgba(0,0,0,0)'
     />
     {
       message.length > 0
-        &&
+      &&
       <Text style={styles.message}>{message}</Text>
     }
     {
       message.length === 0
-        &&
+      &&
       (
-          code.length>0 ?
-          <Button type="primary" onPress={() => userSubmitPromo()}>DONE</Button>
-          :
-          <Button type="ghost" onPress={() => userSkipPromo()}>Skip</Button>
+          code.length > 0 ?
+              <Button type="primary" onPress={() => userSubmitPromo()}>DONE</Button>
+              :
+              <Button type="ghost" onPress={() => userSkipPromo()}>Skip</Button>
       )
     }
     <KeyboardSpacer/>
