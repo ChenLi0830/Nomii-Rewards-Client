@@ -7,6 +7,7 @@ const Button = ({onPress, children, style, type}) => {
   const underlayColor = {
       default: "#37447f",
       ghost: "#FFF",
+      primary: "#3b74b6"
     };
   
   return <TouchableHighlight underlayColor={underlayColor[type || "default"]}

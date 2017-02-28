@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Image, Dimensions} from 'react-native';
-const emptyImage = require("../../public/images/big-check.png");
+const emptyImage = require("../../public/images/circle-empty-highlight 2.png");
 const filledImage = require("../../public/images/circle-1.png");
 
 const {width, height} = Dimensions.get("window");
