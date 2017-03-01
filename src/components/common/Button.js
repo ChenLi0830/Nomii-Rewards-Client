@@ -31,24 +31,30 @@ const styles = new StyleSheet.create({
   },
   default: {
     backgroundColor: "#3A5998",
-    elevation: 1,
-    // shadowColor: "#000000",
-    // shadowOpacity: 0.8,
-    // shadowRadius: 20,
-    // shadowOffset: {
-    //   height: 4,
-    //   width: -4
-    // },
-    // borderWidth:1,
-    // borderColor: "#979797",
-  },
+    elevation: 2,
+    overflow: null,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 3,
+      width: 0
+    },  },
   ghost: {
     borderWidth:1,
     borderColor: "#979797",
   },
   primary:{
     backgroundColor: "#4A90E2",
-    elevation: 1,
+    elevation: 2,
+    overflow: null,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 3,
+      width: 0
+    },
   },
   textBase: {
     textAlign: "center",
