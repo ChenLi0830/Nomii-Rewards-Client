@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   bottom: {
     // position:absolute
   },
-  gradient:{
+  gradient: {
     position: 'absolute',
     padding: height * 0.1,
     left: 0,
@@ -81,32 +81,52 @@ const noCardsContent = (
     </View>
 );
 
-const hasCardsContent = (
-    <View style={{flex: 1}}>
-      <ScrollView style={{
-        marginTop: 70, flex: 1,
-      }}>
-        <View style={styles.listView}>
-          <Card/>
-          <Card/>
-          <Card/>
-          <Card/>
-        </View>
-      </ScrollView>
-      
-      <Components.LinearGradient
-          colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
-            'rgba(255,255,255, 1)']}
-          style={styles.gradient}>
-        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
-          CARDS</Button>
-      </Components.LinearGradient>
-    </View>
-);
+const hasCardsContent = () => {
+  const cardContentList = [
+    {
+      name: "Poké Bar SFU",
+      distance: "1 km",
+      logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
+      progress: 1,
+    },
+    {
+      name: "Big Smoke Burger",
+      distance: "1 km",
+      logo: require("../../public/images/temp/bigsmoke.png"),
+      progress: 0,
+    },
+    {
+      name: "Blossom Teas SFU",
+      distance: "3 km",
+      logo: require("../../public/images/temp/blossom-teas.png"),
+      progress: 2,
+    }
+  ];
+  
+  const cards = cardContentList.map(card => <Card key={card.name} {...card} />);
+  
+  return <View style={{flex: 1}}>
+    <ScrollView style={{
+      marginTop: 70, flex: 1,
+    }}>
+      <View style={styles.listView}>
+        {cards}
+      </View>
+    </ScrollView>
+    
+    <Components.LinearGradient
+        colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
+          'rgba(255,255,255, 1)']}
+        style={styles.gradient}>
+      <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+        CARDS</Button>
+    </Components.LinearGradient>
+  </View>
+};
 
 const Home = (props) => {
   // return noCardsContent;
-  return hasCardsContent;
+  return hasCardsContent();
 };
 
 export default Home;

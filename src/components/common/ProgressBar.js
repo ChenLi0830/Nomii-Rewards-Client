@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   dots: {
     width: width * 0.1,
     height: width * 0.15,
-    // zIndex: 1,
   },
   // elemBox: {
   //   alignItems: "flex-end",
@@ -86,10 +85,6 @@ const ProgressBar = ({index}) => {
     {color: index === 1 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
     {color: index === 2 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
   ];
-  
-  // const lineStyle = [
-  //   {}
-  // ];
   
   const renderLine = (position) => {
     const lineStyle = position === 0 ? styles.lineHalf : styles.lineFull;

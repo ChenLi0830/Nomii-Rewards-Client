@@ -64,20 +64,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const Card = (props) => {
+const Card = ({name, distance, logo, progress}) => {
   return <View style={styles.box}>
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
-        <Text style={styles.name}>Poké Bar SFU</Text>
-        <Text style={styles.distance}>1 km</Text>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.distance}>{distance}</Text>
       </View>
       <View style={styles.storeLogoColumn}>
-        <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover} source={require('../../public/images/temp/Poke_Bar_Social_Blue_Post.png')}/>
+        <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}
+               source={logo}/>
       </View>
     </View>
     
     <View style={styles.discountRow}>
-      <ProgressBar index={2}/>
+      <ProgressBar index={progress}/>
     </View>
   </View>
 };
