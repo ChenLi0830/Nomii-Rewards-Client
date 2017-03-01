@@ -3,7 +3,7 @@ import {StyleSheet, Platform, Image} from 'react-native';
 import {Router, Scene} from 'react-native-router-flux';
 import Main from './components/Main';
 import Swiper from './components/Swiper';
-import AddCards from './components/AddCards';
+import Home from './components/Home';
 import CardList from './components/CardList';
 import PromoCodeContainer from './components/PromoCodeContainer';
 import PromoSuccess from './components/PromoSuccess';
@@ -20,14 +20,23 @@ const styles = StyleSheet.create({
     backgroundColor: null,
     //justifyContent: "flex-end",
     //flexDirection: "column",
-    marginTop: 20,
-    borderBottomWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EDEDED",
+    marginTop: (Platform.OS === 'ios') ? 10 : 20,
+    // borderBottomWidth: 0,
+    // marginBottom: (Platform.OS === 'ios') ? 0 : 20,
+  },
+  cardListNavBar:{
+    borderBottomColor: "#c7c7c7",
+  },
+  cardListTitle:{
+    color: "#2b2b2b",
   }
 });
 
 const RouterComponent = () => {
   return <Router>
-    <Scene key="auth" hideNavBar>
+    <Scene key="auth" hideNavBar >
       <Scene key="lottie" component={LottieAnimatedExample} />
       <Scene key="animated" component={AnimatableExample} />
       <Scene key="login" component={Main} title="Login" initial/>
@@ -39,16 +48,19 @@ const RouterComponent = () => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main"  sceneStyle={{paddingTop: 65}} initial>
-      <Scene key="home" component={AddCards}
+    <Scene key="main" initial>
+      <Scene key="home" component={Home}
+             sceneStyle={{marginTop: 4}}
              navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
-             leftButtonIconStyle={{}}
-             rightButtonIconStyle={{}}
              rightButtonImage={require('../public/images/insight-icon.png')}
              onLeft={()=>{}} onRight={()=>{}}
              renderTitle={() => <NavBarLogo/>} initial/>
-      <Scene key="cardList" component={CardList} title="Nomii"/>
+      
+      <Scene key="cardList" component={CardList}
+             navigationBarStyle={styles.cardListNavBar}
+             titleStyle = {styles.cardListTitle}
+             title="Select Restaurant"/>
     </Scene>
   </Router>;
 };
