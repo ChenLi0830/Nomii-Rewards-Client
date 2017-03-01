@@ -1,5 +1,7 @@
 import {Actions} from 'react-native-router-flux';
 import { Toast } from 'antd-mobile';
+import dismissKeyboard from 'dismissKeyboard';
+
 
 // Action types
 const USER_CHANGE_PROMO = "USER_CHANGE_PROMO";
@@ -30,6 +32,7 @@ export const userSubmitPromo = () => {
     Toast.loading('Loading...', 0);
     // Todo: add promo validation logic
     setTimeout(() => {
+      dismissKeyboard();
       Toast.hide();
       if (getState().promoCode.code === "code") Actions.promoSuccess();
       else dispatch(submitPromoFailed("Invalid Code"));
