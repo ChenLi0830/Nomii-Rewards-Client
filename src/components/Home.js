@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, Image, Dimensions, ScrollView} from 'react-nativ
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './Card';
+import {Components} from 'exponent';
 
 const {width, height} = Dimensions.get('window');
 
@@ -46,6 +47,14 @@ const styles = StyleSheet.create({
   },
   bottom: {
     // position:absolute
+  },
+  gradient:{
+    position: 'absolute',
+    padding: height * 0.1,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: height * 0.15
   }
 });
 
@@ -72,30 +81,25 @@ const noCardsContent = (
 );
 
 const hasCardsContent = (
-    <View style={{flex:1}}>
-      <ScrollView style={{marginTop: 70, flex: 1,
-        //backgroundColor:"#fafafa"
+    <View style={{flex: 1}}>
+      <ScrollView style={{
+        marginTop: 70, flex: 1,
       }}>
-        {/*<View style={{*/}
-          {/*//justifyContent: "space-between",*/}
-          {/*flexDirection:"column",*/}
-          {/*flex:1,*/}
-          {/*backgroundColor: "red"*/}
-        {/*}}>*/}
-          <View style={styles.listView}>
-            <Card/>
-            <Card/>
-            <Card/>
-            <Card/>
-          </View>
-          
-          
-         {/*</View>*/}
+        <View style={styles.listView}>
+          <Card/>
+          <Card/>
+          <Card/>
+          <Card/>
+        </View>
       </ScrollView>
       
-      <View style={{justifyContent: "flex-end", paddingVertical: height*0.02}}>
-        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD CARDS</Button>
-      </View>
+      <Components.LinearGradient
+          colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
+            'rgba(255,255,255, 1)']}
+          style={styles.gradient}>
+        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+          CARDS</Button>
+      </Components.LinearGradient>
     </View>
 );
 
