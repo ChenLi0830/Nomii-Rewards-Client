@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   button: {
     width: width * 0.8,
     height: 40,
-    backgroundColor: "#4586ce",
     marginTop: Platform.OS === "ios" ? -30 : 0,
     bottom: Platform.OS === "ios" ? 10 : -40,
     alignSelf: "center",
@@ -45,7 +44,7 @@ const SwiperContent3 = () => {
         <Image resizeMode={Image.resizeMode.contain}
                style={styles.image}
                source = {require('../../public/images/reward-icon-onboarding.png')}/>
-        <Button style={styles.button} onPress={() => Actions.promoCode()}>GET STARTED</Button>
+        <Button style={styles.button} type="primary" onPress={() => Actions.promoCode()}>GET STARTED</Button>
       </View>
   )
 };

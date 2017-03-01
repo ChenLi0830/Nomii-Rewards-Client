@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: "center",
     flexDirection: "row",
-    top: (Platform.OS === 'ios') ? 20 : 10,
+    top: (Platform.OS === 'ios') ? 20 : 7,
   }
 });
 
