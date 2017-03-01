@@ -1,16 +1,17 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, Platform, Image} from 'react-native';
+import {ProgressBar} from './common';
 
 const {width, height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   box: {
     marginVertical: height * 0.02,
+    paddingVertical: width * 0.03,
     width: width * 0.9,
-    height: height * 0.3,
+    height: 200,
     backgroundColor: "white",
     borderRadius: 10,
-    padding: width * 0.05,
     alignItems: "stretch",
     // overflow: "hidden",
     
@@ -24,11 +25,17 @@ const styles = StyleSheet.create({
     }
   },
   storeRow: {
+    paddingHorizontal: width * 0.05,
     flex: 1,
     flexDirection: "row",
+    // backgroundColor: "yellow",
   },
   discountRow: {
     flex: 1,
+    // marginTop: 50,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "center",
     // backgroundColor:"green",
   },
   storeInfoColumn: {
@@ -39,12 +46,13 @@ const styles = StyleSheet.create({
   storeLogoColumn:{
     flex: 1,
     // backgroundColor: "red",
-    flexDirection: "column",
+    // flexDirection: "column",
     alignItems: "flex-end",
     justifyContent: "center"
   },
   storeLogo: {
-    
+    // width: width * 0.25,
+    // flex:1,
   },
   name: {
     fontSize: 17,
@@ -64,11 +72,12 @@ const Card = (props) => {
         <Text style={styles.distance}>1 km</Text>
       </View>
       <View style={styles.storeLogoColumn}>
-        <Image style={styles.storeLogo} source={require('../../public/images/temp/Poke_Bar_Social_Blue_Post.png')}/>
+        <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover} source={require('../../public/images/temp/Poke_Bar_Social_Blue_Post.png')}/>
       </View>
     </View>
+    
     <View style={styles.discountRow}>
-      
+      <ProgressBar index={2}/>
     </View>
   </View>
 };

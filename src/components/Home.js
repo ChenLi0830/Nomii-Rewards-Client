@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listView: {
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: height * 0.15,
     justifyContent: 'space-around',
     alignItems: 'center',
     // flex: 0.8,
