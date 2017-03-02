@@ -18,19 +18,20 @@ const styles = StyleSheet.create({
   },
   homeNavBar: {
     backgroundColor: null,
-    //justifyContent: "flex-end",
-    //flexDirection: "column",
     borderBottomWidth: 1,
     borderBottomColor: "#EDEDED",
     marginTop: (Platform.OS === 'ios') ? 10 : 20,
-    // borderBottomWidth: 0,
-    // marginBottom: (Platform.OS === 'ios') ? 0 : 20,
   },
   cardListNavBar:{
-    borderBottomColor: "#c7c7c7",
+    backgroundColor: null,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EDEDED",
+    marginTop: (Platform.OS === 'ios') ? 10 : 20,
   },
   cardListTitle:{
-    color: "#2b2b2b",
+    color: "#000",
+    fontWeight: "600",
+    fontSize: 16,
   }
 });
 
@@ -50,17 +51,17 @@ const RouterComponent = () => {
     
     <Scene key="main" initial>
       <Scene key="home" component={Home}
-             sceneStyle={{marginTop: 4}}
+             //sceneStyle={{marginTop: 4}}
              navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              rightButtonImage={require('../public/images/insight-icon.png')}
              onLeft={()=>{}} onRight={()=>{}}
-             renderTitle={() => <NavBarLogo/>} initial/>
+             renderTitle={() => <NavBarLogo/>} />
       
       <Scene key="cardList" component={CardList}
              navigationBarStyle={styles.cardListNavBar}
              titleStyle = {styles.cardListTitle}
-             title="Select Restaurant"/>
+             title="Select Restaurant" initial/>
     </Scene>
   </Router>;
 };

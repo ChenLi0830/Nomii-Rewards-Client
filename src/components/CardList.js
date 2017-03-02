@@ -1,21 +1,78 @@
 import React from 'react';
-import {Text, ScrollView} from 'react-native';
-import { List } from 'antd-mobile';
+import {StyleSheet, Text, ScrollView, Dimensions, View} from 'react-native';
+import Card from './Card';
 
-const Item = List.Item;
-const Brief = Item.Brief;
+const {width, height} = Dimensions.get("window");
+
+const styles = StyleSheet.create({
+  scrollList:{
+    marginTop: 74,
+    flex: 1,
+  },
+  listView: {
+    paddingTop: 10,
+    paddingBottom: height * 0.15,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    // flex: 0.8,
+    // backgroundColor: "yellow"
+  },
+  
+});
 
 const CardList = () => {
-  const renderCards = (
-      [1,2,3,4,5].map(i => <Item key={i} extra={`card ${i} details`}>card {i}</Item>)
-  );
+  const cardContentList = [
+    {
+      name: "Poké Bar SFU",
+      distance: "1 km",
+      logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
+      progress: 1,
+      expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
+    },
+    {
+      name: "Big Smoke Burger",
+      distance: "1 km",
+      logo: require("../../public/images/temp/bigsmoke.png"),
+      progress: 0,
+    },
+    {
+      name: "Blossom Teas SFU",
+      distance: "3 km",
+      logo: require("../../public/images/temp/blossom-teas.png"),
+      progress: 2,
+      expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
+    },
+    {
+      name: "India Gate",
+      distance: "2 km",
+      logo: require("../../public/images/temp/india-gate.png"),
+      progress: 1,
+    },
+    {
+      name: "Russet Shack",
+      distance: "1 km",
+      logo: require("../../public/images/temp/russet-shack.png"),
+      progress: 0,
+    },
+    {
+      name: "Viet Sub",
+      distance: "2 km",
+      logo: require("../../public/images/temp/viet-sub.png"),
+      progress: 2,
+    },
+  ];
   
-  return <ScrollView>
-    <List renderHeader={() => 'List of cards'}>
-      {renderCards}
-    </List>
+  const cards = cardContentList.map(card => <Card key={card.name} {...card} />);
+  
+  
+  return <View style={{flex: 1}}>
+    <ScrollView style={styles.scrollList}>
+      <View style={styles.listView}>
+        {cards}
+      </View>
+    </ScrollView>
     
-  </ScrollView>
+  </View>
 };
 
 export default CardList;

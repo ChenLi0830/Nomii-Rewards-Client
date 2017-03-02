@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Card = ({name, distance, logo, progress}) => {
+const Card = ({name, distance, logo, progress, expireAt}) => {
   return <View style={styles.box}>
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
@@ -78,7 +78,7 @@ const Card = ({name, distance, logo, progress}) => {
     </View>
     
     <View style={styles.discountRow}>
-      <ProgressBar index={progress}/>
+      <ProgressBar index={progress} expireAt={expireAt}/>
     </View>
   </View>
 };

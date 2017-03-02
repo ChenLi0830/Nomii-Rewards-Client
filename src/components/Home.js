@@ -8,6 +8,9 @@ import {Components} from 'exponent';
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  scrollList:{
+    marginTop: 74, flex: 1,
+  },
   wrapper: {
     flex: 1,
     // paddingTop: 30,
@@ -88,27 +91,28 @@ const hasCardsContent = () => {
       distance: "1 km",
       logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
       progress: 1,
+      expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
     },
     {
       name: "Big Smoke Burger",
       distance: "1 km",
       logo: require("../../public/images/temp/bigsmoke.png"),
       progress: 0,
+      expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
     },
     {
       name: "Blossom Teas SFU",
       distance: "3 km",
       logo: require("../../public/images/temp/blossom-teas.png"),
       progress: 2,
+      expireAt: new Date().getTime() + 1000 * 3600 * 24 * 2,
     }
   ];
   
   const cards = cardContentList.map(card => <Card key={card.name} {...card} />);
   
   return <View style={{flex: 1}}>
-    <ScrollView style={{
-      marginTop: 70, flex: 1,
-    }}>
+    <ScrollView style={styles.scrollList}>
       <View style={styles.listView}>
         {cards}
       </View>
