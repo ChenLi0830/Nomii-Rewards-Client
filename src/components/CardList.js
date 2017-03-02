@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, ScrollView, Dimensions, View} from 'react-native';
+import {StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity} from 'react-native';
 import Card from './Card';
+import {Actions} from 'react-native-router-flux';
 
 const {width, height} = Dimensions.get("window");
 
@@ -62,7 +63,11 @@ const CardList = () => {
     },
   ];
   
-  const cards = cardContentList.map(card => <Card key={card.name} {...card} />);
+  const cards = cardContentList.map(card =>
+      <TouchableOpacity TouchableOpacity style={{paddingHorizontal: 10}} key={card.name} onPress={()=> Actions.inputPin({card})}>
+        <Card {...card} />
+      </TouchableOpacity>
+  );
   
   
   return <View style={{flex: 1}}>
