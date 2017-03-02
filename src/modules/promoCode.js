@@ -22,9 +22,9 @@ const submitPromoFailed = (message) => ({
   payload: message,
 });
 
-const userSubmitPromoStart = () => ({
-  type: USER_SUBMIT_PROMO_START,
-});
+// const userSubmitPromoStart = () => ({
+//   type: USER_SUBMIT_PROMO_START,
+// });
 
 export const userSubmitPromo = () => {
   return (dispatch, getState) => {
@@ -32,9 +32,11 @@ export const userSubmitPromo = () => {
     Toast.loading('Loading...', 0);
     // Todo: add promo validation logic
     setTimeout(() => {
-      dismissKeyboard();
       Toast.hide();
-      if (getState().promoCode.code === "code") Actions.promoSuccess();
+      if (getState().promoCode.code === "code") {
+        dismissKeyboard();
+        Actions.promoSuccess();
+      }
       else dispatch(submitPromoFailed("Invalid Code"));
     }, 1000);
   }
@@ -49,16 +51,16 @@ export const userSkipPromo = () => {
 // Reducer
 const initialState = {
   code: "",
-  loading: false,
   message: "",
+  // loading: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "USER_CHANGE_PROMO":
       return {...state, code: action.payload, message: ""};
-    case "USER_SUBMIT_PROMO_START":
-      return {...state, loading: true};
+    // case "USER_SUBMIT_PROMO_START":
+    //   return {...state, loading: true};
     case "USER_SUBMIT_PROMO_FAILED":
       return {...state, loading: false, message: action.payload};
     default:

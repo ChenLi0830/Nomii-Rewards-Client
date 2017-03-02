@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoCode = ({code, loading, message, userSubmitPromo, userChangePromo, userSkipPromo}) => {
+const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPromo}) => {
   console.log(width, height);
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>

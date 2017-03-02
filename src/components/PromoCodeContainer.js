@@ -6,7 +6,7 @@ const mapStateToProps = (state) => {
   const {promoCode} = state;
   return {
     code: promoCode.code,
-    loading: promoCode.loading,
+    // loading: promoCode.loading,
     message: promoCode.message,
   }
 };

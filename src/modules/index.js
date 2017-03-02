@@ -3,6 +3,7 @@ import {createStore, applyMiddleware} from 'redux';
 import reducer from './reducer';
 import createLogger from 'redux-logger';
 import * as promoActions from './promoCode';
+import * as inputPinActions from './inputPin';
 
 const logger = createLogger();
 
@@ -15,4 +16,4 @@ const store = createStore(reducer, applyMiddleware(...middleware));
 
 export default store;
 
-export {promoActions};
+export {promoActions, inputPinActions};

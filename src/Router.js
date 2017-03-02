@@ -11,6 +11,8 @@ import PromoSuccess from './components/PromoSuccess';
 import AnimatableExample from './components/animations/AnimatableExample';
 import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
 import NavBarLogo from './components/NavBarLogo';
+import InputPinScreen from './components/InputPinScreen';
+
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -37,9 +39,9 @@ const styles = StyleSheet.create({
 
 const RouterComponent = () => {
   return <Router>
-    <Scene key="auth" hideNavBar >
-      <Scene key="lottie" component={LottieAnimatedExample} />
-      <Scene key="animated" component={AnimatableExample} />
+    <Scene key="auth" hideNavBar initial>
+      {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
+      {/*<Scene key="animated" component={AnimatableExample} />*/}
       <Scene key="login" component={Main} title="Login" initial/>
     </Scene>
     
@@ -49,19 +51,24 @@ const RouterComponent = () => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" initial>
+    <Scene key="main" >
       <Scene key="home" component={Home}
              //sceneStyle={{marginTop: 4}}
              navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              rightButtonImage={require('../public/images/insight-icon.png')}
              onLeft={()=>{}} onRight={()=>{}}
-             renderTitle={() => <NavBarLogo/>} />
+             renderTitle={() => <NavBarLogo/>} initial/>
       
       <Scene key="cardList" component={CardList}
              navigationBarStyle={styles.cardListNavBar}
              titleStyle = {styles.cardListTitle}
-             title="Select Restaurant" initial/>
+             title="Select Restaurant" />
+      
+      <Scene key="inputPin" component={InputPinScreen}
+             navigationBarStyle={styles.cardListNavBar}
+             titleStyle = {styles.cardListTitle}
+             title="Restaurant PIN" direction="vertical" />
     </Scene>
   </Router>;
 };

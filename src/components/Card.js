@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Platform, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform, Image} from 'react-native';
 import {ProgressBar} from './common';
 
 const {width, height} = Dimensions.get("window");
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 });
 
 const Card = ({name, distance, logo, progress, expireAt}) => {
-  return <View style={styles.box}>
+  return <View style={styles.box} >
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
         <Text style={styles.name}>{name}</Text>
