@@ -33,11 +33,11 @@ const SwiperContent1 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          Collect Three
+          Reward Cards
           {'\n'}
-          Digital Stamps
+          with Three Stamps
         </Text>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source = {require('../../public/images/card-icons-onboarding.png')}/>
         <Text style = {styles.annotation}>swipe left to the next page</Text>

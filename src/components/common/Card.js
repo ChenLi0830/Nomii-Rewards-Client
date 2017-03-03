@@ -78,7 +78,7 @@ const Card = ({name, distance, logo, progress, expireAt}) => {
       </View>
       <View style={styles.storeLogoColumn}>
         <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}
-               source={logo}/>
+               source={logo} cache="force-cache"/>
       </View>
     </View>
     

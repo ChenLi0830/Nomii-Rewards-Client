@@ -70,7 +70,7 @@ const RewardScreen = (props) => {
   
   return (
       <View style={styles.slide}>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source = {images[index]}/>
         

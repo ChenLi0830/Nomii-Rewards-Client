@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 const PromoSuccess = () => {
   return (
       <View style={styles.slide}>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source = {require('../../public/images/reward-icon-onboarding.png')}/>
         

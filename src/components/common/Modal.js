@@ -77,7 +77,7 @@ const NomiiModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = 
       <View style={styles.innerContainer}>
         
         <View style={styles.imageBox}>
-          <Image source={image} style={[styles.image, imageStyle]} resizeMode={Image.resizeMode.contain}/>
+          <Image source={image} style={[styles.image, imageStyle]} resizeMode="contain"/>
         </View>
         
         <View style={styles.textBox}>

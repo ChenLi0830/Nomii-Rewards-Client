@@ -93,7 +93,7 @@ class InputPinScreen extends Component {
           Enter Restaurant PIN
         </Text>
         <View style={styles.inputBox}>
-          <TextInput style={styles.inputText}
+          <TextInput style={styles.inputText} maxLength={4}
                      autoFocus secureTextEntry={true}
                      value={pin} onChangeText={(text) => this.onChangeText(text, card)}
                      underlineColorAndroid='rgba(0,0,0,0)'

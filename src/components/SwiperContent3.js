@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   button: {
     width: width * 0.8,
     height: 40,
-    marginTop: Platform.OS === "ios" ? -30 : 0,
-    bottom: Platform.OS === "ios" ? 10 : -40,
+    // marginTop: Platform.OS === "ios" ? -30 : 0,
+    bottom: Platform.OS === "ios" ? 0 : -40,
     alignSelf: "center",
     borderWidth: 0,
   }
@@ -37,11 +37,13 @@ const SwiperContent3 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          Get Rewarded
+          The More Visits
           {'\n'}
-          Instantly
+          The Better
+          {'\n'}
+          The Rewards
         </Text>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source = {require('../../public/images/reward-icon-onboarding.png')}/>
         <Button style={styles.button} type="primary" onPress={() => Actions.main()}>GET STARTED</Button>

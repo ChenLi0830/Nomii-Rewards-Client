@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Platform, Image} from 'react-native';
+import {StyleSheet, Platform, Alert} from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import Main from './components/Main';
 import Swiper from './components/Swiper';
@@ -51,7 +51,7 @@ const RouterComponent = () => {
       <Scene key="swiper" component={Swiper} />
     </Scene>
     
-    <Scene key="main" >
+    <Scene key="main" direction="vertical" type="reset">
       <Scene key="promoCode" component={PromoCode}
              direction="vertical" hideNavBar initial/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
@@ -60,8 +60,17 @@ const RouterComponent = () => {
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              onLeft={()=>{Actions.promoCode()}}
-             //rightButtonImage={require('../public/images/insight-icon.png')}
-             //onRight={()=>{}}
+             rightButtonImage={require('../public/images/insight-icon.png')}
+             onRight={()=>{
+               Alert.alert(
+                   'Not Authorized',
+                   'You are not authorized to use this feature',
+                   [
+                     {text: 'OK', onPress: () => {}},
+                   ],
+                   { cancelable: false }
+               )
+             }}
              renderTitle={() => <NavBarLogo/>} />
       
       <Scene key="cardList" component={CardList}

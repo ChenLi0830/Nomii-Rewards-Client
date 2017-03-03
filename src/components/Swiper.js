@@ -55,7 +55,8 @@ const renderPagination = (index, total, context) => {
 
 const SwiperComponent = () => {
   return (
-      <Swiper style={styles.wrapper} loop={false} renderPagination={renderPagination}>
+      <Swiper renderPagination={renderPagination}
+          style={styles.wrapper} loop={false} >
         <SwiperContent1/>
         <SwiperContent2/>
         <SwiperContent3/>

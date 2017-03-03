@@ -131,19 +131,19 @@ const ProgressBar = ({index, expireAt}) => {
       
       <Image style={[styles.dots, opacity[0]]}
              source={ImageSources[0]}
-             resizeMode={Image.resizeMode.contain}/>
+             resizeMode="contain"/>
       
       {renderLine(1, index)}
       
       <Image style={[styles.dots, opacity[1]]}
              source={ImageSources[1]}
-             resizeMode={Image.resizeMode.contain}/>
+             resizeMode="contain"/>
       
       {renderLine(2, index)}
       
       <Image style={[styles.dots, opacity[2]]}
              source={ImageSources[2]}
-             resizeMode={Image.resizeMode.contain}/>
+             resizeMode="contain"/>
     </View>
     
     <View style={styles.row2}>

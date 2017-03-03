@@ -68,7 +68,7 @@ const Home = (props) => {
   // console.log(props);
   const noCardsContent = (
       <View style={styles.slide}>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source={require('../../public/images/Home-empty-screen-card.png')}/>
         <View>
@@ -78,7 +78,7 @@ const Home = (props) => {
             Add a card to start
           </Text>
           
-          <Image resizeMode={Image.resizeMode.contain}
+          <Image resizeMode="contain"
                  style={{width: width * 0.2, alignSelf: "center", marginTop: 15}}
                  source={require('../../public/images/down-arrow.png')}/>
         </View>
@@ -143,8 +143,8 @@ const Home = (props) => {
   };
   
   
-  // return noCardsContent;
-  return hasCardsContent();
+  return noCardsContent;
+  // return hasCardsContent();
 };
 
 // Container

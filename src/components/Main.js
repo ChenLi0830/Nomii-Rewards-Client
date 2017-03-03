@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, Linking, Dimensions, Platform} from 'react-native';
+import {Text, StyleSheet, Linking, Dimensions, Platform} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
-import * as Animatable from 'react-native-animatable';
+import {Image, View} from 'react-native-animatable';
 // import Playground from './animations/Playground';
 
 const {width, height} = Dimensions.get("window");
@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
 const Main = () => {
   return <View style={styles.view}>
   
-    <Animatable.Image animation="fadeInDown" duration={300} delay={100}
+    <Image animation="fadeInDown" duration={200} delay={100}
                       style={styles.logo}
-                      resizeMode={Image.resizeMode.contain}
+                      resizeMode="contain"
                       source={require('../../public/images/nomii-offers-login.png')}/>
   
-    <Animatable.Image animation="bounceInDown"
+    <Image animation="bounceInDown"
                       style={styles.slogan}
-                      resizeMode={Image.resizeMode.contain}
+                      resizeMode="contain"
                       source={require('../../public/images/slogan.png')}/>
   
     {/*<Animatable.Text style={styles.title} animation="bounceInDown">*/}
@@ -74,13 +74,13 @@ const Main = () => {
       {/*reward you instantly*/}
     {/*</Animatable.Text>*/}
     
-    <Animatable.Image style={styles.image}
+    <Image style={styles.image}
                       animation="bounceInDown"
                       delay={300}
-                      resizeMode={Image.resizeMode.contain}
+                      resizeMode="contain"
                       source={require('../../public/images/card-icons-onboarding.png')}/>
     
-    <Animatable.View animation="fadeInUp" duration={500} delay={1000}>
+    <View animation="fadeInUp" duration={400} delay={600}>
       <Button onPress={() => Actions.intro()} style={styles.loginBtn}>
         {"Continue with facebook".toUpperCase()}
       </Button>
@@ -88,9 +88,9 @@ const Main = () => {
       <Text style={styles.textExplain}>
         We don't post anything on Facebook.
       </Text>
-    </Animatable.View>
+    </View>
     
-    <Animatable.Text style={styles.textPolicy} animation="fadeInUp" duration={500} delay={1300}>
+    <Text style={styles.textPolicy} animation="fadeInUp" duration={400} delay={800}>
       By signing up, I agree to Nomii's
       <Text style={styles.textPolicyLink}
             onPress={() => Linking.openURL("http://nomiiapp.com")}>
@@ -101,7 +101,7 @@ const Main = () => {
             onPress={() => Linking.openURL("http://nomiiapp.com")}>
             {" Privacy Policy"}
       </Text>
-    </Animatable.Text>
+    </Text>
   
   </View>
 };

@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   image: {
-    width: width * 0.7,
-    marginTop: - height * 0.1
+    width: width * 0.8,
+    marginTop: - height * 0.10
   }
 });
 
@@ -27,11 +27,11 @@ const SwiperContent2 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          Visit the Store
+          Earn Stamps for
           {'\n'}
-          Earn Your Stamp
+          Every Store Visits
         </Text>
-        <Image resizeMode={Image.resizeMode.contain}
+        <Image resizeMode="contain"
                style={styles.image}
                source = {require('../../public/images/Hand-over-icon-onboarding.png')}/>
         <Text/>

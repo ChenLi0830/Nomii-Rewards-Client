@@ -65,7 +65,7 @@ const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPro
   console.log(width, height);
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
-    <Image style={styles.image} resizeMode={Image.resizeMode.contain}
+    <Image style={styles.image} resizeMode="contain"
            source={require('../../public/images/Promocode-placeholder.png')}/>
     <View style={styles.inputBox}>
       <TextInput
