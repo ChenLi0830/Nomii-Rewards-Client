@@ -9,10 +9,11 @@ import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
 import {RewardScreen} from './components/common';
 // import PanAnimation from './components/animations/PanAnimation';
-import AnimatableExample from './components/animations/AnimatableExample';
-import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
+// import AnimatableExample from './components/animations/AnimatableExample';
+// import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
+import LocationComponent from './components/playgound/Location';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -42,6 +43,7 @@ const RouterComponent = () => {
     <Scene key="auth" hideNavBar initial>
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
+      {/*<Scene key="location" component={LocationComponent}/>*/}
       <Scene key="login" component={Main} title="Login" initial/>
     </Scene>
     
