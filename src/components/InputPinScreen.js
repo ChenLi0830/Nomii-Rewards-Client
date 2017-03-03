@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 
 class InputPinScreen extends Component {
   componentDidMount() {
-    setTimeout(() => this.props.toggleModal(), 1000);
+    setTimeout(() => this.props.toggleModal(), 500);
   }
   
   onChangeText(text, card) {
