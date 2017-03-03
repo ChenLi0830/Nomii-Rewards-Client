@@ -4,6 +4,7 @@ import reducer from './reducer';
 import createLogger from 'redux-logger';
 import * as promoActions from './promoCode';
 import * as inputPinActions from './inputPin';
+import * as homeActions from './home';
 
 const logger = createLogger();
 
@@ -16,4 +17,4 @@ const store = createStore(reducer, applyMiddleware(...middleware));
 
 export default store;
 
-export {promoActions, inputPinActions};
+export {promoActions, inputPinActions, homeActions};

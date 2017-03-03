@@ -47,8 +47,7 @@ const styles = StyleSheet.create({
     color: "#35ABBD",
     fontSize: 20,
     fontWeight: "600",
-    // flex: 1,
-    // textAlign: "center",
+    textAlign: "center",
     // textAlignVertical: "center",
   },
   footerBox: {
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const NomiiModal = ({visible, image, text, toggle}) => {
+const NomiiModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = {}}) => {
   
   return <Modal
       animationType={"slide"}
@@ -78,11 +77,11 @@ const NomiiModal = ({visible, image, text, toggle}) => {
       <View style={styles.innerContainer}>
         
         <View style={styles.imageBox}>
-          <Image source={image} style={styles.image} resizeMode={Image.resizeMode.contain}/>
+          <Image source={image} style={[styles.image, imageStyle]} resizeMode={Image.resizeMode.contain}/>
         </View>
         
         <View style={styles.textBox}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, textStyle]}>
             {text}
           </Text>
         </View>
