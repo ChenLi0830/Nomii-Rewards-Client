@@ -114,7 +114,8 @@ const Home = (props) => {
     ];
     
     const cards = cardContentList.map(card =>
-        <TouchableOpacity style={{paddingHorizontal: 10}} key={card.name} onPress={()=> props.pressCard(card)}>
+        <TouchableOpacity style={{paddingHorizontal: 10}} key={card.name}
+                          activeOpacity={0.5} onPress={()=> props.pressCard(card)}>
           <Card key={card.name} {...card} />
         </TouchableOpacity>
     );
