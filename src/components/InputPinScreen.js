@@ -94,10 +94,10 @@ class InputPinScreen extends Component {
         </Text>
         <View style={styles.inputBox}>
           <TextInput style={styles.inputText}
-                     secureTextEntry autoFocus
+                     autoFocus secureTextEntry={true}
                      value={pin} onChangeText={(text) => this.onChangeText(text, card)}
                      underlineColorAndroid='rgba(0,0,0,0)'
-                     keyboardType="phone-pad">
+                     keyboardType="numeric">
           </TextInput>
           {
             message.length > 0

@@ -44,7 +44,7 @@ const SwiperContent3 = () => {
         <Image resizeMode={Image.resizeMode.contain}
                style={styles.image}
                source = {require('../../public/images/reward-icon-onboarding.png')}/>
-        <Button style={styles.button} type="primary" onPress={() => Actions.promoCode()}>GET STARTED</Button>
+        <Button style={styles.button} type="primary" onPress={() => Actions.main()}>GET STARTED</Button>
       </View>
   )
 };

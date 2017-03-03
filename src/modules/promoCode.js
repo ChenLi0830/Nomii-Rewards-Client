@@ -7,6 +7,7 @@ import dismissKeyboard from 'dismissKeyboard';
 const USER_CHANGE_PROMO = "USER_CHANGE_PROMO";
 const USER_SUBMIT_PROMO_START = "USER_SUBMIT_PROMO_START";
 const USER_SUBMIT_PROMO_FAILED = "USER_SUBMIT_PROMO_FAILED";
+const USER_CHANGED_SCREEN = "USER_CHANGED_SCREEN";
 // const LOADING_STOP = "LOADING_STOP";
 // const USER_SUBMIT_PROMO = "USER_SUBMIT_PROMO";
 // const USER_SKIP_PROMO = "USER_SKIP_PROMO";
@@ -20,6 +21,10 @@ export const userChangePromo = (newPromo) => ({
 const submitPromoFailed = (message) => ({
   type: USER_SUBMIT_PROMO_FAILED,
   payload: message,
+});
+
+const userChangedScreen = () => ({
+  type: USER_CHANGED_SCREEN,
 });
 
 // const userSubmitPromoStart = () => ({
@@ -36,6 +41,7 @@ export const userSubmitPromo = () => {
       if (getState().promoCode.code === "code") {
         dismissKeyboard();
         Actions.promoSuccess();
+        dispatch(userChangedScreen());
       }
       else dispatch(submitPromoFailed("Invalid Code"));
     }, 1000);
@@ -44,8 +50,11 @@ export const userSubmitPromo = () => {
 
 export const userSkipPromo = () => {
   return (dispatch) => {
-    Actions.main();
-  }
+    dismissKeyboard();
+    setTimeout(() => {
+      Actions.home();
+      dispatch(userChangedScreen());
+    },300)}
 };
 
 // Reducer
@@ -62,7 +71,9 @@ const reducer = (state = initialState, action) => {
     // case "USER_SUBMIT_PROMO_START":
     //   return {...state, loading: true};
     case "USER_SUBMIT_PROMO_FAILED":
-      return {...state, loading: false, message: action.payload};
+      return {...state, code: "", message: action.payload};
+    case "USER_CHANGED_SCREEN":
+      return {...initialState};
     default:
       return state;
   }

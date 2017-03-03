@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Platform, Image} from 'react-native';
-import {Router, Scene} from 'react-native-router-flux';
+import {Router, Scene, Actions} from 'react-native-router-flux';
 import Main from './components/Main';
 import Swiper from './components/Swiper';
 import Home from './components/Home';
@@ -47,18 +47,20 @@ const RouterComponent = () => {
     
     <Scene key="intro" hideNavBar>
       <Scene key="swiper" component={Swiper} />
-      <Scene key="promoCode" component={PromoCode} title="Promo Code"/>
-      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" initial>
-      <Scene key="home" component={Home} type="reset"
-             hideNavBar={false}
-             navigationBarStyle={styles.homeNavBar}
+    <Scene key="main" >
+      <Scene key="promoCode" component={PromoCode}
+             direction="vertical" hideNavBar initial/>
+      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
+      
+      <Scene key="home" component={Home} animation="fade" type="reset"
+             hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
-             rightButtonImage={require('../public/images/insight-icon.png')}
-             onLeft={()=>{}} onRight={()=>{}}
-             renderTitle={() => <NavBarLogo/>} initial/>
+             onLeft={()=>{Actions.promoCode()}}
+             //rightButtonImage={require('../public/images/insight-icon.png')}
+             //onRight={()=>{}}
+             renderTitle={() => <NavBarLogo/>} />
       
       <Scene key="cardList" component={CardList}
              navigationBarStyle={styles.cardListNavBar}
@@ -72,6 +74,7 @@ const RouterComponent = () => {
   
       <Scene key="reward" component={RewardScreen} hideNavBar
              direction="vertical" />
+  
     </Scene>
   </Router>;
 };

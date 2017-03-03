@@ -48,7 +48,7 @@ const PromoSuccess = () => {
           You unlocked 5% off at all restaurants on your 1st visit
         </Text>
         
-        <Button style={styles.button} type="primary" onPress={() => Actions.main()}>AWESOME!</Button>
+        <Button style={styles.button} type="primary" onPress={() => Actions.home()}>AWESOME!</Button>
       </View>
   )
 };
