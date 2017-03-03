@@ -7,6 +7,7 @@ import Home from './components/Home';
 import CardList from './components/CardList';
 import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
+import {RewardScreen} from './components/common';
 // import PanAnimation from './components/animations/PanAnimation';
 import AnimatableExample from './components/animations/AnimatableExample';
 import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
@@ -50,9 +51,9 @@ const RouterComponent = () => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" >
-      <Scene key="home" component={Home}
-             //sceneStyle={{marginTop: 4}}
+    <Scene key="main" initial>
+      <Scene key="home" component={Home} type="reset"
+             hideNavBar={false}
              navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              rightButtonImage={require('../public/images/insight-icon.png')}
@@ -68,6 +69,9 @@ const RouterComponent = () => {
              navigationBarStyle={styles.cardListNavBar}
              titleStyle = {styles.cardListTitle}
              title="Restaurant PIN" direction="vertical" />
+  
+      <Scene key="reward" component={RewardScreen} hideNavBar
+             direction="vertical" />
     </Scene>
   </Router>;
 };

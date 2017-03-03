@@ -38,7 +38,20 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "#3498DB",
   },
-  
+  messageBox:{
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    position: "absolute",
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  message: {
+    color: "#a6342e",
+    fontSize: 20,
+    fontWeight: "400",
+  },
   
   container: {
     flex: 1,
@@ -56,13 +69,12 @@ class InputPinScreen extends Component {
     setTimeout(() => this.props.toggleModal(), 1000);
   }
   
-  onChangeText(text) {
-    const {onChangePin, onSubmitPin} = this.props;
+  onChangeText(text, card) {
     if (text.length === 4) {
-      onChangePin(text);
-      onSubmitPin();
+      this.props.onChangePin(text);
+      this.props.onSubmitPin(card);
     } else {
-      onChangePin(text)
+      this.props.onChangePin(text)
     }
   };
   
@@ -83,35 +95,23 @@ class InputPinScreen extends Component {
         <View style={styles.inputBox}>
           <TextInput style={styles.inputText}
                      secureTextEntry autoFocus
-                     value={pin} onChangeText={(text) => this.onChangeText(text)}
+                     value={pin} onChangeText={(text) => this.onChangeText(text, card)}
                      underlineColorAndroid='rgba(0,0,0,0)'
                      keyboardType="phone-pad">
           </TextInput>
+          {
+            message.length > 0
+            &&
+            <View style={styles.messageBox}>
+              <Text style={styles.message}>{message}</Text>
+            </View>
+          }
         </View>
         <KeyboardSpacer topSpacing={-100}/>
       
       </View>
     </View>
   }
-  
-  
-  // return <View style={styles.view}>
-  //
-  //   {/*<Card {...props.card}/>
-  //   <Text style={styles.titleText}>
-  //     Enter Restaurant PIN
-  //   </Text>
-  //   <View style={styles.inputBox}>
-  //     <TextInput style={styles.inputText}
-  //                secureTextEntry autoFocus
-  //                value={props.pin} onChangeText={(text) => onChangeText(text)}
-  //                underlineColorAndroid='rgba(0,0,0,0)'
-  //                keyboardType="phone-pad">
-  //     </TextInput>
-  //   </View>
-  //   <KeyboardSpacer topSpacing={-100}/>
-  //    */}
-  // </View>
 }
 
 // Container
@@ -127,7 +127,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onChangePin: (pin) => dispatch(inputPinActions.changePin(pin)),
-    onSubmitPin: () => dispatch(inputPinActions.userSubmitPin()),
+    onSubmitPin: (card) => dispatch(inputPinActions.userSubmitPin(card)),
     toggleModal: () => dispatch(inputPinActions.toggleModal()),
   }
 };

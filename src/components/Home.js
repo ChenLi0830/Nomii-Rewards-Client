@@ -92,7 +92,7 @@ const Home = (props) => {
     const cardContentList = [
       {
         name: "Poké Bar SFU",
-        distance: 1200,
+        distance: 128,
         logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
         progress: 1,
         expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,

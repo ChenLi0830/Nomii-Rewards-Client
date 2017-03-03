@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 });
 
 const renderDistance = (distance) => {
-  if (distance > 1000) return `${Math.ceil(distance/1000)} km`
+  if (distance > 1000) return `${Math.floor(distance/1000)} km`
   else return `${Math.ceil(distance)} m`
 };
 
