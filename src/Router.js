@@ -5,7 +5,7 @@ import Main from './components/Main';
 import Swiper from './components/Swiper';
 import Home from './components/Home';
 import CardList from './components/CardList';
-import PromoCodeContainer from './components/PromoCodeContainer';
+import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
 // import PanAnimation from './components/animations/PanAnimation';
 import AnimatableExample from './components/animations/AnimatableExample';
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
 const RouterComponent = () => {
   return <Router>
-    <Scene key="auth" hideNavBar >
+    <Scene key="auth" hideNavBar initial>
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       <Scene key="login" component={Main} title="Login" initial/>
@@ -46,11 +46,11 @@ const RouterComponent = () => {
     
     <Scene key="intro" hideNavBar>
       <Scene key="swiper" component={Swiper} />
-      <Scene key="promoCode" component={PromoCodeContainer} title="Promo Code"/>
+      <Scene key="promoCode" component={PromoCode} title="Promo Code"/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" initial>
+    <Scene key="main" >
       <Scene key="home" component={Home}
              //sceneStyle={{marginTop: 4}}
              navigationBarStyle={styles.homeNavBar}

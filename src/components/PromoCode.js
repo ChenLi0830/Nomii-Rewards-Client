@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, View, StyleSheet, Dimensions, TextInput, Image} from 'react-native';
 import {Button} from './common';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import {connect} from 'react-redux';
+import {promoActions} from '../modules';
 
 const {width, height} = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -79,4 +81,22 @@ const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPro
   </View>
 };
 
-export default PromoCode;
+//Container
+const mapStateToProps = (state) => {
+  const {promoCode} = state;
+  return {
+    code: promoCode.code,
+    // loading: promoCode.loading,
+    message: promoCode.message,
+  }
+};
+
+const mapDispatchToProps = (dispatch)=>{
+  return {
+    userSubmitPromo: () => {dispatch(promoActions.userSubmitPromo())},
+    userChangePromo: (promo) => {dispatch(promoActions.userChangePromo(promo))},
+    userSkipPromo: () => {dispatch(promoActions.userSkipPromo())},
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PromoCode);
