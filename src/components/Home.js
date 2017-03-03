@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions, ScrollView, TouchableOpacity} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
-import Card from './Card';
+import Card from './common/Card';
 import {Components} from 'exponent';
 
 const {width, height} = Dimensions.get('window');

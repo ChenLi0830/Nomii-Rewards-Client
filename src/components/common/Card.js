@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform, Image} from 'react-native';
-import {ProgressBar} from './common';
+import {ProgressBar} from './ProgressBar';
 
 const {width, height} = Dimensions.get("window");
 

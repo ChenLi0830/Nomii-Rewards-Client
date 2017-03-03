@@ -7,6 +7,7 @@ import dismissKeyboard from 'dismissKeyboard';
 const USER_CHANGE_PIN = "USER_CHANGE_PIN";
 const USER_SUBMIT_PIN_START = "USER_SUBMIT_PIN_START";
 const USER_SUBMIT_PIN_FAILED = "USER_SUBMIT_PIN_FAILED";
+const USER_TOGGLE_MODAL_VISIBILITY = "USER_TOGGLE_MODAL_VISIBILITY";
 
 // Action creator
 export const changePin = (pin) => ({
@@ -19,6 +20,9 @@ const submitPinFailed = (message) => ({
   payload: message,
 });
 
+export const toggleModal = () => ({
+  type: USER_TOGGLE_MODAL_VISIBILITY,
+});
 
 export const userSubmitPin = () => {
   return (dispatch, getState) => {
@@ -41,6 +45,7 @@ const initialState = {
   pin: "",
   // loading: false,
   message: "",
+  showModal: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -49,6 +54,8 @@ const reducer = (state = initialState, action) => {
       return {...state, pin: action.payload, message: ""};
     case "USER_SUBMIT_PIN_FAILED":
       return {...state, pin: "", message: action.payload};
+    case "USER_TOGGLE_MODAL_VISIBILITY":
+      return {...state, showModal: !state.showModal};
     default:
       return state;
   }

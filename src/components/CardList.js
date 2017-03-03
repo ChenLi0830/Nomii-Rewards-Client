@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity} from 'react-native';
-import Card from './Card';
+import Card from './common/Card';
 import {Actions} from 'react-native-router-flux';
 
 const {width, height} = Dimensions.get("window");

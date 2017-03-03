@@ -13,7 +13,6 @@ import LottieAnimatedExample from './components/animations/lottie/LottieAnimated
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
 
-
 const styles = StyleSheet.create({
   wrapper: {
     paddingTop: /*(Platform.OS === 'ios') ? 0 : */50,
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
 
 const RouterComponent = () => {
   return <Router>
-    <Scene key="auth" hideNavBar initial>
+    <Scene key="auth" hideNavBar >
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       <Scene key="login" component={Main} title="Login" initial/>
@@ -51,7 +50,7 @@ const RouterComponent = () => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" >
+    <Scene key="main" initial>
       <Scene key="home" component={Home}
              //sceneStyle={{marginTop: 4}}
              navigationBarStyle={styles.homeNavBar}
