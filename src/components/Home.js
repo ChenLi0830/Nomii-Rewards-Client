@@ -88,21 +88,21 @@ const hasCardsContent = () => {
   const cardContentList = [
     {
       name: "Poké Bar SFU",
-      distance: "1 km",
+      distance: 1200,
       logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
       progress: 1,
       expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
     },
     {
       name: "Big Smoke Burger",
-      distance: "1 km",
+      distance: 87,
       logo: require("../../public/images/temp/bigsmoke.png"),
       progress: 0,
       expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
     },
     {
       name: "Blossom Teas SFU",
-      distance: "3 km",
+      distance: 3212,
       logo: require("../../public/images/temp/blossom-teas.png"),
       progress: 2,
       expireAt: new Date().getTime() + 1000 * 3600 * 24 * 2,

@@ -64,12 +64,17 @@ const styles = StyleSheet.create({
   },
 });
 
+const renderDistance = (distance) => {
+  if (distance > 1000) return `${Math.ceil(distance/1000)} km`
+  else return `${Math.ceil(distance)} m`
+};
+
 const Card = ({name, distance, logo, progress, expireAt}) => {
   return <View style={styles.box} >
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.distance}>{distance}</Text>
+        <Text style={styles.distance}>{renderDistance(distance)}</Text>
       </View>
       <View style={styles.storeLogoColumn}>
         <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}
