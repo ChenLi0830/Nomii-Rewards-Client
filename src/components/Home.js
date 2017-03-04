@@ -143,8 +143,8 @@ const Home = (props) => {
   };
   
   
-  return noCardsContent;
-  // return hasCardsContent();
+  // return noCardsContent;
+  return hasCardsContent();
 };
 
 // Container

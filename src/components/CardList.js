@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, ScrollView, Dimensions, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, ScrollView, Modal, Dimensions, View, TouchableOpacity} from 'react-native';
 import Card from './common/Card';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
-import {homeActions} from '../modules';
+import {cardListActions} from '../modules';
+
 
 const {width, height} = Dimensions.get("window");
 
@@ -74,6 +75,11 @@ const CardList = (props) => {
   
   
   return <View style={{flex: 1}}>
+    <Modal visible={props.showModal}
+           image={require("../../public/images/too-far-icon.png")}
+           text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
+           toggle={props.toggleModal}/>
+    
     <ScrollView style={styles.scrollList}>
       <View style={styles.listView}>
         {cards}
@@ -84,11 +90,14 @@ const CardList = (props) => {
 };
 
 // Container
-
+const mapStateToProps = (state) => {
+  return {showModal: state.home.showModal}
+};
 const mapDispatchToProps = (dispatch)=>{
   return {
-    pressCard: (card) => dispatch(homeActions.pressCard(card))
+    toggleModal: () => dispatch(cardListActions.toggleModal()),
+    pressCard: (card) => dispatch(cardListActions.pressCard(card))
   }
 };
 
-export default connect(null, mapDispatchToProps)(CardList);
+export default connect(mapStateToProps, mapDispatchToProps)(CardList);
