@@ -62,7 +62,7 @@ const styles = new StyleSheet.create({
   },
   defaultText: {
     color: "white",
-    fontWeight: "900",
+    fontWeight: "bold",
   },
   ghostText: {
     color: "#262626",
@@ -70,7 +70,7 @@ const styles = new StyleSheet.create({
   },
   primaryText: {
     color: "#FFF",
-    fontWeight: "900",
+    fontWeight: "bold",
     // fontWeight: "",
   },
 });

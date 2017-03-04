@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   textExplain: {
     color: "#9b9b9b",
-    fontWeight: "900",
+    fontWeight: "bold",
     fontSize: 16,
     marginTop: 20,
     textAlign: "center"

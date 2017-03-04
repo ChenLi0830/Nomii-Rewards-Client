@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 import Dash from 'react-native-dash';
+
 const checkedImage = require("../../../public/images/circle-1 check.png");
 const emptyImage = require("../../../public/images/circle-empty-highlight 2.png");
 const percent5Image = require("../../../public/images/big-five-percent.png");
