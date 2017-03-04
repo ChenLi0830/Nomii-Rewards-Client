@@ -121,11 +121,6 @@ const Home = (props) => {
     );
     
     return <View style={{flex: 1}}>
-      <Modal visible={props.showModal}
-             image={require("../../public/images/too-far-icon.png")}
-             text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
-             toggle={props.toggleModal}/>
-      
       <ScrollView style={styles.scrollList}>
         <View style={styles.listView}>
           {cards}
@@ -143,8 +138,17 @@ const Home = (props) => {
   };
   
   
-  // return noCardsContent;
-  return hasCardsContent();
+  return <View style={{flex: 1}}>
+    <Modal visible={props.showModal}
+           image={require("../../public/images/too-far-icon.png")}
+           text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
+           toggle={props.toggleModal}/>
+    {
+      noCardsContent
+      //hasCardsContent()
+    }
+  </View>
+  
 };
 
 // Container
