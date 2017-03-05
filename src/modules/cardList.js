@@ -1,7 +1,7 @@
 import {Actions} from 'react-native-router-flux';
 
 // Action types
-const TOGGLE_DISTANCE_WARN_MODAL = "TOGGLE_DISTANCE_WARN_MODAL";
+const TOGGLE_DISTANCE_WARN_MODAL = "TOGGLE_DISTANCE_WARN_MODAL_CARDLIST";
 
 // Action creator
 export const toggleModal = () => ({

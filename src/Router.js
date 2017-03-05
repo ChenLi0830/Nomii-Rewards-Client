@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 
 const RouterComponent = () => {
   return <Router>
-    <Scene key="auth" hideNavBar >
+    <Scene key="auth" hideNavBar initial>
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       {/*<Scene key="location" component={LocationComponent}/>*/}
@@ -51,7 +51,7 @@ const RouterComponent = () => {
       <Scene key="swiper" component={Swiper} />
     </Scene>
     
-    <Scene key="main" direction="vertical" type="reset" initial>
+    <Scene key="main" direction="vertical" type="reset">
       <Scene key="promoCode" component={PromoCode}
              direction="vertical" hideNavBar initial/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />

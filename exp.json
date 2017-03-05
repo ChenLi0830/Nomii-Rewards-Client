@@ -1,21 +1,24 @@
 {
   "name": "nomii-rewards-exponentjs",
-  "description": "An empty new project",
+  "description": "Nomii Rewards App",
   "slug": "nomii-rewards-exponentjs",
   "privacy": "public",
   "sdkVersion": "14.0.0",
   "version": "1.0.0",
   "orientation": "portrait",
-  "primaryColor": "#cccccc",
-  "icon": "https://s3.amazonaws.com/exp-brand-assets/ExponentEmptyManifest_192.png",
+  "primaryColor": "#e8314a",
+  "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
   "loading": {
-    "icon": "https://s3.amazonaws.com/exp-brand-assets/ExponentEmptyManifest_192.png",
+    "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
     "hideExponentText": false
   },
   "packagerOpts": {
     "assetExts": ["ttf", "mp4"]
   },
   "ios": {
-    "supportsTablet": true
+    "bundleIdentifier": "com.nomii.rewards"
+  },
+  "android": {
+    "package": "com.nomii.rewards"
   }
 }
