@@ -1,9 +1,10 @@
 import React from 'react';
-import {Text, StyleSheet, Linking, Dimensions, Platform} from 'react-native';
+import {StyleSheet, Linking, Dimensions, Platform, Alert} from 'react-native';
 import {Button} from './common';
-import {Actions} from 'react-native-router-flux';
-import {Image, View} from 'react-native-animatable';
+import {Image, View, Text} from 'react-native-animatable';
 // import Playground from './animations/Playground';
+import {Actions} from 'react-native-router-flux';
+import {Facebook} from 'exponent';
 
 const {width, height} = Dimensions.get("window");
 
@@ -21,12 +22,13 @@ const styles = StyleSheet.create({
   slogan: {
     width: width * 0.8,
   },
-  title: {
-    fontSize: 25,
-    fontWeight: "300",
-    textAlign: "center",
-    letterSpacing: 2,
-  },
+  // title: {
+  //   color: "#D0021B",
+  //   fontSize: 36,
+  //   // fontWeight: "300",
+  //   textAlign: "center",
+  //   // letterSpacing: 2,
+  // },
   image: {
     marginTop: -30,
     width: 150,
@@ -55,33 +57,53 @@ const styles = StyleSheet.create({
   },
 });
 
+const login = async() => {
+  const {type, token} = await Facebook.logInWithReadPermissionsAsync(
+      '1933027890253863', {// AppID To be stored securely
+        permissions: ['public_profile'],
+        behavior: __DEV__ ? "web" : "browser",
+      });
+  if (type === 'success') {
+    // Get the user's name using Facebook's Graph API
+    const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`);
+    Actions.intro();
+    // Alert.alert(
+    //     'Logged in!',
+    //     `Hi ${(await response.json()).name}!`,
+    // );
+  } else {
+    Alert.alert('Log in cancelled');
+  }
+};
+
 const Main = () => {
   return <View style={styles.view}>
-  
+    
     <Image animation="fadeInDown" duration={200} delay={100}
-                      style={styles.logo}
-                      resizeMode="contain"
-                      source={require('../../public/images/nomii-offers-login.png')}/>
-  
+           style={styles.logo}
+           resizeMode="contain"
+           source={require('../../public/images/nomii-offers-login.png')}/>
+    
     <Image animation="bounceInDown"
-                      style={styles.slogan}
-                      resizeMode="contain"
-                      source={require('../../public/images/slogan.png')}/>
-  
-    {/*<Animatable.Text style={styles.title} animation="bounceInDown">*/}
-      {/*Stamp cards that*/}
-      {/*{"\n"}*/}
-      {/*reward you instantly*/}
-    {/*</Animatable.Text>*/}
+           style={styles.slogan}
+           resizeMode="contain"
+           source={require('../../public/images/slogan.png')}/>
+    
+    {/*<Text style={styles.title} animation="bounceInDown">*/}
+    {/*Stamp cards that*/}
+    {/*{"\n"}*/}
+    {/*reward you instantly*/}
+    {/*</Text>*/}
     
     <Image style={styles.image}
-                      animation="bounceInDown"
-                      delay={300}
-                      resizeMode="contain"
-                      source={require('../../public/images/card-icons-onboarding.png')}/>
+           animation="bounceInDown"
+           delay={300}
+           resizeMode="contain"
+           source={require('../../public/images/card-icons-onboarding.png')}/>
     
     <View animation="fadeInUp" duration={400} delay={600}>
-      <Button onPress={() => Actions.intro()} style={styles.loginBtn}>
+      <Button onPress={() => login()} style={styles.loginBtn}>
         {"Continue with facebook".toUpperCase()}
       </Button>
       
@@ -98,8 +120,8 @@ const Main = () => {
       </Text>
       and
       <Text style={styles.textPolicyLink}
-            onPress={() => Linking.openURL("http://nomiiapp.com")}>
-            {" Privacy Policy"}
+            onPress={() => Linking.openURL("https://www.iubenda.com/privacy-policy/7826140")}>
+        {" Privacy Policy"}
       </Text>
     </Text>
   

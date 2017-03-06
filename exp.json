@@ -4,7 +4,7 @@
   "slug": "nomii-rewards-exponentjs",
   "privacy": "public",
   "sdkVersion": "14.0.0",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "orientation": "portrait",
   "primaryColor": "#e8314a",
   "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
@@ -16,9 +16,10 @@
     "assetExts": ["ttf", "mp4"]
   },
   "ios": {
-    "bundleIdentifier": "com.nomii.rewards"
+    "bundleIdentifier": "ca.nomii.rewards"
   },
+  "facebookScheme": "fb1933027890253863",
   "android": {
-    "package": "com.nomii.rewards"
+    "package": "ca.nomii.rewards"
   }
 }
