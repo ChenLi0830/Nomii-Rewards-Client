@@ -84,7 +84,7 @@ class InputPinScreen extends Component {
     return <View style={{flex:1}}>
       <Modal visible={showModal}
              image={require("../../public/images/Hand-over-icon.png")}
-             text={"PASS TO A STAFF\nTO GET A STAMP"}
+             text={"PASS PHONE TO STAFF\nCOLLECT STAMP"}
              toggle={toggleModal}/>
       
       <View style={styles.view}>

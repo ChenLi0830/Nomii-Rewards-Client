@@ -29,7 +29,7 @@ const SwiperContent2 = () => {
         <Text style={styles.title}>
           Earn Stamps for
           {'\n'}
-          Every Store Visits
+          Every Store Visit
         </Text>
         <Image resizeMode="contain"
                style={styles.image}
