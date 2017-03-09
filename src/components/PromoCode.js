@@ -5,6 +5,9 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {promoActions} from '../modules';
 import {Actions} from 'react-native-router-flux';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
+
 
 const {width, height} = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -61,7 +64,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPromo}) => {
+const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, userSkipPromo, userId}) => {
+  const submitPromo = ()=>{
+    console.log("userId", userId);
+    const variables = {
+      userId: userId,
+    };
+    userSubmitPromo(mutate, variables);
+  };
+  
   console.log(width, height);
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
@@ -90,7 +101,7 @@ const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPro
     
     {
       code.length > 0 ?
-          <Button type="primary" onPress={() => userSubmitPromo()}>DONE</Button>
+          <Button type="primary" onPress={() => submitPromo()}>DONE</Button>
           :
           <Button type="ghost" onPress={() => userSkipPromo()}>Skip</Button>
     }
@@ -99,19 +110,36 @@ const PromoCode = ({code, message, userSubmitPromo, userChangePromo, userSkipPro
 };
 
 //Container
+const mutation = gql`
+mutation redeemPromo($userId: ID, $code: String) {
+  redeemPromo(userId: $userId, code: $code){
+    fbName,
+    id,
+    cards{
+      id,
+      stampCount,
+      lastStampAt
+    }
+  }
+}
+`;
+
+const PromoCodeWithGraphQL = graphql(mutation)(PromoCode);
+
 const mapStateToProps = (state) => {
   const {promoCode} = state;
   return {
     code: promoCode.code,
     // loading: promoCode.loading,
     message: promoCode.message,
+    userId: state.user.id,
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userSubmitPromo: () => {
-      dispatch(promoActions.userSubmitPromo())
+    userSubmitPromo: (redeemPromoMutation, variables) => {
+      dispatch(promoActions.userSubmitPromo(redeemPromoMutation, variables))
     },
     userChangePromo: (promo) => {
       dispatch(promoActions.userChangePromo(promo))
@@ -122,4 +150,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PromoCode);
+export default connect(mapStateToProps, mapDispatchToProps)(PromoCodeWithGraphQL);

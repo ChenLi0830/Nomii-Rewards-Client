@@ -2,7 +2,6 @@ import {Actions} from 'react-native-router-flux';
 import { Toast } from 'antd-mobile';
 import dismissKeyboard from 'dismissKeyboard';
 
-
 // Action types
 const USER_CHANGE_PROMO = "USER_CHANGE_PROMO";
 const USER_SUBMIT_PROMO_START = "USER_SUBMIT_PROMO_START";
@@ -31,20 +30,25 @@ const userChangedScreen = () => ({
 //   type: USER_SUBMIT_PROMO_START,
 // });
 
-export const userSubmitPromo = () => {
+export const userSubmitPromo = (redeemPromoMutation, variables) => {
   return (dispatch, getState) => {
     // dispatch(userSubmitPromoStart());
+      
+      // if (getState().promoCode.code === "code") {
     Toast.loading('Loading...', 0);
-    // Todo: add promo validation logic
-    setTimeout(() => {
-      Toast.hide();
-      if (getState().promoCode.code === "code") {
-        dismissKeyboard();
-        Actions.promoSuccess();
-        dispatch(userChangedScreen());
-      }
-      else dispatch(submitPromoFailed("Invalid Code"));
-    }, 1000);
+    redeemPromoMutation({variables: {...variables, code: getState().promoCode.code}})
+        .then(result => {
+          Toast.hide();
+          dismissKeyboard();
+          Actions.promoSuccess();
+          dispatch(userChangedScreen());
+        })
+        .catch(err => {
+          Toast.hide();
+          // console.log("error", err);
+          //Todo display error message rather than always display 'invalid code'
+          dispatch(submitPromoFailed("Invalid Code"));
+        });
   }
 };
 
