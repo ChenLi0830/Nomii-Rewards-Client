@@ -5,6 +5,8 @@ import {Image, View, Text} from 'react-native-animatable';
 // import Playground from './animations/Playground';
 import {Actions} from 'react-native-router-flux';
 import {Facebook} from 'exponent';
+import {connect} from 'react-redux';
+import {userActions} from '../modules';
 
 const {width, height} = Dimensions.get("window");
 
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const login = async() => {
+const login = async(props) => {
   const {type, token} = await Facebook.logInWithReadPermissionsAsync(
       '1933027890253863', {// AppID To be stored securely
         permissions: ['public_profile'],
@@ -67,6 +69,10 @@ const login = async() => {
     // Get the user's name using Facebook's Graph API
     const response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}`);
+    
+    const {name, id} = await response.json();
+    props.updateUserId(id);
+    
     Actions.intro();
     // Alert.alert(
     //     'Logged in!',
@@ -77,7 +83,7 @@ const login = async() => {
   }
 };
 
-const Main = () => {
+const Main = (props) => {
   return <View style={styles.view}>
     
     <Image animation="fadeInDown" duration={200} delay={100}
@@ -103,7 +109,7 @@ const Main = () => {
            source={require('../../public/images/card-icons-onboarding.png')}/>
     
     <View animation="fadeInUp" duration={400} delay={600}>
-      <Button onPress={() => login()} style={styles.loginBtn}>
+      <Button onPress={() => login(props)} style={styles.loginBtn}>
         {"Continue with facebook".toUpperCase()}
       </Button>
       
@@ -128,4 +134,10 @@ const Main = () => {
   </View>
 };
 
-export default Main;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUserId: (id) => dispatch(userActions.updateUserId(id))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(Main);

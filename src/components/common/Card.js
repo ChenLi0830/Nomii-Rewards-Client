@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   storeLogo: {
-    // width: width * 0.25,
-    // flex:1,
+    width: width * 0.20,
+    flex:1,
   },
   name: {
     fontSize: 17,
@@ -65,25 +65,36 @@ const styles = StyleSheet.create({
 });
 
 const renderDistance = (distance) => {
-  if (distance > 1000) return `${Math.floor(distance/1000)} km`
+  if (distance > 1000) return `${Math.floor(distance/1000)} km`;
   else return `${Math.ceil(distance)} m`
 };
 
-const Card = ({name, distance, logo, progress, expireAt}) => {
+const Card = ({id, stampCount, lastStampAt, card}) => {
+  console.log("card",card);
+  const {name, imageURL, longitude, latitude} = card;
+  
   return <View style={styles.box} >
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.distance}>{renderDistance(distance)}</Text>
+        {/*<Text style={styles.distance}>{renderDistance(distance)}</Text>*/}
       </View>
       <View style={styles.storeLogoColumn}>
-        <Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}
-               source={logo} cache="force-cache"/>
+        <Image resizeMode={Image.resizeMode.contain}
+               style={styles.storeLogo}
+               source={{uri: imageURL}}/>
+        {/*<Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}*/}
+               {/*source={[*/}
+                 {/*{uri: 'https://facebook.github.io/react/img/logo_small.png', width: 38, height: 38},*/}
+                 {/*{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},*/}
+                 {/*{uri: 'https://facebook.github.io/react/img/logo_og.png', width: 400, height: 400}*/}
+               {/*]}/>*/}
+        
       </View>
     </View>
     
     <View style={styles.discountRow}>
-      <ProgressBar index={progress} expireAt={expireAt}/>
+      <ProgressBar index={stampCount % 3} expireAt={parseInt(lastStampAt) + 7 * 24 * 3600 * 1000}/>
     </View>
   </View>
 };

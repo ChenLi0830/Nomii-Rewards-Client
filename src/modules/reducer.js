@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import promoCodeReducer from './promoCode';
 import inputPinReducer from './inputPin';
 import homeReducer from './home';
+import userReducer from './user';
 import {client} from './apollo';
 
 export default combineReducers({
@@ -9,5 +10,6 @@ export default combineReducers({
   promoCode: promoCodeReducer,
   inputPin: inputPinReducer,
   home: homeReducer,
+  user: userReducer,
 });
 

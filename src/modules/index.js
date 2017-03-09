@@ -5,6 +5,7 @@ import createLogger from 'redux-logger';
 import * as promoActions from './promoCode';
 import * as inputPinActions from './inputPin';
 import * as homeActions from './home';
+import * as userActions from './user';
 import {client} from './apollo';
 import { composeWithDevTools } from 'remote-redux-devtools';
 
@@ -22,4 +23,4 @@ const store = createStore(reducer, /* preloadedState, */ composeWithDevTools(
 
 export default store;
 
-export {promoActions, inputPinActions, homeActions};
+export {promoActions, inputPinActions, homeActions, userActions};

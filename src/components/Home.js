@@ -8,6 +8,7 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
+import {Toast} from 'antd-mobile';
 
 const {width, height} = Dimensions.get('window');
 
@@ -66,79 +67,98 @@ const styles = StyleSheet.create({
   }
 });
 
-const Home = (props) => {
-  console.log(props);
-  const noCardsContent = (
-      <View style={styles.slide}>
-        <Image resizeMode="contain"
-               style={styles.image}
-               source={require('../../public/images/Home-empty-screen-card.png')}/>
-        <View>
-          <Text style={styles.title}>
-            Your wallet seems empty.
-            {'\n'}
-            Add a card to start
-          </Text>
-          
-          <Image resizeMode="contain"
-                 style={{width: width * 0.2, alignSelf: "center", marginTop: 15}}
-                 source={require('../../public/images/down-arrow.png')}/>
-        </View>
+const noCardsContent = (
+    <View style={styles.slide}>
+      <Image resizeMode="contain"
+             style={styles.image}
+             source={require('../../public/images/Home-empty-screen-card.png')}/>
+      <View>
+        <Text style={styles.title}>
+          Your wallet seems empty.
+          {'\n'}
+          Add a card to start
+        </Text>
         
-        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
-          CARDS</Button>
+        <Image resizeMode="contain"
+               style={{width: width * 0.2, alignSelf: "center", marginTop: 15}}
+               source={require('../../public/images/down-arrow.png')}/>
       </View>
+      
+      <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+        CARDS</Button>
+    </View>
+);
+
+const getUserCards = (props) => {
+  let userCards = [];
+  if (props.data.user && props.data.user.cards && props.data.user.cards.length>0){
+    userCards = props.data.user.cards.filter( card => {
+      return card.lastStampAt !== null;
+    })
+  }
+  // console.log("userCards", userCards);
+  return userCards;
+};
+
+const hasCardsContent = (props, userCards) => {
+  // const cardContentList = [
+  //   {
+  //     name: "Poké Bar SFU",
+  //     distance: 128,
+  //     logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
+  //     progress: 1,
+  //     expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
+  //   },
+  //   {
+  //     name: "Big Smoke Burger",
+  //     distance: 87,
+  //     logo: require("../../public/images/temp/bigsmoke.png"),
+  //     progress: 0,
+  //     expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
+  //   },
+  //   {
+  //     name: "Blossom Teas SFU",
+  //     distance: 3212,
+  //     logo: require("../../public/images/temp/blossom-teas.png"),
+  //     progress: 2,
+  //     expireAt: new Date().getTime() + 1000 * 3600 * 24 * 2,
+  //   }
+  // ];
+  
+  
+  const cards = userCards.map(card =>
+      <TouchableOpacity style={{paddingHorizontal: 10}} key={card.id}
+                        activeOpacity={0.5} onPress={()=> props.pressCard(card)}>
+        <Card {...card} />
+      </TouchableOpacity>
   );
   
-  const hasCardsContent = () => {
-    const cardContentList = [
-      {
-        name: "Poké Bar SFU",
-        distance: 128,
-        logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
-        progress: 1,
-        expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
-      },
-      {
-        name: "Big Smoke Burger",
-        distance: 87,
-        logo: require("../../public/images/temp/bigsmoke.png"),
-        progress: 0,
-        expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
-      },
-      {
-        name: "Blossom Teas SFU",
-        distance: 3212,
-        logo: require("../../public/images/temp/blossom-teas.png"),
-        progress: 2,
-        expireAt: new Date().getTime() + 1000 * 3600 * 24 * 2,
-      }
-    ];
+  return <View style={{flex: 1}}>
+    <ScrollView style={styles.scrollList}>
+      <View style={styles.listView}>
+        {cards}
+      </View>
+    </ScrollView>
     
-    const cards = cardContentList.map(card =>
-        <TouchableOpacity style={{paddingHorizontal: 10}} key={card.name}
-                          activeOpacity={0.5} onPress={()=> props.pressCard(card)}>
-          <Card key={card.name} {...card} />
-        </TouchableOpacity>
-    );
-    
-    return <View style={{flex: 1}}>
-      <ScrollView style={styles.scrollList}>
-        <View style={styles.listView}>
-          {cards}
-        </View>
-      </ScrollView>
-      
-      <Components.LinearGradient
-          colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
-            'rgba(255,255,255, 1)']}
-          style={styles.gradient}>
-        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
-          CARDS</Button>
-      </Components.LinearGradient>
-    </View>
-  };
+    <Components.LinearGradient
+        colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
+          'rgba(255,255,255, 1)']}
+        style={styles.gradient}>
+      <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+        CARDS</Button>
+    </Components.LinearGradient>
+  </View>
+};
+
+const Home = (props) => {
+  // console.log(props);
+  if (props.data.loading) {
+    // Toast.loading('Loading...', 0);
+    return <View></View>;
+  }
+  // Toast.hide();
   
+  const userCards = getUserCards(props);
   
   return <View style={{flex: 1}}>
     <Modal visible={props.showModal}
@@ -146,15 +166,17 @@ const Home = (props) => {
            text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
            toggle={props.toggleModal}/>
     {
+      userCards.length > 0 ?
+      hasCardsContent(props, userCards)
+          :
       noCardsContent
-      //hasCardsContent()
     }
   </View>
 };
 
 const query = gql`
-{
-  user(id:101){
+query getUser($id: ID) {
+  user(id:$id){
     id,
     fbName,
     cards{
@@ -170,11 +192,16 @@ const query = gql`
 }
 `;
 
-const HomeWithData = graphql(query)(Home);
+const HomeWithGraphQL = graphql(query, {
+  options: (ownProps) => ({variables: {id: /*ownProps.userId*/"1088303924608072"}}),
+})(Home);
 
 // Container
 const mapStateToProps = (state) => {
-  return {showModal: state.home.showModal}
+  return {
+    showModal: state.home.showModal,
+    userId: state.user.id,
+  }
 };
 const mapDispatchToProps = (dispatch)=>{
   return {
@@ -183,4 +210,4 @@ const mapDispatchToProps = (dispatch)=>{
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeWithData);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeWithGraphQL);
