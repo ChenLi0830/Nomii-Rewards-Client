@@ -149,7 +149,6 @@ const Main = (props) => {
   </View>
 };
 
-
 // Container
 const mutation = gql`
   mutation UpsertUser($id: ID, $fbName: String){
@@ -157,8 +156,13 @@ const mutation = gql`
       id,
       fbName,
       cards{
+        id
         stampCount,
         lastStampAt,
+        card{
+          name,
+          imageURL,
+        }
       }
     }
   }

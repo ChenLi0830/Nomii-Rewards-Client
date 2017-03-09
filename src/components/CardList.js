@@ -3,6 +3,8 @@ import {StyleSheet, ListView, Dimensions, View, TouchableOpacity} from 'react-na
 import Card from './common/Card';
 import {connect} from 'react-redux';
 import {homeActions} from '../modules';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
 
 const {width, height} = Dimensions.get("window");
 
@@ -21,81 +23,51 @@ const styles = StyleSheet.create({
   }
 });
 
-class CardList extends Component {
-  constructor(props) {
-    super(props);
-    const cardContentList = [
-      {
-        name: "Poké Bar SFU",
-        distance: 128,
-        logo: require("../../public/images/temp/Poke_Bar_Social_Blue_Post.png"),
-        progress: 1,
-        expireAt: new Date().getTime() + 1000 * 3600 * 24 * 1,
-      },
-      {
-        name: "Big Smoke Burger",
-        distance: 87,
-        logo: require("../../public/images/temp/bigsmoke.png"),
-        progress: 0,
-      },
-      {
-        name: "Blossom Teas SFU",
-        distance: 3212,
-        logo: require("../../public/images/temp/blossom-teas.png"),
-        progress: 2,
-        expireAt: new Date().getTime() + 1000 * 3600 * 24 * 3,
-      },
-      {
-        name: "India Gate",
-        distance: 632,
-        logo: require("../../public/images/temp/india-gate.png"),
-        progress: 2,
-      },
-      {
-        name: "Russet Shack",
-        distance: 18,
-        logo: require("../../public/images/temp/russet-shack.png"),
-        progress: 0,
-      },
-      {
-        name: "Viet Sub",
-        distance: 2112,
-        logo: require("../../public/images/temp/viet-sub.png"),
-        progress: 2,
-      },
-    ];
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    
-    this.state = {
-      dataSource: ds.cloneWithRows(cardContentList),
-    }
-  }
-  
-  renderRow(card) {
+const CardList = (props) => {
+  const renderRow = (cardEdge) => {
     return (
         <TouchableOpacity TouchableOpacity style={{paddingHorizontal: 10}} activeOpacity={0.9}
-                          onPress={() => this.props.pressCard(card)}>
-          <Card {...card} />
+                          onPress={() => props.pressCard(cardEdge)}>
+          <Card {...cardEdge} />
         </TouchableOpacity>
     )
-  }
+  };
   
-  render() {
-    return <View style={styles.wrapper}>
-      <ListView dataSource={this.state.dataSource}
-                renderRow={(card) => this.renderRow(card)}
-                style={styles.list}>
-        {/*<View style={styles.listView}>*/}
-        {/*{cards}*/}
-        {/*</View>*/}
-      </ListView>
-    
-    </View>
-  }
+  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  const dataSource = ds.cloneWithRows(props.data.loading ? [] : props.data.edgesOfAllCards);
+  
+  return <View style={styles.wrapper}>
+    <ListView dataSource={dataSource}
+              renderRow={(card) => renderRow(card)}
+              style={styles.list}>
+    </ListView>
+  
+  </View>
 }
-;
 
 // Container
+const query = gql`
+query getAllCardEdges($userId: ID){
+  edgesOfAllCards(userId: $userId){
+    id,
+    stampCount,
+    lastStampAt,
+    card{
+      name,
+      id,
+      imageURL
+    }
+  }
+}
+`;
+
+const CardListWithGraphQL = graphql(query, {
+  options: (ownProps) => ({variables: {userId: ownProps.userId}}),
+})(CardList);
+
+const mapStateToProps = (state) => ({
+  userId: state.user.id,
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -103,4 +75,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(null, mapDispatchToProps)(CardList);
+export default connect(mapStateToProps, mapDispatchToProps)(CardListWithGraphQL);
