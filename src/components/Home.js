@@ -126,7 +126,7 @@ const hasCardsContent = (props, userCards) => {
 };
 
 const Home = (props) => {
-  console.log(props);
+  // console.log(props);
   if (props.data.loading) {
     // Toast.loading('Loading...', 0);
     return <View></View>;

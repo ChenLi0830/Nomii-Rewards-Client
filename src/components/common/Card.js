@@ -70,7 +70,6 @@ const renderDistance = (distance) => {
 };
 
 const Card = ({id, stampCount, lastStampAt, card}) => {
-  console.log("card",card);
   const {name, imageURL, longitude, latitude} = card;
   
   return <View style={styles.box} >
