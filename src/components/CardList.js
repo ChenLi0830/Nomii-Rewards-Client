@@ -38,6 +38,7 @@ const CardList = (props) => {
   
   return <View style={styles.wrapper}>
     <ListView dataSource={dataSource}
+              enableEmptySections
               renderRow={(card) => renderRow(card)}
               style={styles.list}>
     </ListView>
