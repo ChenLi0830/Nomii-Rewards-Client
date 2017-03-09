@@ -7,6 +7,9 @@ import {Actions} from 'react-native-router-flux';
 import {Facebook} from 'exponent';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
+import { Toast } from 'antd-mobile';
 
 const {width, height} = Dimensions.get("window");
 
@@ -65,6 +68,7 @@ const login = async(props) => {
         permissions: ['public_profile'],
         behavior: __DEV__ ? "web" : "browser",
       });
+  
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
     const response = await fetch(
@@ -72,6 +76,17 @@ const login = async(props) => {
     
     const {name, id} = await response.json();
     props.updateUserId(id);
+  
+    Toast.loading('Loading...', 0);
+    
+    await props.mutate({
+      variables: {
+        id: id,
+        fbName: name,
+      }
+    });
+    
+    Toast.hide();
     
     Actions.intro();
     // Alert.alert(
@@ -134,10 +149,27 @@ const Main = (props) => {
   </View>
 };
 
+
+// Container
+const mutation = gql`
+  mutation UpsertUser($id: ID, $fbName: String){
+    upsertUser(id: $id, fbName: $fbName){
+      id,
+      fbName,
+      cards{
+        stampCount,
+        lastStampAt,
+      }
+    }
+  }
+`;
+
+const MainWithGraphQL = graphql(mutation)(Main);
+
 const mapDispatchToProps = (dispatch) => {
   return {
     updateUserId: (id) => dispatch(userActions.updateUserId(id))
   }
 };
 
-export default connect(null, mapDispatchToProps)(Main);
+export default connect(null, mapDispatchToProps)(MainWithGraphQL);
