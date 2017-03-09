@@ -6,6 +6,8 @@ import Card from './common/Card';
 import {Components} from 'exponent';
 import {homeActions} from '../modules';
 import {connect} from 'react-redux';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
 });
 
 const Home = (props) => {
-  // console.log(props);
+  console.log(props);
   const noCardsContent = (
       <View style={styles.slide}>
         <Image resizeMode="contain"
@@ -148,8 +150,27 @@ const Home = (props) => {
       //hasCardsContent()
     }
   </View>
-  
 };
+
+const query = gql`
+{
+  user(id:101){
+    id,
+    fbName,
+    cards{
+			id
+      stampCount,
+      lastStampAt,
+      card{
+        name,
+        imageURL
+      }
+    }
+  }
+}
+`;
+
+const HomeWithData = graphql(query)(Home);
 
 // Container
 const mapStateToProps = (state) => {
@@ -162,4 +183,4 @@ const mapDispatchToProps = (dispatch)=>{
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeWithData);
