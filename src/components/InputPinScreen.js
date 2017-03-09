@@ -5,7 +5,8 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {inputPinActions} from '../modules';
 import {Modal} from './common';
-
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
 
 const {width, height} = Dimensions.get("window");
 
@@ -70,9 +71,16 @@ class InputPinScreen extends Component {
   }
   
   onChangeText(text, card) {
+    // console.log(this.props);
     if (text.length === 4) {
       this.props.onChangePin(text);
-      this.props.onSubmitPin(card);
+      
+      const variables = {
+        userId: this.props.userId,
+        cardId: card.id,
+      };
+      
+      this.props.onSubmitPin(card, this.props.mutate, variables);
     } else {
       this.props.onChangePin(text)
     }
@@ -115,21 +123,40 @@ class InputPinScreen extends Component {
 }
 
 // Container
+const mutation = gql`
+  mutation StampCard($userId: ID, $cardId: ID){
+    stampCard(userId: $userId, cardId: $cardId){
+      id,
+      fbName,
+      cards{
+        id,
+        stampCount,
+        lastStampAt
+      }
+    }
+  }
+`;
+
+const InputPinWithGraphQL = graphql(mutation)(InputPinScreen);
+
 const mapStateToProps = (state) => {
-  const {inputPin} = state;
+  const {inputPin, user} = state;
   return {
     pin: inputPin.pin,
     message: inputPin.message,
     showModal: inputPin.showModal,
+    userId: user.id,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onChangePin: (pin) => dispatch(inputPinActions.changePin(pin)),
-    onSubmitPin: (card) => dispatch(inputPinActions.userSubmitPin(card)),
+    onSubmitPin: (card, stampCardMutation, variables) => {
+      return dispatch(inputPinActions.userSubmitPin(card, stampCardMutation, variables))
+    },
     toggleModal: () => dispatch(inputPinActions.toggleModal()),
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InputPinScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(InputPinWithGraphQL);

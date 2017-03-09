@@ -29,22 +29,25 @@ export const toggleModal = () => ({
   type: USER_TOGGLE_MODAL_VISIBILITY,
 });
 
-export const userSubmitPin = (card) => {
+export const userSubmitPin = (card, stampCardMutation, variables) => {
+  console.log("card", card);
   return (dispatch, getState) => {
-    Toast.loading('Loading...', 0);
     // Todo: add pin validation logic
-    setTimeout(() => {
-      Toast.hide();
       if (getState().inputPin.pin === "2587") {
         // console.warn("success");
-        dispatch(submitPinSuccess());
-        dismissKeyboard();
-        setTimeout(()=>{
-          Actions.reward({progress: card.progress});
-        }, 100);
+        Toast.loading('Loading...', 0);
+        stampCardMutation({variables: variables})
+            .then(result =>{
+              Toast.hide();
+              
+              dispatch(submitPinSuccess());
+              dismissKeyboard();
+              setTimeout(()=>{
+                Actions.reward({progress: card.stampCount % 3});
+              }, 100);
+            })
       }
       else dispatch(submitPinFailed("Invalid Pin"));
-    }, 500);
   }
 };
 
