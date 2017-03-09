@@ -124,8 +124,8 @@ class InputPinScreen extends Component {
 
 // Container
 const mutation = gql`
-  mutation StampCard($userId: ID, $cardId: ID){
-    stampCard(userId: $userId, cardId: $cardId){
+  mutation StampCard($userId: ID, $cardId: ID, $pin: String){
+    stampCard(userId: $userId, cardId: $cardId, pin: $pin){
       id,
       fbName,
       cards{

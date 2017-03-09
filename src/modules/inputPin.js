@@ -30,24 +30,25 @@ export const toggleModal = () => ({
 });
 
 export const userSubmitPin = (card, stampCardMutation, variables) => {
-  console.log("card", card);
+  // console.log("card", card);
   return (dispatch, getState) => {
-    // Todo: add pin validation logic
-      if (getState().inputPin.pin === "2587") {
-        // console.warn("success");
-        Toast.loading('Loading...', 0);
-        stampCardMutation({variables: variables})
-            .then(result =>{
-              Toast.hide();
-              
-              dispatch(submitPinSuccess());
-              dismissKeyboard();
-              setTimeout(()=>{
-                Actions.reward({progress: card.stampCount % 3});
-              }, 100);
-            })
-      }
-      else dispatch(submitPinFailed("Invalid Pin"));
+    Toast.loading('Loading...', 0);
+    stampCardMutation({variables: {...variables, pin:getState().inputPin.pin}})
+        .then(result =>{
+          Toast.hide();
+        
+          dispatch(submitPinSuccess());
+          dismissKeyboard();
+          setTimeout(()=>{
+            Actions.reward({progress: card.stampCount % 3});
+          }, 100);
+        })
+        .catch(err => {
+          Toast.hide();
+          // console.log("error", err);
+          //Todo display error message rather than always display 'invalid pin'
+          dispatch(submitPinFailed("Invalid Pin"));
+        });
   }
 };
 
