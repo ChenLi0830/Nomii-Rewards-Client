@@ -2,3 +2,5 @@ node_modules/**/*
 .exponent/*
 npm-debug.*
 .idea
+settings.json
+packager-info.json

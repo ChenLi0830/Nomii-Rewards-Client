@@ -14,6 +14,8 @@ export const updateUserId = (userId) => ({
 // Reducer
 const initialState = {
   id: null,
+  // id: "1088303924608072",
+  // id: 101,
 };
 
 const reducer = (state = initialState, action) => {
