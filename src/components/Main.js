@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Linking, Dimensions, Platform, Alert} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Linking, Dimensions, Platform, Alert, AsyncStorage} from 'react-native';
 import {Button} from './common';
 import {Image, View, Text} from 'react-native-animatable';
 // import Playground from './animations/Playground';
@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {userActions} from '../modules';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
-import { Toast } from 'antd-mobile';
+import {Toast} from 'antd-mobile';
 
 const {width, height} = Dimensions.get("window");
 
@@ -62,92 +62,136 @@ const styles = StyleSheet.create({
   },
 });
 
-const login = async(props) => {
-  const {type, token} = await Facebook.logInWithReadPermissionsAsync(
+const upsertUser = async(token, expires, props) => {
+  Toast.loading('Loading...', 0);
+  await AsyncStorage.setItem("@NomiiStore:token", JSON.stringify({token, expires}));
+  
+  const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+  
+  const {name, id} = await response.json();
+  
+  props.updateUserId(id);
+  
+  const user = await props.mutate({
+    variables: {
+      id: id,
+      fbName: name,
+    }
+  });
+  
+  Toast.hide();
+  
+  return user;
+};
+
+const facebookLogin = async(props) => {
+  const {type, token, expires} = await Facebook.logInWithReadPermissionsAsync(
       '1933027890253863', {// AppID To be stored securely
         permissions: ['public_profile'],
         behavior: __DEV__ ? "web" : "browser",
       });
-  
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
-    const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`);
-    
-    const {name, id} = await response.json();
-    props.updateUserId(id);
+    const upsertResult = await upsertUser(token, expires, props);
+    const user = upsertResult.data.upsertUser;
   
-    Toast.loading('Loading...', 0);
-    
-    await props.mutate({
-      variables: {
-        id: id,
-        fbName: name,
-      }
-    });
-    
-    Toast.hide();
-    
-    Actions.intro();
-    // Alert.alert(
-    //     'Logged in!',
-    //     `Hi ${(await response.json()).name}!`,
-    // );
+    console.log("user", user);
+    console.log("user.cards", user.cards);
+    if (user.cards && user.cards.length>0) {
+      console.log("Actions.main();");
+      Actions.main();
+    }
+    else {
+      console.log("Actions.intro();");
+      Actions.intro();
+    }
   } else {
     Alert.alert('Log in cancelled');
   }
 };
 
-const Main = (props) => {
-  return <View style={styles.view}>
-    
-    <Image animation="fadeInDown" duration={200} delay={100}
-           style={styles.logo}
-           resizeMode="contain"
-           source={require('../../public/images/nomii-offers-login.png')}/>
-    
-    <Image animation="bounceInDown"
-           style={styles.slogan}
-           resizeMode="contain"
-           source={require('../../public/images/slogan.png')}/>
-    
-    {/*<Text style={styles.title} animation="bounceInDown">*/}
-    {/*Stamp cards that*/}
-    {/*{"\n"}*/}
-    {/*reward you instantly*/}
-    {/*</Text>*/}
-    
-    <Image style={styles.image}
-           animation="bounceInDown"
-           delay={300}
-           resizeMode="contain"
-           source={require('../../public/images/card-icons-onboarding.png')}/>
-    
-    <View animation="fadeInUp" duration={400} delay={600}>
-      <Button onPress={() => login(props)} style={styles.loginBtn}>
-        {"Continue with facebook".toUpperCase()}
-      </Button>
-      
-      <Text style={styles.textExplain}>
-        We don't post anything on Facebook.
-      </Text>
-    </View>
-    
-    <Text style={styles.textPolicy} animation="fadeInUp" duration={400} delay={800}>
-      By signing up, I agree to Nomii's
-      <Text style={styles.textPolicyLink}
-            onPress={() => Linking.openURL("http://nomiiapp.com")}>
-        {" Terms of Service "}
-      </Text>
-      and
-      <Text style={styles.textPolicyLink}
-            onPress={() => Linking.openURL("https://www.iubenda.com/privacy-policy/7826140")}>
-        {" Privacy Policy"}
-      </Text>
-    </Text>
-  
-  </View>
+const login = async(props) => {
+  try {
+    await facebookLogin(props);
+  }
+  catch (error) {
+    console.error(error);
+    // Error retrieving data
+  }
 };
+
+class Main extends Component {
+  componentDidMount() {
+    (async() => { // Immediately invoked function
+      // await AsyncStorage.removeItem("@NomiiStore:token");
+      
+      const value = await AsyncStorage.getItem("@NomiiStore:token");
+      if (value !== null) {// Found token
+        // console.log(value);
+        const {token, expires} = JSON.parse(value);
+        console.log(token, expires);
+        if (new Date().getTime() < expires * 1000) {
+          await upsertUser(token, expires, this.props);
+          Actions.main();
+        }
+      }
+    })()
+  }
+  
+  render() {
+    return <View style={styles.view}>
+      
+      <Image animation="fadeInDown" duration={200} delay={100}
+             style={styles.logo}
+             resizeMode="contain"
+             source={require('../../public/images/nomii-offers-login.png')}/>
+      
+      <Image animation="bounceInDown"
+             style={styles.slogan}
+             resizeMode="contain"
+             source={require('../../public/images/slogan.png')}/>
+      
+      {/*<Text style={styles.title} animation="bounceInDown">*/}
+      {/*Stamp cards that*/}
+      {/*{"\n"}*/}
+      {/*reward you instantly*/}
+      {/*</Text>*/}
+      
+      <Image style={styles.image}
+             animation="bounceInDown"
+             delay={300}
+             resizeMode="contain"
+             source={require('../../public/images/card-icons-onboarding.png')}/>
+      
+      <View animation="fadeInUp" duration={400} delay={600}>
+        <Button onPress={() => login(this.props)} style={styles.loginBtn}>
+          {"Continue with facebook".toUpperCase()}
+        </Button>
+        
+        <Text style={styles.textExplain}>
+          We don't post anything on Facebook.
+        </Text>
+      </View>
+      
+      <Text style={styles.textPolicy} animation="fadeInUp" duration={400} delay={800}>
+        By signing up, I agree to Nomii's
+        <Text style={styles.textPolicyLink}
+              onPress={() => Linking.openURL("http://nomiiapp.com")}>
+          {" Terms of Service "}
+        </Text>
+        and
+        <Text style={styles.textPolicyLink}
+              onPress={() => Linking.openURL("https://www.iubenda.com/privacy-policy/7826140")}>
+          {" Privacy Policy"}
+        </Text>
+      </Text>
+    
+    </View>
+  }
+  
+  
+}
+;
 
 // Container
 const mutation = gql`

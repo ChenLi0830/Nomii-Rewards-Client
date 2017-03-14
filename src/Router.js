@@ -10,10 +10,12 @@ import PromoSuccess from './components/PromoSuccess';
 import {RewardScreen} from './components/common';
 // import PanAnimation from './components/animations/PanAnimation';
 // import AnimatableExample from './components/animations/AnimatableExample';
-// import LottieAnimatedExample from './components/animations/lottie/LottieAnimatedExample';
+// import LottieAnimatedExample from './components/playgound/lottie/LottieAnimatedExample';
+import LottieAnimatedExample from './components/playgound/lottie/SimpleExample';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
 import LocationComponent from './components/playgound/Location';
+import SimpleExampleNomii from './components/playgound/lottie/SimpleExampleNomii';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -41,21 +43,20 @@ const styles = StyleSheet.create({
 const RouterComponent = () => {
   return <Router>
     <Scene key="auth" hideNavBar initial>
+      {/*<Scene key="lottie" component={SimpleExampleNomii} />*/}
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       {/*<Scene key="location" component={LocationComponent}/>*/}
       <Scene key="login" component={Main} title="Login" initial/>
     </Scene>
     
-    <Scene key="intro" hideNavBar>
+    <Scene key="intro" hideNavBar >
       <Scene key="swiper" component={Swiper} />
+      <Scene key="promoCode" component={PromoCode} />
+      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" direction="vertical" type="reset">
-      <Scene key="promoCode" component={PromoCode}
-             direction="vertical" hideNavBar initial/>
-      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
-      
+    <Scene key="main" direction="vertical" type="reset" >
       <Scene key="home" component={Home} animation="fade" type="reset"
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
@@ -86,6 +87,9 @@ const RouterComponent = () => {
       <Scene key="reward" component={RewardScreen} hideNavBar
              direction="vertical" />
   
+      <Scene key="promoCode" component={PromoCode}
+             direction="vertical" hideNavBar/>
+      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
   </Router>;
 };
