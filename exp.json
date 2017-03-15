@@ -20,6 +20,7 @@
   },
   "facebookScheme": "fb1933027890253863",
   "android": {
-    "package": "com.nomii.rewards"
+    "package": "com.nomii.rewards",
+    "versionCode": 2,
   }
 }
