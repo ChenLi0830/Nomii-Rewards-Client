@@ -14,7 +14,7 @@ import Card from './common/Card';
 import {Components} from 'exponent';
 import {homeActions} from '../modules';
 import {connect} from 'react-redux';
-import {getUserQuery} from '../graphql/queries/user';
+import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
 
 const {width, height} = Dimensions.get('window');

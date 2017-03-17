@@ -7,7 +7,7 @@ import {Actions} from 'react-native-router-flux';
 import {Facebook} from 'exponent';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
-import {UpsertUserMutation} from '../graphql/mutations/user';
+import {UpsertUserMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 

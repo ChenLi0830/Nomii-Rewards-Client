@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
-import {UpsertUserMutation} from '../graphql/mutations/user';
+import {UpsertUserMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {connect} from'react-redux'
 import HomeCards from './HomeCards';
