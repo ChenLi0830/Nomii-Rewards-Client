@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {inputPinActions} from '../modules';
 import {Modal} from './common';
 import gql from 'graphql-tag';
+import {userStampCardMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 
 const {width, height} = Dimensions.get("window");
@@ -78,6 +79,7 @@ class InputPinScreen extends Component {
       const variables = {
         userId: this.props.userId,
         cardId: card.id,
+        PIN: text,
       };
       
       this.props.onSubmitPin(card, this.props.mutate, variables);
@@ -123,21 +125,8 @@ class InputPinScreen extends Component {
 }
 
 // Container
-const mutation = gql`
-  mutation StampCard($userId: ID, $cardId: ID, $pin: String){
-    stampCard(userId: $userId, cardId: $cardId, pin: $pin){
-      id,
-      fbName,
-      cards{
-        id,
-        stampCount,
-        lastStampAt
-      }
-    }
-  }
-`;
 
-const InputPinWithGraphQL = graphql(mutation)(InputPinScreen);
+const InputPinWithGraphQL = graphql(userStampCardMutation)(InputPinScreen);
 
 const mapStateToProps = (state) => {
   const {inputPin, user} = state;

@@ -33,7 +33,8 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
   // console.log("card", card);
   return (dispatch, getState) => {
     Toast.loading('Loading...', 0);
-    stampCardMutation({variables: {...variables, pin:getState().inputPin.pin}})
+    console.log("variables", variables);
+    stampCardMutation({variables: {...variables}})
         .then(result =>{
           Toast.hide();
         
@@ -45,9 +46,9 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
         })
         .catch(err => {
           Toast.hide();
-          // console.log("error", err);
+          // console.log(err.graphQLErrors[0].message)
           //Todo display error message rather than always display 'invalid pin'
-          dispatch(submitPinFailed("Invalid Pin"));
+          dispatch(submitPinFailed(err.graphQLErrors[0].message));
         });
   }
 };

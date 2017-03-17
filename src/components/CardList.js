@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {homeActions} from '../modules';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
+import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 
 const {width, height} = Dimensions.get("window");
 
@@ -13,6 +14,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: "#ececec",
   },
   list: {
     marginTop: 74,
@@ -24,17 +26,20 @@ const styles = StyleSheet.create({
 });
 
 const CardList = (props) => {
-  const renderRow = (cardEdge) => {
+  console.log("props", props);
+  
+  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  const dataSource = ds.cloneWithRows(props.data.loading ? [] : props.data.allRestaurantCards);
+  
+  const renderRow = (card) => {
     return (
         <TouchableOpacity TouchableOpacity style={{paddingHorizontal: 10}} activeOpacity={0.9}
-                          onPress={() => props.pressCard(cardEdge)}>
-          <Card {...cardEdge} />
+                          onPress={() => props.pressCard(card)}>
+          <Card {...card} />
         </TouchableOpacity>
     )
   };
   
-  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-  const dataSource = ds.cloneWithRows(props.data.loading ? [] : props.data.edgesOfAllCards);
   
   return <View style={styles.wrapper}>
     <ListView dataSource={dataSource}
@@ -47,22 +52,8 @@ const CardList = (props) => {
 }
 
 // Container
-const query = gql`
-query getAllCardEdges($userId: ID){
-  edgesOfAllCards(userId: $userId){
-    id,
-    stampCount,
-    lastStampAt,
-    card{
-      name,
-      id,
-      imageURL
-    }
-  }
-}
-`;
 
-const CardListWithGraphQL = graphql(query, {
+const CardListWithGraphQL = graphql(getAllRestaurantCardsQuery, {
   options: (ownProps) => ({variables: {userId: ownProps.userId}}),
 })(CardList);
 

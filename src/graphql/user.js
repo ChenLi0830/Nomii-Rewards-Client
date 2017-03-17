@@ -33,10 +33,14 @@ query getUser($id:ID){
 			id
       stampCount,
       lastStampAt,
-      # restaurant{
-      #   name,
-      #   imageURL
-      # }
+      restaurant{
+        id
+        name,
+        imageURL,
+        longitude,
+        latitude,
+        description,
+      }
     },
     redeemedCoupons{
       redeemedAt,
@@ -48,5 +52,19 @@ query getUser($id:ID){
 }
 `;
 
+const userStampCardMutation = gql`
+mutation userStampCard($userId: ID, $cardId: ID, $PIN: String){
+  stampCard(userId: $userId, cardId: $cardId, PIN: $PIN){
+    id,
+    fbName,
+    cards{
+      id,
+      stampCount,
+      lastStampAt
+    }
+  }
+}
 
-export {UpsertUserMutation, getUserQuery};
+`;
+
+export {UpsertUserMutation, getUserQuery, userStampCardMutation};

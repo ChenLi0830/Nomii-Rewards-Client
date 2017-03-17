@@ -69,8 +69,8 @@ const renderDistance = (distance) => {
   else return `${Math.ceil(distance)} m`
 };
 
-const Card = ({id, stampCount, lastStampAt, card}) => {
-  const {name, imageURL, longitude, latitude} = card;
+const Card = ({id, stampCount, lastStampAt, restaurant}) => {
+  const {name, imageURL, longitude, latitude} = restaurant;
   
   return <View style={styles.box} >
     <View style={styles.storeRow}>
