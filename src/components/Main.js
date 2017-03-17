@@ -172,10 +172,7 @@ class Main extends Component {
     
     </View>
   }
-  
-  
 }
-;
 
 // Container
 const MainWithGraphQL = graphql(UpsertUserMutation)(Main);

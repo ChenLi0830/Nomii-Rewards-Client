@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Platform} from 'react-native';
+import {AsyncStorage, Platform, StatusBar} from 'react-native';
 import Router from './Router';
 // import {Provider} from 'react-redux';
 import {ApolloProvider} from 'react-apollo';
 import {client} from './modules/apollo';
 import store from './modules';
-import { setCustomText, setCustomTextInput } from 'react-native-global-props';
+import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 
 // Set global fonts for Text component
 const customTextProps = {
@@ -21,12 +21,17 @@ const customTextInputProps = {
 
 setCustomText(customTextProps);
 setCustomTextInput(customTextInputProps);
+StatusBar.setBarStyle('dark-content', true);
 
 class App extends Component {
-
+  constructor(props){
+    super(props);
+  }
+  
   render() {
+    // console.log("App this.props.fbUser", this.props.fbUser);
     return <ApolloProvider store={store} client={client}>
-      <Router/>
+      <Router fbUser={this.props.fbUser}/>
     </ApolloProvider>;
   }
 }

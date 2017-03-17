@@ -40,14 +40,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const RouterComponent = () => {
+const RouterComponent = ({fbUser}) => {
+  // console.log("RouterComponent fbUser", fbUser);
   return <Router>
-    <Scene key="auth" hideNavBar initial>
+    <Scene key="auth" hideNavBar>
       {/*<Scene key="lottie" component={SimpleExampleNomii} />*/}
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       {/*<Scene key="location" component={LocationComponent}/>*/}
-      <Scene key="login" component={Main} title="Login" initial/>
+      <Scene key="login" component={Main} title="Login" initial={!fbUser}/>
     </Scene>
     
     <Scene key="intro" hideNavBar >
@@ -56,11 +57,11 @@ const RouterComponent = () => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" direction="vertical" type="reset" >
+    <Scene key="main" direction="vertical" type="reset" initial={!!fbUser}>
       <Scene key="home" component={Home} animation="fade" type="reset"
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
-             onLeft={()=>{Actions.promoCode()}}
+             onLeft={()=>{Actions.promoCode()}} fbUser={fbUser}
              rightButtonImage={require('../public/images/insight-icon.png')}
              onRight={()=>{
                Alert.alert(
