@@ -1,5 +1,5 @@
 import Exponent from 'exponent';
 import React from 'react';
-import App from './src/App';
+import AppPreload from './src/AppPreload';
 
-Exponent.registerRootComponent(App);
+Exponent.registerRootComponent(AppPreload);
