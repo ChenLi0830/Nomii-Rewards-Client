@@ -7,7 +7,7 @@ import {Actions} from 'react-native-router-flux';
 import {Facebook} from 'exponent';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
-import gql from 'graphql-tag';
+import {UpsertUserMutation} from '../graphql/mutations/user';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 
@@ -80,7 +80,6 @@ const upsertUser = async(token, expires, props) => {
   });
   
   Toast.hide();
-  
   return user;
 };
 
@@ -90,19 +89,21 @@ const facebookLogin = async(props) => {
         permissions: ['public_profile'],
         behavior: __DEV__ ? "web" : "browser",
       });
+  
+  // console.log("type, token, expires", type, token, expires);
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
     const upsertResult = await upsertUser(token, expires, props);
     const user = upsertResult.data.upsertUser;
   
-    console.log("user", user);
-    console.log("user.cards", user.cards);
+    // console.log("user", user);
+    // console.log("user.cards", user.cards);
     if (user.cards && user.cards.length>0) {
-      console.log("Actions.main();");
+      // console.log("Actions.main();");
       Actions.main();
     }
     else {
-      console.log("Actions.intro();");
+      // console.log("Actions.intro();");
       Actions.intro();
     }
   } else {
@@ -121,23 +122,6 @@ const login = async(props) => {
 };
 
 class Main extends Component {
-  componentDidMount() {
-    (async() => { // Immediately invoked function
-      // await AsyncStorage.removeItem("@NomiiStore:token");
-      
-      const value = await AsyncStorage.getItem("@NomiiStore:token");
-      if (value !== null) {// Found token
-        // console.log(value);
-        const {token, expires} = JSON.parse(value);
-        console.log(token, expires);
-        if (new Date().getTime() < expires * 1000) {
-          await upsertUser(token, expires, this.props);
-          Actions.main();
-        }
-      }
-    })()
-  }
-  
   render() {
     return <View style={styles.view}>
       
@@ -194,25 +178,7 @@ class Main extends Component {
 ;
 
 // Container
-const mutation = gql`
-  mutation UpsertUser($id: ID, $fbName: String){
-    upsertUser(id: $id, fbName: $fbName){
-      id,
-      fbName,
-      cards{
-        id
-        stampCount,
-        lastStampAt,
-        card{
-          name,
-          imageURL,
-        }
-      }
-    }
-  }
-`;
-
-const MainWithGraphQL = graphql(mutation)(Main);
+const MainWithGraphQL = graphql(UpsertUserMutation)(Main);
 
 const mapDispatchToProps = (dispatch) => {
   return {
