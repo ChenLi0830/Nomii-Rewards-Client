@@ -4,6 +4,7 @@ import {Button} from './common';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {promoActions} from '../modules';
+import {redeemCouponMutation} from '../graphql/coupon';
 import {Actions} from 'react-native-router-flux';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
@@ -69,6 +70,7 @@ const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, use
     console.log("userId", userId);
     const variables = {
       userId: userId,
+      code: code
     };
     userSubmitPromo(mutate, variables);
   };
@@ -83,7 +85,7 @@ const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, use
           style={styles.inputText}
           autoCorrect={false}
           autoFocus
-          maxLength={6}
+          maxLength={10}
           autoCapitalize="none"
           //placeholder="Promo Code"
           value={code}
@@ -110,21 +112,7 @@ const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, use
 };
 
 //Container
-const mutation = gql`
-mutation redeemPromo($userId: ID, $code: String) {
-  redeemPromo(userId: $userId, code: $code){
-    fbName,
-    id,
-    cards{
-      id,
-      stampCount,
-      lastStampAt
-    }
-  }
-}
-`;
-
-const PromoCodeWithGraphQL = graphql(mutation)(PromoCode);
+const PromoCodeWithGraphQL = graphql(redeemCouponMutation)(PromoCode);
 
 const mapStateToProps = (state) => {
   const {promoCode} = state;

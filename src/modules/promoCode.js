@@ -36,7 +36,7 @@ export const userSubmitPromo = (redeemPromoMutation, variables) => {
       
       // if (getState().promoCode.code === "code") {
     Toast.loading('Loading...', 0);
-    redeemPromoMutation({variables: {...variables, code: getState().promoCode.code}})
+    redeemPromoMutation({variables: {...variables}})
         .then(result => {
           Toast.hide();
           dismissKeyboard();
@@ -46,8 +46,7 @@ export const userSubmitPromo = (redeemPromoMutation, variables) => {
         .catch(err => {
           Toast.hide();
           // console.log("error", err);
-          //Todo display error message rather than always display 'invalid code'
-          dispatch(submitPromoFailed("Invalid Code"));
+          dispatch(submitPromoFailed(err.graphQLErrors[0].message));
         });
   }
 };

@@ -47,7 +47,6 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
         .catch(err => {
           Toast.hide();
           // console.log(err.graphQLErrors[0].message)
-          //Todo display error message rather than always display 'invalid pin'
           dispatch(submitPinFailed(err.graphQLErrors[0].message));
         });
   }

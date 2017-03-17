@@ -50,6 +50,7 @@ class AppPreloading extends React.Component {
   
   async fetchUser() {
     try {
+      // await AsyncStorage.removeItem("@NomiiStore:token");
       const value = await AsyncStorage.getItem("@NomiiStore:token");
       if (value !== null) {// Found token
         // console.log(value);
