@@ -65,18 +65,25 @@ const styles = StyleSheet.create({
 });
 
 const renderDistance = (distance) => {
-  if (distance > 1000) return `${Math.floor(distance/1000)} km`;
-  else return `${Math.ceil(distance)} m`
+  if (distance > 10 * 1000) return `> 10km`;
+  
+  let unit = "m";
+  if (distance > 1000) {
+    distance = (distance/1000).toFixed(1);
+    unit = "km";
+  }
+  
+  return `${distance}${unit}`
 };
 
-const Card = ({id, stampCount, lastStampAt, restaurant}) => {
+const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
   const {name, imageURL, longitude, latitude} = restaurant;
   
   return <View style={styles.box} >
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
         <Text style={styles.name}>{name}</Text>
-        {/*<Text style={styles.distance}>{renderDistance(distance)}</Text>*/}
+        <Text style={styles.distance}>{renderDistance(distance)}</Text>
       </View>
       <View style={styles.storeLogoColumn}>
         <Image resizeMode={Image.resizeMode.contain}

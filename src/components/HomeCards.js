@@ -16,6 +16,7 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
+import {calculateCardsWithDistances} from './api';
 
 const {width, height} = Dimensions.get('window');
 
@@ -108,7 +109,10 @@ const getUserCards = (props) => {
 };
 
 const hasCardsContent = (props, userCards) => {
-  const cards = userCards.map(card =>
+  let sortedCards = calculateCardsWithDistances(userCards, props.location);
+  // console.log("sortedCards", sortedCards);
+  
+  const cards = sortedCards.map(card =>
       <TouchableOpacity style={{paddingHorizontal: 10}} key={card.id}
                         activeOpacity={0.5} onPress={() => props.pressCard(card)}>
         <Card {...card} />
@@ -133,7 +137,7 @@ const hasCardsContent = (props, userCards) => {
 };
 
 const HomeCards = (props) => {
-  // console.log(props);
+  console.log(props);
   if (props.data.loading) {
     // Toast.loading('Loading...', 0);
     return <View></View>;
@@ -156,7 +160,6 @@ const HomeCards = (props) => {
   </View>
 };
 
-
 // Container
 
 const HomeCardsWithGraphQL = graphql(getUserQuery, {
@@ -168,6 +171,7 @@ const mapStateToProps = (state) => {
   return {
     showModal: state.home.showModal,
     userId: state.user.id,
+    location: state.user.location,
   }
 };
 

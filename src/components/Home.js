@@ -5,6 +5,7 @@ import {graphql} from 'react-apollo';
 import {connect} from'react-redux'
 import HomeCards from './HomeCards';
 import {userActions} from '../modules';
+import Expo from 'exponent';
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,29 +29,52 @@ class Home extends Component{
     console.log("props", this.props);
   }
   
-  componentWillMount(){
+  async upsertUser(){
+    try{
+      const {id, name} = this.props.fbUser;
+    
+      const user = await this.props.mutate({
+        variables: {
+          id: id,
+          fbName: name,
+        }
+      });
+    
+      this.props.updateUserId(id);
+    }
+    catch(err){
+      console.log("err", err);
+      // Todo handle network connection error
+    }
+  }
+  
+  async askLocationPermission(){
+    const { Location, Permissions } = Expo;
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    // console.warn("status",status);
+    if (status === 'granted') {
+      const options = {
+        enableHighAccuracy: true,
+        // timeInterval: 5000,
+        // distanceInterval: 5
+      };
+      
+      Location.watchPositionAsync(options, (updateResult) => {
+        console.log("updateResult", updateResult);
+        this.props.updateUserLocation(updateResult.coords);
+      });
+    } else {
+      throw new Error('Location permission not granted');
+    }
+  }
+  
+  async componentWillMount(){
     //Upsert user
-    (async () => {
-      try{
-        const {id, name} = this.props.fbUser;
-        
-        const user = await this.props.mutate({
-          variables: {
-            id: id,
-            fbName: name,
-          }
-        });
-        
-        this.props.updateUserId(id);
-        
-        this.setState({isReady: true});
-        // console.log("upsert finished user", user);
-      }
-      catch(err){
-        console.log("err", err);
-        // Todo handle network connection error
-      }
-    })()
+    const promises = [this.askLocationPermission(), this.upsertUser()];
+    let results = await Promise.all(promises);
+    // console.warn("results", results);
+    this.setState({location: results[0], isReady: true});
+    // console.log("upsert finished user", user);
   }
   
   render(){
@@ -68,7 +92,8 @@ const HomeWithMutation = graphql(UpsertUserMutation)(Home);
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUserId: (id) => dispatch(userActions.updateUserId(id))
+    updateUserId: (id) => dispatch(userActions.updateUserId(id)),
+    updateUserLocation: (location) => dispatch(userActions.updateUserLocation(location)),
   }
 };
 
