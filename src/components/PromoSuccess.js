@@ -35,7 +35,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoSuccess = () => {
+const PromoSuccess = ({redeemedCoupons}) => {
+  let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
+  if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
+  
   return (
       <View style={styles.slide}>
         <Image resizeMode="contain"
@@ -45,7 +48,7 @@ const PromoSuccess = () => {
         <Text style={styles.title}>
           SUCCESS!!
           {'\n'}
-          You unlocked 5% off at all restaurants on your 1st visit
+          {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
         </Text>
         
         <Button style={styles.button} type="primary" onPress={() => Actions.home()}>AWESOME!</Button>

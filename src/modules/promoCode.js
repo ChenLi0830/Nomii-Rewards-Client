@@ -38,9 +38,10 @@ export const userSubmitPromo = (redeemPromoMutation, variables) => {
     Toast.loading('Loading...', 0);
     redeemPromoMutation({variables: {...variables}})
         .then(result => {
+          // console.log("redeem coupon result", result);
           Toast.hide();
           dismissKeyboard();
-          Actions.promoSuccess();
+          Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
           dispatch(userChangedScreen());
         })
         .catch(err => {

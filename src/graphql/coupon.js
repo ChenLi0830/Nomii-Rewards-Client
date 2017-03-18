@@ -21,6 +21,11 @@ mutation redeemPromo($userId:ID, $code:String){
       id,
       stampCount,
       lastStampAt,
+    },
+    redeemedCoupons{
+     	redeemedAt,
+      couponCode,
+      restaurantName
     }
   }
 }
