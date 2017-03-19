@@ -45,14 +45,14 @@ const styles = StyleSheet.create({
 
 
 const RouterComponent = ({user}) => {
-  console.log("RouterComponent user", user);
+  // console.log("RouterComponent user", user);
   return <Router>
-    <Scene key="auth" hideNavBar>
+    <Scene key="auth" hideNavBar initial={!user}>
       {/*<Scene key="lottie" component={SimpleExampleNomii} />*/}
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       {/*<Scene key="location" component={LocationComponent}/>*/}
-      <Scene key="login" component={Main} title="Login" initial={!user}/>
+      <Scene key="login" component={Main} title="Login" />
     </Scene>
     
     <Scene key="intro" hideNavBar >
@@ -66,7 +66,7 @@ const RouterComponent = ({user}) => {
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              onLeft={()=>{Actions.promoCode()}}
-             rightButtonImage={user.ownedRestaurants.length > 0 ? require('../public/images/insight-icon.png') : null}
+             rightButtonImage={(user && user.ownedRestaurants.length > 0) ? require('../public/images/insight-icon.png') : null}
              onRight={()=>Actions.statistics()}
              renderTitle={() => <NavBarLogo/>} />
       
@@ -87,11 +87,15 @@ const RouterComponent = ({user}) => {
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
       
-      <Scene key="statistics" direction="vertical" navigationBarStyle={styles.homeNavBar}>
-        <Scene key="stat" component={ShowStats} title="Report"
+      <Scene key="statistics" direction="vertical"  type="reset" initial>
+        <Scene key="stat" component={ShowStats} title="Report" initial
                leftButtonImage={require('../public/images/ic_close_white_48pt.png')}
+               navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
+               ownedRestaurant = {user && user.ownedRestaurants[0]}
                onLeft={()=>{Actions.home()}}/>
-        <Scene key="assignPin" component={AssignPIN} title="Assign PIN"/>
+        
+        <Scene key="assignPin" component={AssignPIN} title="Assign PIN"
+               navigationBarStyle={styles.homeNavBar}/>
       </Scene>
       
     </Scene>

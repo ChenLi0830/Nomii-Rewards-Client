@@ -20,4 +20,9 @@ const calculateCardsWithDistances = (cards, userLocation) => {
   return _.sortBy(cardsWithDistances, card => card.distance);
 };
 
-export {calculateCardsWithDistances};
+
+const getTimeInSec = () => {
+  return Math.trunc(new Date().getTime()/1000);
+};
+
+export {calculateCardsWithDistances, getTimeInSec};
