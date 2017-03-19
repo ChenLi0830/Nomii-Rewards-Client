@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     // paddingVertical: height * 0.1,
   },
   userInfo:{
-    flex: 1,
+    flex: 2,
     // backgroundColor: "yellow",
     flexDirection: "row",
   },
