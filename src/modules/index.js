@@ -6,6 +6,7 @@ import * as promoActions from './promoCode';
 import * as inputPinActions from './inputPin';
 import * as homeActions from './home';
 import * as userActions from './user';
+import * as createPinActions from './createPin';
 import {client} from './apollo';
 import { composeWithDevTools } from 'remote-redux-devtools';
 
@@ -23,4 +24,4 @@ const store = createStore(reducer, /* preloadedState, */ composeWithDevTools(
 
 export default store;
 
-export {promoActions, inputPinActions, homeActions, userActions};
+export {promoActions, inputPinActions, homeActions, userActions, createPinActions};

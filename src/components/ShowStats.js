@@ -156,7 +156,8 @@ const ShowStats = (props) => {
               {PINList}
             </View>
   
-            <Button style={styles.button} type="primary" onPress={() => Actions.assignPin()}>
+            <Button style={styles.button} type="primary"
+                    onPress={() => Actions.assignPin({restaurant:props.data.restaurant})}>
               ADD NEW PIN
             </Button>
           </View>
