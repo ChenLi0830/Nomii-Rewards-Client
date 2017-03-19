@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: "#ececec",
+    // backgroundColor: "#ececec",
   },
   list: {
     marginTop: 74,
