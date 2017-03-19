@@ -91,7 +91,7 @@ const RouterComponent = ({user}) => {
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
       
-      <Scene key="statistics" direction="vertical" type="reset" initial>
+      <Scene key="statistics" direction="vertical" type="reset">
         <Scene key="stat" component={ShowStats} title="Report"
                leftButtonImage={require('../public/images/close-button.png')}
                navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}

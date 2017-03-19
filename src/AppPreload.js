@@ -41,6 +41,13 @@ class AppPreloading extends React.Component {
     const images = [
       require('../public/images/1st-circle-check.png'),
       require('../public/images/big-check.png'),
+      require('../public/images/promo.png'),
+      require('../public/images/insight-icon.png'),
+      require('../public/images/card-icons-onboarding.png'),
+      require('../public/images/nomii-offers-login.png'),
+      require('../public/images/Hand-over-icon-onboarding.png'),
+      require('../public/images/reward-icon-onboarding.png'),
+      require('../public/images/slogan.png'),
     ];
     for (let image of images) {
       await Asset.fromModule(image).downloadAsync();
