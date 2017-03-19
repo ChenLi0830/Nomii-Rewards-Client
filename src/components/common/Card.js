@@ -77,7 +77,8 @@ const renderDistance = (distance) => {
 };
 
 const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
-  const {name, imageURL, longitude, latitude} = restaurant;
+  console.log("restaurant", restaurant);
+  const {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   
   return <View style={styles.box} >
     <View style={styles.storeRow}>
@@ -100,7 +101,7 @@ const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
     </View>
     
     <View style={styles.discountRow}>
-      <ProgressBar index={stampCount % 3} expireAt={parseInt(lastStampAt) + 7 * 24 * 3600 * 1000}/>
+      <ProgressBar index={stampCount % 3} expireAt={parseInt(lastStampAt) + stampValidDays * 24 * 3600}/>
     </View>
   </View>
 };

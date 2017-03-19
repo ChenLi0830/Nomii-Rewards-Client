@@ -23,6 +23,7 @@ query getRestaurant($restaurantId: ID){
     longitude,
     latitude,
     description,
+    stampValidDays,
   }
 }
 `;
@@ -38,6 +39,7 @@ query getAllRestaurantCards($userId: ID){
       name,
       imageURL,
       description,
+      stampValidDays,
       longitude,
       latitude,
     }

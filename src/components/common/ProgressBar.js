@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 import Dash from 'react-native-dash';
+import { getTimeInSec } from '../api';
 
 const checkedImage = require("../../../public/images/circle-1 check.png");
 const emptyImage = require("../../../public/images/circle-empty-highlight 2.png");
@@ -117,7 +118,7 @@ const ProgressBar = ({index, expireAt}) => {
     {color: index === 2 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
   ];
   
-  const daysLeft = Math.ceil((expireAt - new Date())/(1000 * 3600 * 24));
+  const daysLeft = Math.ceil((expireAt - getTimeInSec())/(3600 * 24));
   const expirationText = daysLeft > 1 ? `${daysLeft} days left` : `${daysLeft} day left`;
   const expirationIsInvalid = isNaN(daysLeft) || daysLeft < 0;
   

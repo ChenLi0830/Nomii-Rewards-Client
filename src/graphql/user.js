@@ -18,6 +18,7 @@ mutation upsertUser($id:ID, $fbName: String){
         longitude,
         latitude
         description,
+        stampValidDays,
       }
     },
     ownedRestaurants
@@ -41,6 +42,7 @@ query getUser($id:ID){
         longitude,
         latitude,
         description,
+        stampValidDays,
       }
     },
     redeemedCoupons{
