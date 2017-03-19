@@ -89,7 +89,11 @@ const removePIN = (mutate, restaurantId, code) => {
   mutate({variables: {...variables}})
       .then(result => {
         Toast.hide();
-      });
+      })
+      .catch(error => {
+        // console.log("error", error);
+        Toast.fail("Something is wrong\nPlease try again", 2);
+      })
 };
 
 const removePINAlert = (mutate, restaurantId, code) => {

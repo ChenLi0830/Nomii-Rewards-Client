@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     height: 60,
     fontSize: 25,
-    color: "#3498DB",
+    color: "#585858",
   },
   button: {
     // marginTop: Platform.OS === "ios" ? -30 : 0,
@@ -69,6 +69,10 @@ const createNewPIN = (props) => {
       })
       .then(()=>{
         setTimeout(()=>props.createEmployeeSuccess(), 1500);
+      })
+      .catch(error => {
+        // console.log("error", error);
+        Toast.fail("Something is wrong\nPlease try again", 2);
       })
 };
     

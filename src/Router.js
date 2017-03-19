@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "600",
     fontSize: 16,
+  },
+  navTitle:{
+    fontSize: 18,
+    fontWeight: "600",
   }
 });
 
@@ -87,15 +91,15 @@ const RouterComponent = ({user}) => {
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
       
-      <Scene key="statistics" direction="vertical"  type="reset" initial>
-        <Scene key="stat" component={ShowStats} title="Report" initial
+      <Scene key="statistics" direction="vertical" type="reset" initial>
+        <Scene key="stat" component={ShowStats} title="Report"
                leftButtonImage={require('../public/images/close-button.png')}
                navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
-               ownedRestaurant = {user && user.ownedRestaurants[0]}
+               ownedRestaurant = {user && user.ownedRestaurants[0]} titleStyle={styles.navTitle}
                onLeft={()=>{Actions.home()}}/>
         
         <Scene key="assignPin" component={AssignPIN} title="Assign PIN"
-               navigationBarStyle={styles.homeNavBar}/>
+               navigationBarStyle={styles.homeNavBar} titleStyle={styles.navTitle}/>
       </Scene>
       
     </Scene>

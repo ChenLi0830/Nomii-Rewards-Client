@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 });
 
 const logo = () => {
-  return <Image animation="slideInDown" duration={500} delay={300} style={styles.logo}
+  return <Image animation="slideInDown" duration={100} delay={0} style={styles.logo}
                 resizeMode="contain"
                 source={require("../../public/images/nomii-offers-login.png")}/>;
 };
