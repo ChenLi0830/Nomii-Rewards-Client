@@ -3,11 +3,14 @@ import {StyleSheet, Platform, Alert} from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import Main from './components/Main';
 import Swiper from './components/Swiper';
-import Home from './components/Home';
+import HomeCards from './components/HomeCards';
 import CardList from './components/CardList';
 import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
 import {RewardScreen} from './components/common';
+import AssignPIN from './components/AssignPIN'
+import ShowStats from './components/ShowStats';
+
 // import PanAnimation from './components/animations/PanAnimation';
 // import AnimatableExample from './components/animations/AnimatableExample';
 // import LottieAnimatedExample from './components/playgound/lottie/LottieAnimatedExample';
@@ -40,15 +43,16 @@ const styles = StyleSheet.create({
   }
 });
 
-const RouterComponent = ({fbUser}) => {
-  // console.log("RouterComponent fbUser", fbUser);
+
+const RouterComponent = ({user}) => {
+  console.log("RouterComponent user", user);
   return <Router>
     <Scene key="auth" hideNavBar>
       {/*<Scene key="lottie" component={SimpleExampleNomii} />*/}
       {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
       {/*<Scene key="animated" component={AnimatableExample} />*/}
       {/*<Scene key="location" component={LocationComponent}/>*/}
-      <Scene key="login" component={Main} title="Login" initial={!fbUser}/>
+      <Scene key="login" component={Main} title="Login" initial={!user}/>
     </Scene>
     
     <Scene key="intro" hideNavBar >
@@ -57,22 +61,13 @@ const RouterComponent = ({fbUser}) => {
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
     </Scene>
     
-    <Scene key="main" direction="vertical" type="reset" initial={!!fbUser}>
-      <Scene key="home" component={Home} animation="fade" type="reset"
+    <Scene key="main" direction="vertical" type="reset" initial={!!user}>
+      <Scene key="home" component={HomeCards} animation="fade" type="reset"
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
-             onLeft={()=>{Actions.promoCode()}} fbUser={fbUser}
-             rightButtonImage={require('../public/images/insight-icon.png')}
-             onRight={()=>{
-               Alert.alert(
-                   'Not Authorized',
-                   'You are not authorized to use this feature',
-                   [
-                     {text: 'OK', onPress: () => {}},
-                   ],
-                   { cancelable: false }
-               )
-             }}
+             onLeft={()=>{Actions.promoCode()}}
+             rightButtonImage={user.ownedRestaurants.length > 0 ? require('../public/images/insight-icon.png') : null}
+             onRight={()=>Actions.statistics()}
              renderTitle={() => <NavBarLogo/>} />
       
       <Scene key="cardList" component={CardList}
@@ -91,8 +86,18 @@ const RouterComponent = ({fbUser}) => {
       <Scene key="promoCode" component={PromoCode}
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
+      
+      <Scene key="statistics" direction="vertical" navigationBarStyle={styles.homeNavBar}>
+        <Scene key="stat" component={ShowStats} title="Report"
+               leftButtonImage={require('../public/images/ic_close_white_48pt.png')}
+               onLeft={()=>{Actions.home()}}/>
+        <Scene key="assignPin" component={AssignPIN} title="Assign PIN"/>
+      </Scene>
+      
     </Scene>
   </Router>;
 };
 //, justifyContent: "flex-end", flexDirection: "column"
+
+
 export default RouterComponent;

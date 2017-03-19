@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
-import {UpsertUserMutation} from '../graphql/user';
+import {UpsertUserMutation} from './graphql/user';
 import {graphql} from 'react-apollo';
 import {connect} from'react-redux'
-import HomeCards from './HomeCards';
-import {userActions} from '../modules';
+import {userActions} from './modules';
 import Expo from 'exponent';
-
-const {width, height} = Dimensions.get('window');
+import Router from './Router';
 
 const styles = StyleSheet.create({
   scrollList:{
@@ -19,28 +17,34 @@ const styles = StyleSheet.create({
   },
 });
 
-class Home extends Component{
+class RouterWrapper extends Component{
   state = {
     isReady: false,
   };
   
   constructor(props){
     super(props);
-    console.log("props", this.props);
+    console.log("RouterWrapper props", this.props);
   }
   
   async upsertUser(){
     try{
+      if (!this.props.fbUser) return null;
+      
       const {id, name} = this.props.fbUser;
-    
+      
       const user = await this.props.mutate({
         variables: {
           id: id,
           fbName: name,
         }
       });
-    
+  
       this.props.updateUserId(id);
+      // console.log("user", user);
+      return user.data.upsertUser;
+      
+      
     }
     catch(err){
       console.log("err", err);
@@ -55,8 +59,8 @@ class Home extends Component{
     if (status === 'granted') {
       const options = {
         enableHighAccuracy: true,
-        // timeInterval: 5000,
-        // distanceInterval: 5
+        timeInterval: 5000,
+        distanceInterval: 5
       };
       
       Location.watchPositionAsync(options, (updateResult) => {
@@ -73,7 +77,7 @@ class Home extends Component{
     const promises = [this.askLocationPermission(), this.upsertUser()];
     let results = await Promise.all(promises);
     // console.warn("results", results);
-    this.setState({location: results[0], isReady: true});
+    this.setState({isReady: true, user: results[1]});
     // console.log("upsert finished user", user);
   }
   
@@ -83,12 +87,12 @@ class Home extends Component{
       return <View></View>;
     }
     
-    return <HomeCards/>
+    return <Router user = {this.state.user}/>
   }
 }
 
 // Container
-const HomeWithMutation = graphql(UpsertUserMutation)(Home);
+const RouterWrapperWithMutation = graphql(UpsertUserMutation)(RouterWrapper);
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -97,4 +101,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(null, mapDispatchToProps)(HomeWithMutation);
+export default connect(null, mapDispatchToProps)(RouterWrapperWithMutation);
+

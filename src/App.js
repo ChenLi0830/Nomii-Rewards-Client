@@ -5,6 +5,8 @@ import Router from './Router';
 import {ApolloProvider} from 'react-apollo';
 import {client} from './modules/apollo';
 import store from './modules';
+import RouterWrapper from './RouterWrapper';
+
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 
 // Set global fonts for Text component
@@ -25,13 +27,14 @@ StatusBar.setBarStyle('dark-content', true);
 
 class App extends Component {
   constructor(props){
+    console.log("App props", props);
     super(props);
   }
   
   render() {
     // console.log("App this.props.fbUser", this.props.fbUser);
     return <ApolloProvider store={store} client={client}>
-      <Router fbUser={this.props.fbUser}/>
+      <RouterWrapper fbUser={this.props.fbUser}/>
     </ApolloProvider>;
   }
 }

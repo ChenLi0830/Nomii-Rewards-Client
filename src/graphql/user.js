@@ -19,7 +19,8 @@ mutation upsertUser($id:ID, $fbName: String){
         latitude
         description,
       }
-    }
+    },
+    ownedRestaurants
   }
 }
 `;
