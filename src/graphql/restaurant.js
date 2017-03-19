@@ -52,7 +52,8 @@ query getRestaurantStats($restaurantId: ID, $daysToCover: Float, $endTo: Int){
     PINs{
       code,
       employeeName,
-      usageCount
+      usageCount,
+      id
     }
     statistics(daysToCover: $daysToCover, endTo: $endTo){
       id,

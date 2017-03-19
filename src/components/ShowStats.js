@@ -95,11 +95,15 @@ const styles = StyleSheet.create({
 
 const ShowStats = (props) => {
   if (props.data.loading) return <View></View>
+  if (!props.data.restaurant) {
+    throw new Error("user doesn't own restaurant! props.data.restaurant", props.data.restaurant);
+    return <View></View>
+  }
   console.log("props.data.restaurant", props.data.restaurant);
-  const {PINs, statistics} = props.data.restaurant;
+  const {PINs, statistics, id} = props.data.restaurant;
   
   const PINList = PINs.map(PIN => {
-    return <EmployeePINItem key={PIN.code} {...PIN}/>
+    return <EmployeePINItem key={PIN.code} restaurantId={id} {...PIN}/>
   });
   
   return (

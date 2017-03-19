@@ -1,6 +1,9 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import { Tabs, WhiteSpace, SwipeAction } from 'antd-mobile';
+import {removePINMutation} from '../graphql/PIN';
+import {graphql} from 'react-apollo';
+import {Toast} from 'antd-mobile';
 
 const styles = StyleSheet.create({
   textWrapper: {
@@ -77,9 +80,21 @@ const calcInitials = (employeeName) => {
   return abbrev;
 };
 
-const EmployeePIN = ({code, employeeName, usageCount}) => {
+const removePIN = (mutate, restaurantId, code, data) => {
+  Toast.loading('Deleting...', 0);
+  const variables = {
+    restaurantId: restaurantId,
+    PIN: code,
+  };
+  mutate({variables: {...variables}})
+      .then(result => {
+        Toast.hide();
+      });
+};
+
+const EmployeePIN = ({code, employeeName, usageCount, mutate, restaurantId, data}) => {
   // console.log("EmployeePIN props", props);
-  console.log("code, employeeName, usageCount", code, employeeName, usageCount);
+  console.log("code, employeeName, usageCount restaurantId", code, employeeName, usageCount, restaurantId);
   const nameInitial = calcInitials(employeeName);
   
   return <View style={{flex: 1}}>
@@ -88,7 +103,7 @@ const EmployeePIN = ({code, employeeName, usageCount}) => {
         right={[
           {
             text: 'delete',
-            onPress: () => console.log('delete'),
+            onPress: () => removePIN(mutate, restaurantId, code, data),
             style: { backgroundColor: '#F50000', color: 'white' },
           },
         ]}
@@ -119,4 +134,4 @@ const EmployeePIN = ({code, employeeName, usageCount}) => {
 
 
 
-export default EmployeePIN;
+export default graphql(removePINMutation)(EmployeePIN);
