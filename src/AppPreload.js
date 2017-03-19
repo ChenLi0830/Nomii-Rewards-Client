@@ -18,7 +18,7 @@ class AppPreloading extends React.Component {
   
       const result = await Promise.all(promises);
       
-      console.log("Promise all result", result);
+      // console.log("Promise all result", result);
       
       this.setState({
         fbUser: result[0],
@@ -62,7 +62,7 @@ class AppPreloading extends React.Component {
       if (value !== null) {// Found token
         // console.log(value);
         const {token, expires} = JSON.parse(value);
-        console.log(token, expires);
+        // console.log(token, expires);
         
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
         const result = await response.json();
