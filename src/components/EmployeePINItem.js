@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Alert} from 'react-native';
 import { Tabs, WhiteSpace, SwipeAction } from 'antd-mobile';
 import {removePINMutation} from '../graphql/PIN';
 import {graphql} from 'react-apollo';
@@ -80,7 +80,7 @@ const calcInitials = (employeeName) => {
   return abbrev;
 };
 
-const removePIN = (mutate, restaurantId, code, data) => {
+const removePIN = (mutate, restaurantId, code) => {
   Toast.loading('Deleting...', 0);
   const variables = {
     restaurantId: restaurantId,
@@ -90,6 +90,18 @@ const removePIN = (mutate, restaurantId, code, data) => {
       .then(result => {
         Toast.hide();
       });
+};
+
+const removePINAlert = (mutate, restaurantId, code) => {
+  Alert.alert(
+      'Unassign Employee',
+      'Are you sure you want to remove this employee?',
+      [
+        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+        {text: 'Remove', onPress: () => removePIN(mutate, restaurantId, code), style: 'destructive'},
+      ],
+      { cancelable: false }
+  )
 };
 
 const EmployeePIN = ({code, employeeName, usageCount, mutate, restaurantId, data}) => {
@@ -103,7 +115,7 @@ const EmployeePIN = ({code, employeeName, usageCount, mutate, restaurantId, data
         right={[
           {
             text: 'delete',
-            onPress: () => removePIN(mutate, restaurantId, code, data),
+            onPress: () => removePINAlert(mutate, restaurantId, code, data),
             style: { backgroundColor: '#F50000', color: 'white' },
           },
         ]}
