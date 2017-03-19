@@ -89,7 +89,7 @@ const RouterComponent = ({user}) => {
       
       <Scene key="statistics" direction="vertical"  type="reset" initial>
         <Scene key="stat" component={ShowStats} title="Report" initial
-               leftButtonImage={require('../public/images/ic_close_white_48pt.png')}
+               leftButtonImage={require('../public/images/close-button.png')}
                navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
                ownedRestaurant = {user && user.ownedRestaurants[0]}
                onLeft={()=>{Actions.home()}}/>
