@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     marginTop: -height * 0.1,
-    width: width * 0.7,
+    width: width * 0.9,
   },
   image: {
     width: width * 0.6,
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   button: {
     width: width * 0.8,
     height: 40,
+    marginTop: 15,
     // marginTop: Platform.OS === "ios" ? -30 : 0,
     // bottom: Platform.OS === "ios" ? 10 : -40,
     // alignSelf: "center",
@@ -86,14 +87,16 @@ const noCardsContent = (
           {'\n'}
           Add a card to start
         </Text>
-        
-        <Image resizeMode="contain"
-               style={{width: width * 0.2, alignSelf: "center", marginTop: 15}}
-               source={require('../../public/images/down-arrow.png')}/>
       </View>
       
-      <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
-        CARDS</Button>
+      <View>
+        <Image resizeMode="contain"
+               style={{width: width * 0.2, alignSelf: "center", marginTop: 25}}
+               source={require('../../public/images/down-arrow.png')}/>
+        
+        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+          CARDS</Button>
+      </View>
     </View>
 );
 
