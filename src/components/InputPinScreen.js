@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
 class InputPinScreen extends Component {
   componentDidMount() {
-    setTimeout(() => this.props.toggleModal(), 500);
+    this.props.toggleModal();
   }
   
   onChangeText(text, card) {
@@ -88,6 +88,14 @@ class InputPinScreen extends Component {
     }
   };
   
+  toggleModal(){
+    this.props.toggleModal();
+    setTimeout(()=>{
+      // focus input text box
+      this.refs.input.focus();
+    }, 100);
+  }
+  
   render() {
     const {card, pin, message, showModal, toggleModal} = this.props;
     
@@ -95,7 +103,7 @@ class InputPinScreen extends Component {
       <Modal visible={showModal}
              image={require("../../public/images/Hand-over-icon.png")}
              text={"PASS PHONE TO STAFF\nCOLLECT STAMP"}
-             toggle={toggleModal}/>
+             toggle={() => {this.toggleModal()}}/>
       
       <View style={styles.view}>
         <Card {...card}/>
@@ -103,8 +111,8 @@ class InputPinScreen extends Component {
           Enter Restaurant PIN
         </Text>
         <View style={styles.inputBox}>
-          <TextInput style={styles.inputText} maxLength={4}
-                     autoFocus secureTextEntry={true}
+          <TextInput style={styles.inputText} maxLength={4} ref='input'
+                     secureTextEntry={true}
                      value={pin} onChangeText={(text) => this.onChangeText(text, card)}
                      underlineColorAndroid='rgba(0,0,0,0)'
                      keyboardType="numeric">

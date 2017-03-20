@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 const NomiiModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = {}}) => {
   
   return <Modal
-      animationType={"slide"}
+      animationType={"fade"}
       transparent={true}
       visible={visible}
       onRequestClose={() => toggle()}
