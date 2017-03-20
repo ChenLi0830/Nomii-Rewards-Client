@@ -57,12 +57,17 @@ class RouterWrapper extends Component{
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     // console.warn("status",status);
     if (status === 'granted') {
+      //Get instant location
+      const location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      this.props.updateUserLocation(location.coords);
+  
+      // Keep track of User's location
       const options = {
         enableHighAccuracy: true,
         timeInterval: 5000,
         distanceInterval: 5
       };
-      
+
       Location.watchPositionAsync(options, (updateResult) => {
         console.log("updateResult", updateResult);
         this.props.updateUserLocation(updateResult.coords);

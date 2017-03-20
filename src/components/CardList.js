@@ -29,9 +29,11 @@ const styles = StyleSheet.create({
 const CardList = (props) => {
   // console.log("props", props);
   // !props.data.loading && console.log("calculateCardsWithDistances(props.data.allRestaurantCards)", calculateCardsWithDistances(props.data.allRestaurantCards, props.location));
-  
+  if (!props.location) console.warn("props.location doesn't exist");
+    
+  let cardsSortedByDistance =  (props.data.loading) ?  [] : calculateCardsWithDistances(props.data.allRestaurantCards, props.location);
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-  const dataSource = ds.cloneWithRows(props.data.loading ? [] : calculateCardsWithDistances(props.data.allRestaurantCards, props.location));
+  const dataSource = ds.cloneWithRows(cardsSortedByDistance);
   
   const renderRow = (card) => {
     return (
