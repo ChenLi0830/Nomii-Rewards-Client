@@ -63,6 +63,11 @@ const styles = StyleSheet.create({
     // alignSelf: "center",
     borderWidth: 0,
   },
+  buttonHasContent:{
+    width: width * 0.8,
+    height: 40,
+    borderWidth: 0,
+  },
   bottom: {
     // position:absolute
   },
@@ -133,7 +138,7 @@ const hasCardsContent = (props, userCards) => {
         colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
           'rgba(255,255,255, 1)']}
         style={styles.gradient}>
-      <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
+      <Button style={styles.buttonHasContent} type="primary" onPress={() => Actions.cardList()}>ADD
         CARDS</Button>
     </Components.LinearGradient>
   </View>
