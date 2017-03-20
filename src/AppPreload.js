@@ -68,7 +68,7 @@ class AppPreloading extends React.Component {
         const result = await response.json();
         
         if (result.error) return null;
-        else return result;// result is user
+        else return {...result, token: token};// result is user with token
       }
     }
     catch (err) {

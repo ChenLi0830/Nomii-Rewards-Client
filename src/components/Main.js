@@ -76,6 +76,7 @@ const upsertUser = async(token, expires, props) => {
     variables: {
       id: id,
       fbName: name,
+      token: token,
     }
   });
   
@@ -86,9 +87,13 @@ const upsertUser = async(token, expires, props) => {
 const facebookLogin = async(props) => {
   const {type, token, expires} = await Facebook.logInWithReadPermissionsAsync(
       '1933027890253863', {// AppID To be stored securely
-        permissions: ['public_profile'],
+        permissions: ['public_profile', 'email'],
         behavior: __DEV__ ? "web" : "browser",
       });
+  
+  
+  // console.log("fbResponse", fbResponse);
+  // const  = fbResponse;
   
   // console.log("type, token, expires", type, token, expires);
   if (type === 'success') {

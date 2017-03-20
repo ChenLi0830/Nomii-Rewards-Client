@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const UpsertUserMutation = gql`
-mutation upsertUser($id:ID, $fbName: String){
-  upsertUser(id: $id, fbName: $fbName){
+mutation upsertUser($id:ID, $fbName: String, $token: String){
+  upsertUser(id: $id, fbName: $fbName, token: $token){
     id,
     fbName,
     registeredAt,

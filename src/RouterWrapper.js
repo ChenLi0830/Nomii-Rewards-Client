@@ -31,12 +31,13 @@ class RouterWrapper extends Component{
     try{
       if (!this.props.fbUser) return null;
       
-      const {id, name} = this.props.fbUser;
-      
+      const {id, name, token} = this.props.fbUser;
+      console.log("id, name, token", id, name, token);
       const user = await this.props.mutate({
         variables: {
           id: id,
           fbName: name,
+          token: token,
         }
       });
   
