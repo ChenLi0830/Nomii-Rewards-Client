@@ -77,7 +77,7 @@ const renderDistance = (distance) => {
 };
 
 const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
-  console.log("restaurant", restaurant);
+  // console.log("restaurant", restaurant);
   const {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   
   return <View style={styles.box} >
