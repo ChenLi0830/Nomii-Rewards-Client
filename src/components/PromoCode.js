@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   message: {
     color: "#262626",
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "300",
     backgroundColor: "rgba(0,0,0,0)",
   },
