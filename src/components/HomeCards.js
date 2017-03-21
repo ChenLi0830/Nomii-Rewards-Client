@@ -11,7 +11,7 @@ import {
 import {Button, Modal} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './common/Card';
-import {Components} from 'expo';
+import {LinearGradient} from 'expo';
 import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
@@ -135,13 +135,13 @@ const hasCardsContent = (props, userCards) => {
       </View>
     </ScrollView>
     
-    <Components.LinearGradient
+    <LinearGradient
         colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
           'rgba(255,255,255, 1)']}
         style={styles.gradient}>
       <Button style={styles.buttonHasContent} type="primary" onPress={() => Actions.cardList()}>ADD
         CARDS</Button>
-    </Components.LinearGradient>
+    </LinearGradient>
   </View>
 };
 
