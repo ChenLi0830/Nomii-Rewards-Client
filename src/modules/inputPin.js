@@ -1,6 +1,7 @@
 import {Actions} from 'react-native-router-flux';
 import { Toast } from 'antd-mobile';
 import dismissKeyboard from 'dismissKeyboard';
+import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 
 
 // Action types
@@ -33,8 +34,11 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
   // console.log("card", card);
   return (dispatch, getState) => {
     Toast.loading('Loading...', 0);
-    console.log("variables", variables);
-    stampCardMutation({variables: {...variables}})
+    // console.log("variables", variables);
+    stampCardMutation({
+      variables: {...variables},
+      refetchQueries: [{query: getAllRestaurantCardsQuery, variables: {userId: variables.userId}}]
+    })
         .then(result =>{
           Toast.hide();
         
