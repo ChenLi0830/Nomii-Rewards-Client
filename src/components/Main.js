@@ -4,7 +4,7 @@ import {Button} from './common';
 import {Image, View, Text} from 'react-native-animatable';
 // import Playground from './animations/Playground';
 import {Actions} from 'react-native-router-flux';
-import {Facebook} from 'exponent';
+import {Facebook} from 'expo';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
 import {UpsertUserMutation} from '../graphql/user';

@@ -27,7 +27,7 @@ StatusBar.setBarStyle('dark-content', true);
 
 class App extends Component {
   constructor(props){
-    console.log("App props", props);
+    // console.log("App props", props);
     super(props);
   }
   

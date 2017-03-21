@@ -1,6 +1,6 @@
 import React from 'react';
-import {Asset, Components} from 'exponent';
-import {AsyncStorage} from 'react-native';
+import {Asset, AppLoading} from 'expo';
+import {AsyncStorage, Text} from 'react-native';
 import App from './App';
 
 class AppPreloading extends React.Component {
@@ -29,7 +29,7 @@ class AppPreloading extends React.Component {
   
   render() {
     if (!this.state.isReady) {
-      return <Components.AppLoading />;
+      return <AppLoading />;
     }
     
     return (

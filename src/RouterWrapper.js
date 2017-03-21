@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, Dimensions, Alert} from 'react-native';
 import {UpsertUserMutation} from './graphql/user';
 import {graphql} from 'react-apollo';
 import {connect} from'react-redux'
 import {userActions} from './modules';
-import Expo from 'exponent';
+import {Location, Permissions} from 'expo';
 import Router from './Router';
 
 const styles = StyleSheet.create({
@@ -54,9 +54,9 @@ class RouterWrapper extends Component{
   }
   
   async askLocationPermission(){
-    const { Location, Permissions } = Expo;
+    // const { Location, Permissions } = Expo;
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    // console.warn("status",status);
+    console.warn("status",status);
     if (status === 'granted') {
       //Get instant location
       const location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
@@ -74,7 +74,15 @@ class RouterWrapper extends Component{
         this.props.updateUserLocation(updateResult.coords);
       });
     } else {
-      throw new Error('Location permission not granted');
+      // Alert.alert(
+      //     'Location is required',
+      //     'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
+      //     [
+      //       {text: 'Finished', onPress: () => askLocationPermission()},
+      //     ],
+      //     { cancelable: false }
+      // )
+      console.warn(new Error('Location permission not granted'));
     }
   }
   
@@ -82,7 +90,7 @@ class RouterWrapper extends Component{
     //Upsert user
     const promises = [this.askLocationPermission(), this.upsertUser()];
     let results = await Promise.all(promises);
-    // console.warn("results", results);
+    console.log("user", results[1]);
     this.setState({isReady: true, user: results[1]});
     // console.log("upsert finished user", user);
   }

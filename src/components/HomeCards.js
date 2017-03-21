@@ -11,7 +11,7 @@ import {
 import {Button, Modal} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './common/Card';
-import {Components} from 'exponent';
+import {Components} from 'expo';
 import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';

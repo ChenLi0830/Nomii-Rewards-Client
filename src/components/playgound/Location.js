@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View} from 'react-native';
-import {Location, Permissions} from 'exponent';
+import {Location, Permissions} from 'expo';
 
 class LocationComponent extends Component {
   state = {
@@ -8,7 +8,7 @@ class LocationComponent extends Component {
   };
   
   async _getPosition() {
-    // const {Location, Permissions} = Exponent;
+    // const {Location, Permissions} = expo;
     const {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status === 'granted') {
       Location.getCurrentPositionAsync({enableHighAccuracy: true}).then((position) => {
@@ -39,7 +39,7 @@ class LocationComponent extends Component {
   }
 }
 
-// const {Location, Permissions} = Exponent;
+// const {Location, Permissions} = expo;
 
 
 // Permissions.askAsync(Permissions.LOCATION)

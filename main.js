@@ -1,5 +1,4 @@
-import Exponent from 'exponent';
+import Expo from 'expo';
 import React from 'react';
 import AppPreload from './src/AppPreload';
-
-Exponent.registerRootComponent(AppPreload);
+Expo.registerRootComponent(AppPreload);

@@ -3,14 +3,14 @@
   "description": "Nomii Rewards App",
   "slug": "nomii-rewards-exponentjs",
   "privacy": "public",
-  "sdkVersion": "14.0.0",
+  "sdkVersion": "15.0.0",
   "version": "1.2.0",
   "orientation": "portrait",
   "primaryColor": "#e8314a",
   "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
   "loading": {
     "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
-    "hideExponentText": false
+    "hideExponentText": true
   },
   "packagerOpts": {
     "assetExts": ["ttf", "mp4"]
