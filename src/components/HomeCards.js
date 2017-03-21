@@ -16,7 +16,7 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
-import {calculateCardsWithDistances} from './api';
+import {calculateCardsWithDistances, cardIsExpired} from './api';
 
 const {width, height} = Dimensions.get('window');
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     // alignSelf: "center",
     borderWidth: 0,
   },
-  buttonHasContent:{
+  buttonHasContent: {
     width: width * 0.8,
     height: 40,
     borderWidth: 0,
@@ -109,7 +109,8 @@ const getUserCards = (props) => {
   let userCards = [];
   if (props.data.user && props.data.user.cards && props.data.user.cards.length > 0) {
     userCards = props.data.user.cards.filter(card => {
-      return card.lastStampAt !== null;
+      // Valid cards which are not expired
+      return card.lastStampAt !== null && !cardIsExpired(card);
     })
   }
   // console.log("userCards", userCards);

@@ -2,7 +2,7 @@ import {Actions} from 'react-native-router-flux';
 import { Toast } from 'antd-mobile';
 import dismissKeyboard from 'dismissKeyboard';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
-
+import {cardIsExpired} from '../components/api';
 
 // Action types
 const USER_CHANGE_PIN = "USER_CHANGE_PIN";
@@ -45,7 +45,13 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
           dispatch(submitPinSuccess());
           dismissKeyboard();
           setTimeout(()=>{
-            Actions.reward({progress: card.stampCount % 3});
+            // console.warn("cardIsExpired(card)", cardIsExpired(card));
+            if (cardIsExpired(card)) {
+              Actions.reward({progress: 0});
+            }
+            else {
+              Actions.reward({progress: card.stampCount % 3});
+            }
           }, 100);
         })
         .catch(err => {

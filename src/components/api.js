@@ -25,4 +25,7 @@ const getTimeInSec = () => {
   return Math.trunc(new Date().getTime()/1000);
 };
 
-export {calculateCardsWithDistances, getTimeInSec};
+const cardIsExpired = (card) => {
+  return card.lastStampAt + card.restaurant.stampValidDays * 24 * 3600 < getTimeInSec()
+};
+export {calculateCardsWithDistances, getTimeInSec, cardIsExpired};

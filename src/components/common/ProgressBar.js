@@ -111,6 +111,13 @@ const renderLine = (position, index, urgency) => {
 };
 
 const ProgressBar = ({index, expireInDays, urgency}) => {
+  // Card is expired
+  if (expireInDays<0) {
+    // shown as new card with no stamp
+    urgency = 2;
+    index = 0;
+  }
+  
   const ImageSources = [
     index === 0 ? emptyImage[urgency] : checkedImage,
     index === 0 && emptyImage[urgency] || index === 1 && percent5Image[urgency] || index === 2 && checkedImage,
