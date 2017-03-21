@@ -3,10 +3,24 @@ import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 import Dash from 'react-native-dash';
 import { getTimeInSec } from '../api';
 
-const checkedImage = require("../../../public/images/circle-1 check.png");
-const emptyImage = require("../../../public/images/circle-empty-highlight 2.png");
-const percent5Image = require("../../../public/images/big-five-percent.png");
-const percent10Image = require("../../../public/images/big-ten-percent.png");
+const checkedImage = require("../../../public/images/card-screens/1st-circle-check.png");
+const emptyImage = [
+  require("../../../public/images/card-screens/circle-empty-highlight-red.png"),
+  require("../../../public/images/card-screens/circle-empty-highlight-orange.png"),
+  require("../../../public/images/card-screens/circle-empty-highlight-teal.png"),
+];
+const percent5Image = [
+  require("../../../public/images/card-screens/2nd-circle-5-percent-red.png"),
+  require("../../../public/images/card-screens/2nd-circle-5-percent.png"),
+  require("../../../public/images/card-screens/2nd-circle-5-percent-teal.png")
+];
+const percent10Image = [
+  require("../../../public/images/card-screens/3rd-circle.png"),
+  require("../../../public/images/card-screens/3rd-circle-orange.png"),
+  require("../../../public/images/card-screens/3rd-circle-teal.png")
+];
+const colors = ["#EB2E46", "#E67E22", "#35ABBD"];
+const dashColors = ["rgba(235,46,70,0.2)","rgba(230,126,34,0.2)","rgba(53,171,189,0.2)"];
 
 const {width, height} = Dimensions.get("window");
 
@@ -37,14 +51,11 @@ const styles = StyleSheet.create({
   // },
   dotText: {
     alignSelf: "center",
-    color: "#35ABBD",
     fontWeight: "bold"
-    // position: "absolute",
-    // marginLeft: width * 0.05
   },
   lineBase: {
     borderTopWidth: 3,
-    borderColor: "#35ABBD",
+    // borderColor: "#35ABBD",
     height: 0
   },
   lineFull: {
@@ -57,7 +68,7 @@ const styles = StyleSheet.create({
     height: width * 0.07,
     borderRadius: 50,
     width: width * 0.25,
-    backgroundColor: "#35ABBD",
+    // backgroundColor: "#35ABBD",
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
@@ -91,19 +102,19 @@ const renderRestrictions = (isInvalid) => {
   else return <View style={styles.row2WhiteSpace}/>;
 };
 
-const renderLine = (position, index) => {
+const renderLine = (position, index, urgency) => {
   const lineStyle = position === 0 ? styles.lineHalf : styles.lineFull;
   if (index >= position)
-    return <View style={[styles.lineBase, lineStyle]}/>;
+    return <View style={[styles.lineBase, lineStyle, {borderColor: colors[urgency]}]}/>;
   else
-    return <Dash dashGap={3} dashThickness={3} dashColor="rgba(53,171,189,0.2)" style={lineStyle}/>;
+    return <Dash dashGap={3} dashThickness={3} dashColor={dashColors[urgency]} style={[lineStyle]}/>;
 };
 
-const ProgressBar = ({index, expireAt}) => {
+const ProgressBar = ({index, expireInDays, urgency}) => {
   const ImageSources = [
-    index === 0 ? emptyImage : checkedImage,
-    index === 0 && emptyImage || index === 1 && percent5Image || index === 2 && checkedImage,
-    index > 1 ? percent10Image : emptyImage,
+    index === 0 ? emptyImage[urgency] : checkedImage,
+    index === 0 && emptyImage[urgency] || index === 1 && percent5Image[urgency] || index === 2 && checkedImage,
+    index > 1 ? percent10Image[urgency] : emptyImage[urgency],
   ];
   
   const opacity = [
@@ -113,35 +124,35 @@ const ProgressBar = ({index, expireAt}) => {
   ];
   
   const textColor = [
-    {color: index === 0 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
-    {color: index === 1 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
-    {color: index === 2 ? "#35ABBD" : "rgba(53,171,189,0.2)"},
+    {color: index === 0 ? colors[urgency] : "rgba(53,171,189,0.2)"},
+    {color: index === 1 ? colors[urgency] : "rgba(53,171,189,0.2)"},
+    {color: index === 2 ? colors[urgency] : "rgba(53,171,189,0.2)"},
   ];
   
-  const daysLeft = Math.ceil((expireAt - getTimeInSec())/(3600 * 24));
+  const daysLeft = expireInDays;
   const expirationText = daysLeft > 1 ? `${daysLeft} days left` : `${daysLeft} day left`;
   const expirationIsInvalid = isNaN(daysLeft) || daysLeft < 0;
   
   //The elements on the right hand side takes 0.1*3 + 0.05 + 0.1*2 = 0.55
   return <View style={{flex: 1}}>
     <View style={styles.row1}>
-      <View style={[styles.detailBox, expirationIsInvalid && styles.detailBoxInvalid]}>
+      <View style={[styles.detailBox, {backgroundColor: colors[urgency]}, expirationIsInvalid && styles.detailBoxInvalid]}>
         <Text style={[styles.detailText, expirationIsInvalid && styles.detailTextInvalid]}>{expirationText}</Text>
       </View>
       
-      {renderLine(0, index)}
+      {renderLine(0, index, urgency)}
       
       <Image style={[styles.dots, opacity[0]]}
              source={ImageSources[0]}
              resizeMode="contain"/>
       
-      {renderLine(1, index)}
+      {renderLine(1, index, urgency)}
       
       <Image style={[styles.dots, opacity[1]]}
              source={ImageSources[1]}
              resizeMode="contain"/>
       
-      {renderLine(2, index)}
+      {renderLine(2, index, urgency)}
       
       <Image style={[styles.dots, opacity[2]]}
              source={ImageSources[2]}

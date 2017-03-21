@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform, Image} from 'react-native';
 import {ProgressBar} from './ProgressBar';
+import {getTimeInSec} from '../api';
 
 const {width, height} = Dimensions.get("window");
 
@@ -76,11 +77,43 @@ const renderDistance = (distance) => {
   return `${distance}${unit}`
 };
 
+const getUrgency = (stampValidDays, expireInDays) => {
+  console.log("stampValidDays, expireInDays", stampValidDays, expireInDays);
+  let urgencyArray = [
+    [2, 4, 7],
+    [3, 7, 14],
+    [5, 15, 30],
+  ];
+  // Get correct row
+  let row;
+  for (row=0; row<urgencyArray.length; row++){
+    // row is found
+    if (urgencyArray[row][2]>=stampValidDays) break;
+  }
+  if (row === urgencyArray.length) row--;
+  
+  // Get urgency
+  let urgency;
+  for (urgency = 0; urgency<urgencyArray[row].length; urgency++){
+    // urgencyLevel is found
+    if (urgencyArray[row][urgency] >= expireInDays) break;
+  }
+  if (urgency === urgencyArray[0].length) urgency--;
+  return urgency;
+};
+
 const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
   // console.log("restaurant", restaurant);
-  const {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
+  let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   
-  return <View style={styles.box} >
+  let expireInDays = Math.ceil((parseInt(lastStampAt) + stampValidDays * 24 * 3600 - getTimeInSec())/(3600 * 24));
+  
+  // stampValidDays = 7;
+  // expireInDays = 3;
+  
+  const urgency = getUrgency(stampValidDays, expireInDays);
+  
+  return <View style={styles.box}>
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
         <Text style={styles.name}>{name}</Text>
@@ -96,12 +129,11 @@ const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
                  {/*{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},*/}
                  {/*{uri: 'https://facebook.github.io/react/img/logo_og.png', width: 400, height: 400}*/}
                {/*]}/>*/}
-        
       </View>
     </View>
     
     <View style={styles.discountRow}>
-      <ProgressBar index={stampCount % 3} expireAt={parseInt(lastStampAt) + stampValidDays * 24 * 3600}/>
+      <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency}/>
     </View>
   </View>
 };

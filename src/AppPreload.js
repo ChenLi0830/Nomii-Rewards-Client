@@ -48,6 +48,21 @@ class AppPreloading extends React.Component {
       require('../public/images/Hand-over-icon-onboarding.png'),
       require('../public/images/reward-icon-onboarding.png'),
       require('../public/images/slogan.png'),
+      require('../public/images/circle-empty-highlight 2.png'),
+      require('../public/images/Home-empty-screen-card.png'),
+      require('../public/images/down-arrow.png'),
+      require('../public/images/card-screens/1st-circle-check.png'),
+      require('../public/images/card-screens/2nd-circle-5-percent-red.png'),
+      require('../public/images/card-screens/2nd-circle-5-percent-teal.png'),
+      require('../public/images/card-screens/2nd-circle-5-percent.png'),
+      require('../public/images/card-screens/3rd-circle-orange.png'),
+      require('../public/images/card-screens/3rd-circle-teal.png'),
+      require('../public/images/card-screens/3rd-circle.png'),
+      require('../public/images/card-screens/circle-empty-highlight-orange.png'),
+      require('../public/images/card-screens/circle-empty-highlight-red.png'),
+      require('../public/images/card-screens/circle-empty-highlight-teal.png'),
+      require('../public/images/card-screens/circle-1 check.png'),
+  
     ];
     for (let image of images) {
       await Asset.fromModule(image).downloadAsync();
