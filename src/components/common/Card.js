@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     // backgroundColor:"green",
   },
   storeInfoColumn: {
-    flex: 1,
+    flex: 2,
     // backgroundColor:"yellow",
     justifyContent: "space-around",
   },
@@ -116,7 +116,7 @@ const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
   return <View style={styles.box}>
     <View style={styles.storeRow}>
       <View style={styles.storeInfoColumn}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name} numberOfLines={2}>{name}</Text>
         <Text style={styles.distance}>{renderDistance(distance)}</Text>
       </View>
       <View style={styles.storeLogoColumn}>
