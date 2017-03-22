@@ -70,15 +70,18 @@ const upsertUser = async(token, expires, props) => {
   
   const {name, id} = await response.json();
   
-  props.updateUserId(id);
-  
-  const user = await props.mutate({
+  const userResult = await props.mutate({
     variables: {
       id: id,
       fbName: name,
       token: token,
     }
   });
+  
+  const user = userResult.data.upsertUser;
+  
+  props.updateUser(user);
+  // console.log("user", user);
   
   Toast.hide();
   return user;
@@ -98,19 +101,19 @@ const facebookLogin = async(props) => {
   // console.log("type, token, expires", type, token, expires);
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
-    const upsertResult = await upsertUser(token, expires, props);
-    const user = upsertResult.data.upsertUser;
+    const user = await upsertUser(token, expires, props);
+    
   
     // console.log("user", user);
-    // console.log("user.cards", user.cards);
-    if (user.cards && user.cards.length>0) {
-      // console.log("Actions.main();");
-      Actions.main();
-    }
-    else {
-      // console.log("Actions.intro();");
-      Actions.intro();
-    }
+    // // console.log("user.cards", user.cards);
+    // if (user.cards && user.cards.length>0) {
+    //   // console.log("Actions.main();");
+    //   Actions.main();
+    // }
+    // else {
+    //   // console.log("Actions.intro();");
+    //   Actions.intro();
+    // }
   } else {
     Alert.alert('Log in cancelled');
   }
@@ -126,7 +129,7 @@ const login = async(props) => {
   }
 };
 
-class Main extends Component {
+class Login extends Component {
   render() {
     return <View style={styles.view}>
       
@@ -180,12 +183,13 @@ class Main extends Component {
 }
 
 // Container
-const MainWithGraphQL = graphql(UpsertUserMutation)(Main);
+const LoginWithGraphQL = graphql(UpsertUserMutation)(Login);
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUserId: (id) => dispatch(userActions.updateUserId(id))
+    // updateUserId: (id) => dispatch(userActions.updateUserId(id)),
+    updateUser: (user) => dispatch(userActions.updateUser(user)),
   }
 };
 
-export default connect(null, mapDispatchToProps)(MainWithGraphQL);
+export default connect(null, mapDispatchToProps)(LoginWithGraphQL);

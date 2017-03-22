@@ -4,12 +4,18 @@ import dismissKeyboard from 'dismissKeyboard';
 
 // Action types
 const UPDATE_USER_ID = "UPDATE_USER_ID";
+const UPDATE_USER = "UPDATE_USER";
 const UPDATE_USER_LOCATION = "UPDATE_USER_LOCATION";
 
 // Action creator
 export const updateUserId = (userId) => ({
   type: UPDATE_USER_ID,
   payload: userId,
+});
+
+export const updateUser = (user) => ({
+  type: UPDATE_USER,
+  payload: user,
 });
 
 export const updateUserLocation = (location) => ({
@@ -31,6 +37,9 @@ const reducer = (state = initialState, action) => {
       return {...state, id: String(action.payload)};
     case "UPDATE_USER_LOCATION":
       return {...state, location: action.payload};
+    case "UPDATE_USER":
+      // console.log("new user", {...state, ...action.payload});
+      return {...state, ...action.payload};
     default:
       return state;
   }

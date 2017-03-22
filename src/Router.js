@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Platform, Alert} from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
-import Main from './components/Main';
+import Login from './components/Login';
 import Swiper from './components/Swiper';
 import HomeCards from './components/HomeCards';
 import CardList from './components/CardList';
@@ -10,6 +10,8 @@ import PromoSuccess from './components/PromoSuccess';
 import {RewardScreen} from './components/common';
 import AssignPIN from './components/AssignPIN'
 import ShowStats from './components/ShowStats';
+
+import {connect} from 'react-redux';
 
 // import PanAnimation from './components/animations/PanAnimation';
 // import AnimatableExample from './components/animations/AnimatableExample';
@@ -47,26 +49,15 @@ const styles = StyleSheet.create({
   }
 });
 
-
 const RouterComponent = ({user}) => {
-  // console.log("RouterComponent user", user);
-  return <Router>
-    <Scene key="auth" hideNavBar initial={!user}>
-      {/*<Scene key="lottie" component={SimpleExampleNomii} />*/}
-      {/*<Scene key="lottie" component={LottieAnimatedExample} />*/}
-      {/*<Scene key="animated" component={AnimatableExample} />*/}
-      {/*<Scene key="location" component={LocationComponent}/>*/}
-      <Scene key="login" component={Main} title="Login" />
-    </Scene>
-    
-    <Scene key="intro" hideNavBar >
-      <Scene key="swiper" component={Swiper} />
-      <Scene key="promoCode" component={PromoCode} />
-      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
-    </Scene>
-    
-    <Scene key="main" direction="vertical" type="reset" initial={!!user}>
-      <Scene key="home" component={HomeCards} animation="fade" type="reset"
+  console.log("RouterComponent user", user);
+  const notLoggedIn = !user || !user.id;
+  const isNewUser = !user.cards || user.cards.length===0;
+  
+  if (notLoggedIn) return <Login/>;
+  else return <Router>
+    <Scene key="main">
+      <Scene key="home" component={HomeCards} animation="fade" type="reset" initial={!isNewUser}
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              onLeft={()=>{Actions.promoCode()}}
@@ -87,9 +78,11 @@ const RouterComponent = ({user}) => {
       <Scene key="reward" component={RewardScreen} hideNavBar
              direction="vertical" />
   
+      <Scene key="swiper" component={Swiper} initial={isNewUser} hideNavBar/>
+      
       <Scene key="promoCode" component={PromoCode}
              direction="vertical" hideNavBar/>
-      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" />
+      <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" hideNavBar/>
       
       <Scene key="statistics" direction="vertical" type="reset">
         <Scene key="stat" component={ShowStats} title="Report"
@@ -105,7 +98,10 @@ const RouterComponent = ({user}) => {
     </Scene>
   </Router>;
 };
-//, justifyContent: "flex-end", flexDirection: "column"
 
+//Container
+const mapStateToProps = (state)=> ({
+  user: state.user,
+});
 
-export default RouterComponent;
+export default connect(mapStateToProps)(RouterComponent);

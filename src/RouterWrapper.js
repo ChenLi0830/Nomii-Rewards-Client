@@ -33,7 +33,8 @@ class RouterWrapper extends Component{
       
       const {id, name, token} = this.props.fbUser;
       console.log("id, name, token", id, name, token);
-      const user = await this.props.mutate({
+      
+      const userResult = await this.props.mutate({
         variables: {
           id: id,
           fbName: name,
@@ -41,9 +42,13 @@ class RouterWrapper extends Component{
         }
       });
   
-      this.props.updateUserId(id);
+      const user = userResult.data.upsertUser;
+      console.log("user", user);
+      
+      this.props.updateUser(user);
+      // this.props.updateUserId(id);
       // console.log("user", user);
-      return user.data.upsertUser;
+      return user;
       
       
     }
@@ -53,10 +58,25 @@ class RouterWrapper extends Component{
     }
   }
   
+  async keepAskingLocationPermission(){
+    let status = "";
+    status = await this.askLocationPermission();
+    if (status !== "granted"){
+      Alert.alert(
+          'Location is required',
+          'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
+          [
+            {text: 'Finished', onPress: async() => {status = await this.askLocationPermission();}},
+          ],
+          { cancelable: false }
+      );
+    }
+  }
+  
   async askLocationPermission(){
     // const { Location, Permissions } = Expo;
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.warn("status",status);
+    // console.warn("status",status);
     if (status === 'granted') {
       //Get instant location
       const location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
@@ -73,26 +93,26 @@ class RouterWrapper extends Component{
         console.log("updateResult", updateResult);
         this.props.updateUserLocation(updateResult.coords);
       });
-    } else {
-      // Alert.alert(
-      //     'Location is required',
-      //     'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
-      //     [
-      //       {text: 'Finished', onPress: () => askLocationPermission()},
-      //     ],
-      //     { cancelable: false }
-      // )
-      console.warn(new Error('Location permission not granted'));
     }
+    else {
+      Alert.alert(
+          'Location is required',
+          'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
+          [
+            {text: 'Finished', onPress: () => {}},
+          ],
+          { cancelable: false }
+      );
+      // console.warn(new Error('Location permission not granted'));
+    }
+    return status;
   }
   
   async componentWillMount(){
     //Upsert user
     const promises = [this.askLocationPermission(), this.upsertUser()];
-    let results = await Promise.all(promises);
-    console.log("user", results[1]);
-    this.setState({isReady: true, user: results[1]});
-    // console.log("upsert finished user", user);
+    await Promise.all(promises);
+    this.setState({isReady: true});
   }
   
   render(){
@@ -101,7 +121,7 @@ class RouterWrapper extends Component{
       return <View></View>;
     }
     
-    return <Router user = {this.state.user}/>
+    return <Router/>
   }
 }
 
@@ -110,7 +130,7 @@ const RouterWrapperWithMutation = graphql(UpsertUserMutation)(RouterWrapper);
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUserId: (id) => dispatch(userActions.updateUserId(id)),
+    updateUser: (user) => dispatch(userActions.updateUser(user)),
     updateUserLocation: (location) => dispatch(userActions.updateUserLocation(location)),
   }
 };
