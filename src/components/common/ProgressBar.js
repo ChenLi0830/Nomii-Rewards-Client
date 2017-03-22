@@ -94,12 +94,13 @@ const styles = StyleSheet.create({
 });
 
 const renderRestrictions = (isInvalid) => {
-  if (isInvalid) return <View style={{width: width * 0.2, marginLeft: width*0.05}}>
-    <Text style={styles.anchor}>
-      view restrictions
-    </Text>
-  </View>;
-  else return <View style={styles.row2WhiteSpace}/>;
+  return <View style={styles.row2WhiteSpace}/>;
+  // if (isInvalid) return <View style={{width: width * 0.2, marginLeft: width*0.05}}>
+  //   <Text style={styles.anchor}>
+  //     view restrictions
+  //   </Text>
+  // </View>;
+  // else return <View style={styles.row2WhiteSpace}/>;
 };
 
 const renderLine = (position, index, urgency) => {
