@@ -13,12 +13,12 @@ export const toggleModal = () => ({
 
 export const pressCard = (card) => {
   return (dispatch, getState) => {
-    // if (card.distance <= 1000)
-    // {
+    if (card.distance <= 100)
+    {
       Actions.inputPin({card});
-    // } else {
-    //   dispatch(toggleModal());
-    // }
+    } else {
+      dispatch(toggleModal());
+    }
   }
 };
 

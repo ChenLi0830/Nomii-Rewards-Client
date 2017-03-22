@@ -159,6 +159,7 @@ const HomeCards = (props) => {
     <Modal visible={props.showModal}
            image={require("../../public/images/too-far-icon.png")}
            text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
+           textStyle={{color: "#FF0033"}}
            toggle={props.toggleModal}/>
     {
       userCards.length > 0 ?

@@ -40,6 +40,7 @@ class AppPreloading extends React.Component {
   async _cacheResourcesAsync() {
     const images = [
       require('../public/images/1st-circle-check.png'),
+      require('../public/images/too-far-icon.png'),
       require('../public/images/big-check.png'),
       require('../public/images/promo.png'),
       require('../public/images/insight-icon.png'),
