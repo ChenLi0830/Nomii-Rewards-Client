@@ -9,6 +9,7 @@ const USER_CHANGE_PIN = "USER_CHANGE_PIN";
 const USER_SUBMIT_PIN_START = "USER_SUBMIT_PIN_START";
 const USER_SUBMIT_PIN_FAILED = "USER_SUBMIT_PIN_FAILED";
 const USER_SUBMIT_PIN_SUCCESS = "USER_SUBMIT_PIN_SUCCESS";
+const USER_ENTER_PIN_SCREEN = "USER_ENTER_PIN_SCREEN";
 const USER_TOGGLE_MODAL_VISIBILITY = "USER_TOGGLE_MODAL_VISIBILITY";
 
 // Action creator
@@ -24,6 +25,10 @@ const submitPinFailed = (message) => ({
 
 const submitPinSuccess = () => ({
   type: USER_SUBMIT_PIN_SUCCESS,
+});
+
+export const userEnterScreen = () => ({
+  type: USER_ENTER_PIN_SCREEN,
 });
 
 export const toggleModal = () => ({
@@ -77,7 +82,8 @@ const reducer = (state = initialState, action) => {
     case "USER_SUBMIT_PIN_FAILED":
       return {...state, pin: "", message: action.payload};
     case "USER_SUBMIT_PIN_SUCCESS":
-      return {...state, pin: ""};
+    case "USER_ENTER_PIN_SCREEN":
+      return initialState;
     case "USER_TOGGLE_MODAL_VISIBILITY":
       return {...state, showModal: !state.showModal};
     default:

@@ -66,6 +66,10 @@ const styles = StyleSheet.create({
 });
 
 class InputPinScreen extends Component {
+  componentWillMount(){
+    this.props.onEnterScreen();
+  }
+  
   componentDidMount() {
     this.props.toggleModal();
   }
@@ -151,6 +155,7 @@ const mapDispatchToProps = (dispatch) => {
     onSubmitPin: (card, stampCardMutation, variables) => {
       return dispatch(inputPinActions.userSubmitPin(card, stampCardMutation, variables))
     },
+    onEnterScreen: () => dispatch(inputPinActions.userEnterScreen()),
     toggleModal: () => dispatch(inputPinActions.toggleModal()),
   }
 };
