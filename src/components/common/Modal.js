@@ -1,5 +1,7 @@
 import React from 'react';
-import {Modal, TouchableOpacity, StyleSheet, Text, Image, Dimensions, View} from 'react-native';
+import {Modal, TouchableOpacity, StyleSheet, Text, Image, Dimensions, View, Platform} from 'react-native';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+
 // import {inputPinActions} from '../modules';
 
 
@@ -9,8 +11,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingVertical: height * 0.25,
-    paddingHorizontal: width * 0.18,
+    paddingVertical: responsiveHeight(25),
+    paddingHorizontal: responsiveWidth(15),
     backgroundColor: 'rgba(185, 195, 199, 0.5)',
     // alignItems: "center",
   },
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around"
   },
   imageBox: {
-    flex:1,
+    flex:2,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 20,
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
   image: {
     // flex: 1,
     // aspectRatio: (572 / 260),
-    width: width * 0.55,
+    width: responsiveWidth(60),
   },
   textBox: {
     flex: 1,
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
   },
   text:{
     color: "#35ABBD",
-    fontSize: 20,
+    fontSize: responsiveFontSize(2.5),
     fontWeight: "600",
     textAlign: "center",
     // textAlignVertical: "center",
