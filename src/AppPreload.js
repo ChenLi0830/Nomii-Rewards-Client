@@ -2,6 +2,7 @@ import React from 'react';
 import {Asset, AppLoading} from 'expo';
 import {AsyncStorage, Text} from 'react-native';
 import App from './App';
+import {Toast} from 'antd-mobile';
 
 class AppPreloading extends React.Component {
   state = {
@@ -63,7 +64,6 @@ class AppPreloading extends React.Component {
       require('../public/images/card-screens/circle-empty-highlight-red.png'),
       require('../public/images/card-screens/circle-empty-highlight-teal.png'),
       require('../public/images/card-screens/circle-1 check.png'),
-  
     ];
     for (let image of images) {
       await Asset.fromModule(image).downloadAsync();
@@ -89,6 +89,7 @@ class AppPreloading extends React.Component {
     }
     catch (err) {
       console.log("err", err);
+      Toast.fail("Something is wrong\nPlease try again", 2);
     }
   }
 }

@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
 const RouterComponent = ({user}) => {
   console.log("RouterComponent user", user);
   const notLoggedIn = !user || !user.id;
-  const isNewUser = !user.cards || user.cards.length===0;
+  // Todo: update GraphQL and make this user.lastLoginAt!==user.registeredAt
+  const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
   
   if (notLoggedIn) return <Login/>;
   else return <Router>
