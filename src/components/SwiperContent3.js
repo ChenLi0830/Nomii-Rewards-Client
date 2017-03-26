@@ -20,8 +20,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   image: {
-    width: width * 0.7,
-    marginTop: - height * 0.1
+    width: width * 0.6,
+    marginTop: - height * 0.1,
+    flex: 1,
   },
   button: {
     width: width * 0.8,

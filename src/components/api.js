@@ -26,6 +26,7 @@ const getTimeInSec = () => {
 };
 
 const cardIsExpired = (card) => {
+  if (!card.lastStampAt) return false; // Card's stamp comes from redeeming coupon
   return card.lastStampAt + card.restaurant.stampValidDays * 24 * 3600 < getTimeInSec()
 };
 export {calculateCardsWithDistances, getTimeInSec, cardIsExpired};
