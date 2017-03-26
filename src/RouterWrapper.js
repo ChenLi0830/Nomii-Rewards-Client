@@ -28,7 +28,7 @@ class RouterWrapper extends Component{
   }
   
   async upsertUser(){
-    try{
+    try {
       if (!this.props.fbUser) return null;
       
       const {id, name, token} = this.props.fbUser;
@@ -58,59 +58,37 @@ class RouterWrapper extends Component{
     }
   }
   
-  async keepAskingLocationPermission(){
-    let status = "";
-    status = await this.askLocationPermission();
-    if (status !== "granted"){
-      Alert.alert(
-          'Location is required',
-          'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
-          [
-            {text: 'Finished', onPress: async() => {status = await this.askLocationPermission();}},
-          ],
-          { cancelable: false }
-      );
-    }
-  }
+  async getLocation(){
+    try {
+      // const locationPermission = await Permissions.getAsync(Permissions.LOCATION);
+      // console.log("locationPermission", locationPermission);
   
-  async askLocationPermission(){
-    // const { Location, Permissions } = Expo;
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    // console.warn("status",status);
-    if (status === 'granted') {
-      //Get instant location
-      const location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      let location = {};
+  
+      await Promise.race([
+          Location.getCurrentPositionAsync({enableHighAccuracy: true}),
+          // 2s Timeout for Android phones system version < 6
+          new Promise((resolve, reject) => setTimeout(()=>reject(new Error('timeout')), 2000)),
+      ])
+          .then(result => {
+            console.log("location", location);
+            location = result
+          })
+          .catch(error => {
+            console.log("get location timed out", error);
+          });
+      
+      console.log("location", location);
       this.props.updateUserLocation(location.coords);
-  
-      // Keep track of User's location
-      const options = {
-        enableHighAccuracy: true,
-        timeInterval: 5000,
-        distanceInterval: 5
-      };
-
-      Location.watchPositionAsync(options, (updateResult) => {
-        console.log("updateResult", updateResult);
-        this.props.updateUserLocation(updateResult.coords);
-      });
     }
-    else {
-      Alert.alert(
-          'Location is required',
-          'Please enable location by going to Settings -> Scroll down to Nomii Rewards -> Location -> Select "While Using the App"',
-          [
-            {text: 'Finished', onPress: () => {}},
-          ],
-          { cancelable: false }
-      );
-      // console.warn(new Error('Location permission not granted'));
+    catch(error) {
+      console.log("App doesn't have location permission");
     }
-    return status;
   }
   
   async componentWillMount(){
     //Upsert user
-    const promises = [this.askLocationPermission(), this.upsertUser()];
+    const promises = [this.getLocation(), this.upsertUser()];
     await Promise.all(promises);
     this.setState({isReady: true});
   }

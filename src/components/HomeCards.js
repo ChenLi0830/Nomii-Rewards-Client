@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {calculateCardsWithDistances, cardIsExpired} from './api';
+import NoLocationScreen from './NoLocationScreen';
 
 const {width, height} = Dimensions.get('window');
 
@@ -146,7 +147,11 @@ const hasCardsContent = (props, userCards) => {
 };
 
 const HomeCards = (props) => {
-  // console.log("HomeCards props", props);
+  console.log("HomeCards props", props);
+  if (!props.locationGranted) {
+    return <NoLocationScreen/>
+  }
+  
   if (props.data.loading) {
     // Toast.loading('Loading...', 0);
     return <View></View>;

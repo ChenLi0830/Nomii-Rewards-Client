@@ -3,17 +3,17 @@ import {Dimensions, Text, TouchableHighlight, StyleSheet} from 'react-native';
 
 const {width, height} = Dimensions.get("window");
 
-const Button = ({onPress, children, style, type}) => {
+const Button = ({onPress, children, style, type="primary"}) => {
   const underlayColor = {
       default: "#37447f",
       ghost: "#FFF",
       primary: "#3b74b6"
     };
   
-  return <TouchableHighlight underlayColor={underlayColor[type || "default"]}
-                             style={[styles.buttonBase, styles[type || "default"], style]}
+  return <TouchableHighlight underlayColor={underlayColor[type]}
+                             style={[styles.buttonBase, styles[type], style]}
                              onPress={() => onPress()}>
-    <Text style={[styles.textBase, styles[type ? type+"Text" : "defaultText"]]}>
+    <Text style={[styles.textBase, styles[type+"Text"]]}>
       {children}
     </Text>
   </TouchableHighlight>

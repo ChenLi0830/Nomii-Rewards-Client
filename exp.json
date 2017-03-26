@@ -13,7 +13,7 @@
     "hideExponentText": true
   },
   "packagerOpts": {
-    "assetExts": ["ttf", "mp4"]
+    "assetExts": ["ttf"]
   },
   "ios": {
     "bundleIdentifier": "ca.nomii.rewards"

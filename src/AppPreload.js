@@ -55,6 +55,7 @@ class AppPreloading extends React.Component {
       require('../public/images/down-arrow.png'),
       require('../public/images/DEALS2.png'),
       require('../public/images/Promocode-placeholder.png'),
+      require('../public/images/Location-services-icon.png'),
       require('../public/images/card-screens/1st-circle-check.png'),
       require('../public/images/card-screens/2nd-circle-5-percent-red.png'),
       require('../public/images/card-screens/2nd-circle-5-percent-teal.png'),

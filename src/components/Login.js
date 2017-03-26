@@ -156,7 +156,7 @@ class Login extends Component {
              source={require('../../public/images/card-icons-onboarding.png')}/>
       
       <View animation="fadeInUp" duration={400} delay={600}>
-        <Button onPress={() => login(this.props)} style={styles.loginBtn}>
+        <Button onPress={() => login(this.props)} style={styles.loginBtn} type="default">
           {"Continue with facebook".toUpperCase()}
         </Button>
         
