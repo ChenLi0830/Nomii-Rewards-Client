@@ -1,7 +1,7 @@
 {
   "name": "Nomii Rewards",
   "description": "Nomii Rewards App",
-  "slug": "nomii-rewards-exponentjs-staging",
+  "slug": "nomii-rewards-exponentjs",
   "privacy": "public",
   "sdkVersion": "15.0.0",
   "version": "1.2.1",
@@ -16,11 +16,11 @@
     "assetExts": ["ttf"]
   },
   "ios": {
-    "bundleIdentifier": "ca.nomii.rewards.staging"
+    "bundleIdentifier": "ca.nomii.rewards"
   },
   "facebookScheme": "fb1933027890253863",
   "android": {
-    "package": "com.nomii.rewards.staging",
+    "package": "com.nomii.rewards",
     "versionCode": 4
   }
 }
