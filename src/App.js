@@ -21,6 +21,11 @@ const customTextInputProps = {
   }
 };
 
+// Remove console.log from production app
+if (!__DEV__) {
+  console.log = () => {};
+}
+
 setCustomText(customTextProps);
 setCustomTextInput(customTextInputProps);
 StatusBar.setBarStyle('dark-content', true);
