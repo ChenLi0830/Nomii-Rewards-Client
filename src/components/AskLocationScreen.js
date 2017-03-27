@@ -43,6 +43,8 @@ const askLocationPermission = async (props)=>{
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     console.log("status",status);
     if (status === 'granted') {
+      Toast.loading('', 0);
+      
       // Keep track of User's location
       const options = {
         enableHighAccuracy: true,
@@ -60,9 +62,10 @@ const askLocationPermission = async (props)=>{
 
       await Promise.race([
         Location.getCurrentPositionAsync({enableHighAccuracy: true}),
-        new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 2000))
+        new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
       ])
           .then(result => {
+            console.log("location", result);
             location = result;
           })
           .catch(error => {
@@ -70,8 +73,13 @@ const askLocationPermission = async (props)=>{
             Toast.offline("There is something wrong with\nyour system location settings", 3);
           });
       
-      console.log("location", location);
+      // console.log("location", location);
       props.updateUserLocation(location.coords);
+      
+      setTimeout(() => {
+        Toast.hide();
+        Actions.home();
+      }, 300);
     }
     else { // location is not granted
       console.log(new Error('Location permission not granted'));

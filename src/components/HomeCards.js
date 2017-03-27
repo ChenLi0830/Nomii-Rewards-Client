@@ -148,7 +148,8 @@ const hasCardsContent = (props, userCards) => {
 
 const HomeCards = (props) => {
   console.log("HomeCards props", props);
-  if (!props.locationGranted) {
+  console.log("props.locationGranted", props.location);
+  if (!props.location) {
     return <NoLocationScreen/>
   }
   

@@ -2,7 +2,10 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {responsiveWidth, responsiveFontSize, responsiveHeight} from 'react-native-responsive-dimensions';
 import { FontAwesome } from '@expo/vector-icons';
-
+import {Location} from 'expo';
+import {userActions} from '../modules';
+import {connect} from 'react-redux';
+import {Actions} from 'react-native-router-flux';
 
 const numberColWidth = responsiveWidth(4);
 
@@ -60,6 +63,25 @@ const styles = new StyleSheet.create({
 });
 
 const NoLocationScreen = (props) => {
+  // Constantly check for location permission, redirect to 'home' screen when location is obtained
+  let location;
+  const getLocationInterval = setInterval(async ()=>{
+    try{
+      location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      if (!!location) {
+        console.log("location is obtained", location);
+        props.updateUserLocation(location.coords);
+    
+        clearInterval(getLocationInterval);
+        
+        setTimeout(()=>Actions.home(), 300);// wait 300 millisecond for location to be updated.
+      }
+    }
+    catch(err){
+      console.log("no location permission yet");
+    }
+  }, 2000);
+  
   return <View style={styles.wrapper}>
     <Image resizeMode="contain"
            style={styles.image}
@@ -122,4 +144,11 @@ const NoLocationScreen = (props) => {
   </View>
 };
 
-export default NoLocationScreen;
+// Container
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUserLocation: (location) => dispatch(userActions.updateUserLocation(location)),
+  }
+};
+
+export default connect(null, mapDispatchToProps)(NoLocationScreen);

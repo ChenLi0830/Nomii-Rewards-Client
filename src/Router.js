@@ -68,6 +68,9 @@ const RouterComponent = ({user}) => {
   
   let initialScreen = determineInitialScreen(isNewUser, locationNotGranted);
   
+  // console.log("initialScreen", initialScreen);
+  // console.log("locationNotGranted", locationNotGranted);
+  
   if (notLoggedIn) return <Login/>;
   else return <Router>
     <Scene key="main">
@@ -76,7 +79,6 @@ const RouterComponent = ({user}) => {
              titleStyle = {styles.cardListTitle} title="Location Services"/>
   
       <Scene key="home" component={HomeCards} type="reset" initial={initialScreen === "home"}
-             locationGranted = {!locationNotGranted}
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              onLeft={()=>{Actions.promoCode()}}

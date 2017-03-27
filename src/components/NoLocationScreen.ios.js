@@ -58,6 +58,25 @@ const styles = new StyleSheet.create({
 });
 
 const NoLocationScreen = (props) => {
+  // Constantly check for location permission, redirect to 'home' screen when location is obtained
+  let location;
+  const getLocationInterval = setInterval(async ()=>{
+    try{
+      location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      if (!!location) {
+        console.log("location is obtained", location);
+        props.updateUserLocation(location.coords);
+        
+        clearInterval(getLocationInterval);
+        
+        setTimeout(()=>Actions.home(), 300);// wait 300 millisecond for location to be updated.
+      }
+    }
+    catch(err){
+      console.log("no location permission yet");
+    }
+  }, 2000);
+  
   return <View style={styles.wrapper}>
     <Image resizeMode="contain"
            style={styles.image}
