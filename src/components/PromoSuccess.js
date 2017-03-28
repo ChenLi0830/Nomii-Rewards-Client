@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
 
 const {width,height} = Dimensions.get('window');
 
@@ -35,7 +36,13 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoSuccess = ({redeemedCoupons}) => {
+const redirectScreen = (location) => {
+  if (location) Actions.home();
+  else Actions.location();
+};
+
+const PromoSuccess = ({redeemedCoupons, location}) => {
+  console.log("location", location);
   let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
   if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
   
@@ -51,9 +58,13 @@ const PromoSuccess = ({redeemedCoupons}) => {
           {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
         </Text>
         
-        <Button style={styles.button} type="primary" onPress={() => Actions.home()}>AWESOME!</Button>
+        <Button style={styles.button} type="primary" onPress={() => redirectScreen(location)}>AWESOME!</Button>
       </View>
   )
 };
 
-export default PromoSuccess;
+//Container
+const mapStateToProps = (state)=>({
+  location: state.user.location,
+});
+export default connect(mapStateToProps)(PromoSuccess);

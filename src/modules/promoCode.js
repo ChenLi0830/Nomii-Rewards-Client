@@ -53,10 +53,11 @@ export const userSubmitPromo = (redeemPromoMutation, variables) => {
 };
 
 export const userSkipPromo = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dismissKeyboard();
     setTimeout(() => {
-      Actions.home();
+      if (getState().user.location) Actions.home();
+      else Actions.location();
       dispatch(userChangedScreen());
     },300)}
 };
