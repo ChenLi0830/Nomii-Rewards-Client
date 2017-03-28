@@ -1,6 +1,6 @@
 {
-  "name": "Nomii Rewards",
-  "description": "Nomii Rewards App",
+  "name": "Staging Nomii Rewards",
+  "description": "Nomii Rewards App - Staging",
   "slug": "nomii-rewards-exponentjs-staging",
   "privacy": "public",
   "sdkVersion": "15.0.0",
