@@ -1,10 +1,10 @@
 {
-  "name": "Staging Nomii Rewards",
-  "description": "Nomii Rewards App - Staging",
-  "slug": "nomii-rewards-exponentjs-staging",
+  "name": "Dev Nomii Rewards",
+  "description": "Nomii Rewards App - Dev",
+  "slug": "nomii-rewards-exponentjs-dev",
   "privacy": "public",
   "sdkVersion": "15.0.0",
-  "version": "1.3.0",
+  "version": "1.2.1",
   "orientation": "portrait",
   "primaryColor": "#e8314a",
   "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards-assets/nomii-rewards-app-icon_512.png",
@@ -16,11 +16,11 @@
     "assetExts": ["ttf"]
   },
   "ios": {
-    "bundleIdentifier": "ca.nomii.rewards.staging"
+    "bundleIdentifier": "ca.nomii.rewards.dev"
   },
   "facebookScheme": "fb1933027890253863",
   "android": {
-    "package": "com.nomii.rewards.staging",
-    "versionCode": 5
+    "package": "com.nomii.rewards.dev",
+    "versionCode": 4
   }
 }

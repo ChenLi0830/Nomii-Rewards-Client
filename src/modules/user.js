@@ -6,6 +6,7 @@ import dismissKeyboard from 'dismissKeyboard';
 const UPDATE_USER_ID = "UPDATE_USER_ID";
 const UPDATE_USER = "UPDATE_USER";
 const UPDATE_USER_LOCATION = "UPDATE_USER_LOCATION";
+const UPDATE_USER_PUSH_TOKEN = "UPDATE_USER_PUSH_TOKEN";
 
 // Action creator
 export const updateUserId = (userId) => ({
@@ -22,6 +23,12 @@ export const updateUserLocation = (location) => ({
   type: UPDATE_USER_LOCATION,
   payload: location,
 });
+
+export const updateUserPushToken = (pushToken) => ({
+  type: UPDATE_USER_PUSH_TOKEN,
+  payload: pushToken,
+});
+
 
 // Reducer
 const initialState = {
@@ -40,6 +47,8 @@ const reducer = (state = initialState, action) => {
     case "UPDATE_USER":
       // console.log("new user", {...state, ...action.payload});
       return {...state, ...action.payload};
+    case "UPDATE_USER_PUSH_TOKEN":
+      return {...state, pushToken: action.payload};
     default:
       return state;
   }

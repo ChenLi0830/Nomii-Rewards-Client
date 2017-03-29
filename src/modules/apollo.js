@@ -4,7 +4,7 @@ import ApolloClient, {createNetworkInterface} from 'apollo-client';
 let uri;
 switch (config.slug){
   case "nomii-rewards-exponentjs-dev":
-    uri = "http://localhost:4000/graphql";
+    uri = "http://192.168.0.14:4000/graphql"; //The LAN IP address where GraphQL is hosted
     break;
   case "nomii-rewards-exponentjs-staging":
     uri = "https://p9s1hjsm03.execute-api.us-west-2.amazonaws.com/staging/graphql";

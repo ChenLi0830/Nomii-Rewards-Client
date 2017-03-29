@@ -2,6 +2,11 @@ import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
 import {Button} from './Button';
 import {Actions} from 'react-native-router-flux';
+import { Permissions, Notifications } from 'expo';
+import {graphql} from 'react-apollo';
+import {connect} from 'react-redux';
+import {userUpsertPushTokenMutation} from '../../graphql/user';
+import {userActions} from '../../modules';
 
 const {width,height} = Dimensions.get('window');
 
@@ -65,7 +70,46 @@ const buttonTitles = [
   "AWESOME!"
 ];
 
+async function registerForPushNotificationsAsync(props) {
+  // Android remote notification permissions are granted during the app
+  // install, so this will only ask on iOS
+  let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
+  
+  // Stop here if the user did not grant permissions
+  if (status !== 'granted') {
+    console.log("status", status);
+    return;
+  }
+  
+  // Get the token that uniquely identifies this device
+  let token = await Notifications.getExponentPushTokenAsync();
+  
+  console.log("props.userId", props.userId);
+  console.log("pushToken", token);
+  
+  await props.mutate({
+    variables: {
+      userId: props.userId,
+      pushToken: token,
+  }});
+  
+  props.updateUserPushToken(token);
+}
+
+const btnPressed = async (props) => {
+  if (!props.pushToken || typeof props.pushToken !== "string" || props.pushToken.length === 0) {
+    try {
+      await registerForPushNotificationsAsync(props);
+    }
+    catch(error){
+      console.log("error registerForPushNotificationsAsync", error);
+    }
+  }
+  Actions.home();
+};
+
 const RewardScreen = (props) => {
+  console.log("RewardScreen props", props);
   const index = props.progress;
   
   return (
@@ -82,11 +126,33 @@ const RewardScreen = (props) => {
           {detailText[index]}
         </Text>
         
-        <Button style={styles.button} type="primary" onPress={() => Actions.home()}>
+        <Button style={styles.button} type="primary" onPress={() => btnPressed(props)}>
           {buttonTitles[index]}
         </Button>
       </View>
   )
 };
 
-export {RewardScreen};
+//Container
+const RewardScreenWithGraphQL = graphql(userUpsertPushTokenMutation, {
+  options: (ownProps) => ({variables: {id: ownProps.userId}}),
+})(RewardScreen);
+
+const mapStateToProps = (state) => {
+  console.log("state.user", state.user);
+  // console.log("state.user.userId", state.user.userId);
+  return {
+    userId: state.user.id,
+    pushToken: state.user.pushToken,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUserPushToken: (pushToken) => dispatch(userActions.updateUserPushToken(pushToken)),
+  }
+};
+
+const containerComponent = connect(mapStateToProps, mapDispatchToProps)(RewardScreenWithGraphQL);
+
+export {containerComponent as RewardScreen};
