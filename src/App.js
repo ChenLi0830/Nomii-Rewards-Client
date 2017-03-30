@@ -6,6 +6,7 @@ import {ApolloProvider} from 'react-apollo';
 import {client} from './modules/apollo';
 import store from './modules';
 import RouterWrapper from './RouterWrapper';
+import {Amplitude} from 'expo';
 
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 
@@ -35,8 +36,10 @@ class App extends Component {
     // console.log("App props", props);
     super(props);
   }
-  
+
   render() {
+    // Amplitude.logEvent('App opened');
+
     // console.log("App this.props.fbUser", this.props.fbUser);
     return <ApolloProvider store={store} client={client}>
       <RouterWrapper fbUser={this.props.fbUser}/>

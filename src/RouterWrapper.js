@@ -4,7 +4,7 @@ import {UpsertUserMutation} from './graphql/user';
 import {graphql} from 'react-apollo';
 import {connect} from'react-redux'
 import {userActions} from './modules';
-import {Location, Permissions} from 'expo';
+import {Amplitude, Location, Permissions} from 'expo';
 import Router from './Router';
 
 const styles = StyleSheet.create({
@@ -21,19 +21,19 @@ class RouterWrapper extends Component{
   state = {
     isReady: false,
   };
-  
+
   constructor(props){
     super(props);
     console.log("RouterWrapper props", this.props);
   }
-  
+
   async upsertUser(){
     try {
       if (!this.props.fbUser) return null;
-      
+
       const {id, name, token} = this.props.fbUser;
       console.log("id, name, token", id, name, token);
-      
+
       const userResult = await this.props.mutate({
         variables: {
           id: id,
@@ -41,30 +41,30 @@ class RouterWrapper extends Component{
           token: token,
         }
       });
-  
+
       const user = userResult.data.upsertUser;
       console.log("user", user);
-      
+
       this.props.updateUser(user);
       // this.props.updateUserId(id);
       // console.log("user", user);
       return user;
-      
-      
+
+
     }
     catch(err){
       console.log("err", err);
       // Todo handle network connection error
     }
   }
-  
+
   async getLocation(){
     try {
       // const locationPermission = await Permissions.getAsync(Permissions.LOCATION);
       // console.log("locationPermission", locationPermission);
-  
+
       let location = {};
-  
+
       await Promise.race([
           Location.getCurrentPositionAsync({enableHighAccuracy: true}),
           // 2s Timeout for Android phones system version < 6
@@ -77,7 +77,7 @@ class RouterWrapper extends Component{
           .catch(error => {
             console.log("get location timed out", error);
           });
-      
+
       console.log("location", location);
       this.props.updateUserLocation(location.coords);
     }
@@ -85,20 +85,32 @@ class RouterWrapper extends Component{
       console.log("App doesn't have location permission");
     }
   }
-  
+
+  // async setAmplitudeUserId() {
+  //   try {
+  //     Amplitude.setUserId(this.props.fbUser.id)
+  //   } catch(error) {
+  //     console.log('********ERROR********')
+  //   }
+  // }
+
   async componentWillMount(){
     //Upsert user
-    const promises = [this.getLocation(), this.upsertUser()];
+    const promises = [
+      this.getLocation(),
+      this.upsertUser(),
+      // this.setAmplitudeUserId()
+    ];
     await Promise.all(promises);
     this.setState({isReady: true});
   }
-  
+
   render(){
     if (!this.state.isReady) {
       // Toast.loading('Loading...', 0);
       return <View></View>;
     }
-    
+
     return <Router/>
   }
 }
@@ -114,4 +126,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(null, mapDispatchToProps)(RouterWrapperWithMutation);
-

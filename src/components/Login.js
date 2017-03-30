@@ -4,7 +4,7 @@ import {Button} from './common';
 import {Image, View, Text} from 'react-native-animatable';
 // import Playground from './animations/Playground';
 import {Actions} from 'react-native-router-flux';
-import {Facebook} from 'expo';
+import {Amplitude, Facebook} from 'expo';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
 import {UpsertUserMutation} from '../graphql/user';
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
 const upsertUser = async(token, expires, props) => {
   Toast.loading('Loading...', 0);
   await AsyncStorage.setItem("@NomiiStore:token", JSON.stringify({token, expires}));
-  
+
   const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-  
+
   const {name, id} = await response.json();
-  
+
   const userResult = await props.mutate({
     variables: {
       id: id,
@@ -77,12 +77,12 @@ const upsertUser = async(token, expires, props) => {
       token: token,
     }
   });
-  
+
   const user = userResult.data.upsertUser;
-  
+
   props.updateUser(user);
   // console.log("user", user);
-  
+
   Toast.hide();
   return user;
 };
@@ -93,17 +93,18 @@ const facebookLogin = async(props) => {
         permissions: ['public_profile', 'email'],
         behavior: __DEV__ ? "web" : "browser",
       });
-  
-  
+
+
   // console.log("fbResponse", fbResponse);
   // const  = fbResponse;
-  
+
   // console.log("type, token, expires", type, token, expires);
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
     const user = await upsertUser(token, expires, props);
-    
-  
+
+    Amplitude.logEvent('FB login successful');
+
     // console.log("user", user);
     // // console.log("user.cards", user.cards);
     // if (user.cards && user.cards.length>0) {
@@ -115,6 +116,7 @@ const facebookLogin = async(props) => {
     //   Actions.intro();
     // }
   } else {
+    Amplitude.logEvent('FB login cancelled');
     Alert.alert('Log in cancelled');
   }
 };
@@ -132,39 +134,39 @@ const login = async(props) => {
 class Login extends Component {
   render() {
     return <View style={styles.view}>
-      
+
       <Image animation="fadeInDown" duration={200} delay={100}
              style={styles.logo}
              resizeMode="contain"
              source={require('../../public/images/nomii-offers-login.png')}/>
-      
+
       <Image animation="bounceInDown"
              style={styles.slogan}
              resizeMode="contain"
              source={require('../../public/images/slogan.png')}/>
-      
+
       {/*<Text style={styles.title} animation="bounceInDown">*/}
       {/*Stamp cards that*/}
       {/*{"\n"}*/}
       {/*reward you instantly*/}
       {/*</Text>*/}
-      
+
       <Image style={styles.image}
              animation="bounceInDown"
              delay={300}
              resizeMode="contain"
              source={require('../../public/images/card-icons-onboarding.png')}/>
-      
+
       <View animation="fadeInUp" duration={400} delay={600}>
         <Button onPress={() => login(this.props)} style={styles.loginBtn} type="default">
           {"Continue with facebook".toUpperCase()}
         </Button>
-        
+
         <Text style={styles.textExplain}>
           We don't post anything on Facebook.
         </Text>
       </View>
-      
+
       <Text style={styles.textPolicy} animation="fadeInUp" duration={400} delay={800}>
         By signing up, I agree to Nomii's
         <Text style={styles.textPolicyLink}
@@ -177,7 +179,7 @@ class Login extends Component {
           {" Privacy Policy"}
         </Text>
       </Text>
-    
+
     </View>
   }
 }

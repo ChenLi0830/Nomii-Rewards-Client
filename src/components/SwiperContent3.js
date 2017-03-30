@@ -38,11 +38,9 @@ const SwiperContent3 = () => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
-          The More Visits
+          More Visits
           {'\n'}
-          The Better
-          {'\n'}
-          The Rewards
+          Better Rewards
         </Text>
         <Image resizeMode="contain"
                style={styles.image}
