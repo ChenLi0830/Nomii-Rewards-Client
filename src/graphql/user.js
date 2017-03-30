@@ -5,7 +5,6 @@ mutation upsertUser($id:ID, $fbName: String, $token: String){
   upsertUser(id: $id, fbName: $fbName, token: $token){
     id,
     fbName,
-    pushToken,
     registeredAt,
     lastLoginAt,
     cards {
@@ -32,7 +31,6 @@ query getUser($id:ID){
   user(id:$id){
     id,
     fbName,
-    pushToken,
     cards{
 			id
       stampCount,
@@ -72,13 +70,13 @@ mutation userStampCard($userId: ID, $cardId: ID, $PIN: String){
 
 `;
 
-const userUpsertPushTokenMutation = gql`
+const userAddPushTokenMutation = gql`
 mutation userUpsertPushToken($userId: ID, $pushToken: String){
-  upsertPushToken(userId: $userId, pushToken: $pushToken){
+  addPushToken(userId: $userId, pushToken: $pushToken){
     id,
     fbName,
   }
 }
 `;
 
-export {UpsertUserMutation, getUserQuery, userStampCardMutation, userUpsertPushTokenMutation};
+export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation};

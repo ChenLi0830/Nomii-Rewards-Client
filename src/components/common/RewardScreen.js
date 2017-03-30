@@ -1,12 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions, Platform, AsyncStorage} from 'react-native';
 import {Button} from './Button';
 import {Actions} from 'react-native-router-flux';
 import { Permissions, Notifications } from 'expo';
 import {graphql} from 'react-apollo';
 import {connect} from 'react-redux';
-import {userUpsertPushTokenMutation} from '../../graphql/user';
+import {userAddPushTokenMutation} from '../../graphql/user';
 import {userActions} from '../../modules';
+import {Toast} from 'antd-mobile';
 
 const {width,height} = Dimensions.get('window');
 
@@ -93,18 +94,25 @@ async function registerForPushNotificationsAsync(props) {
       pushToken: token,
   }});
   
-  props.updateUserPushToken(token);
+  AsyncStorage.setItem("@NomiiStore:pushToken", token);
 }
 
 const btnPressed = async (props) => {
-  if (!props.pushToken || typeof props.pushToken !== "string" || props.pushToken.length === 0) {
-    try {
-      await registerForPushNotificationsAsync(props);
+  try {
+    Toast.loading("Saving Data", 0);
+    await AsyncStorage.removeItem("@NomiiStore:pushToken");
+    const pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
+    console.log("pushToken", pushToken);
+    if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
+        await registerForPushNotificationsAsync(props);
     }
-    catch(error){
-      console.log("error registerForPushNotificationsAsync", error);
-    }
+    Toast.hide();
   }
+  catch(error){
+    console.log("error registerForPushNotificationsAsync", error);
+    Toast.hide();
+  }
+  
   Actions.home();
 };
 
@@ -134,7 +142,7 @@ const RewardScreen = (props) => {
 };
 
 //Container
-const RewardScreenWithGraphQL = graphql(userUpsertPushTokenMutation, {
+const RewardScreenWithGraphQL = graphql(userAddPushTokenMutation, {
   options: (ownProps) => ({variables: {id: ownProps.userId}}),
 })(RewardScreen);
 
