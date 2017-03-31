@@ -3,6 +3,7 @@ import {Amplitude, Asset, AppLoading} from 'expo';
 import {AsyncStorage, Text} from 'react-native';
 import App from './App';
 import {Toast} from 'antd-mobile';
+import config from '../exp.json';
 
 class AppPreloading extends React.Component {
   state = {
@@ -15,7 +16,7 @@ class AppPreloading extends React.Component {
       const promises = [
         this.fetchUser(),
         this._cacheResourcesAsync(),
-        this._initAmplitude(),
+        this.initAmplitude(),
       ];
 
       const result = await Promise.all(promises);
@@ -39,8 +40,16 @@ class AppPreloading extends React.Component {
     );
   }
 
-  async _initAmplitude() {
-    const apiKey = '803bfb08c172b8c368784b020106cfd7'
+  async initAmplitude() {
+    switch (config.slug) {
+      case "nomii-rewards-exponentjs":
+        const apiKey = '803bfb08c172b8c368784b020106cfd7' // production
+        break;
+      default:
+        const apiKey = 'c0e8baedac6e93c09a242c7efeedcf68' // staging
+        break;
+    }
+
     await Amplitude.initialize(apiKey)
   }
 
