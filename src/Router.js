@@ -11,7 +11,7 @@ import {RewardScreen} from './components/common';
 import AssignPIN from './components/AssignPIN'
 import ShowStats from './components/ShowStats';
 import AskLocationScreen from './components/AskLocationScreen';
-import NoLocationScreen from './components/NoLocationScreen';
+import AskNotificationScreen from './components/AskNotificationScreen';
 
 import {connect} from 'react-redux';
 
@@ -104,6 +104,8 @@ const RouterComponent = ({user}) => {
       <Scene key="promoCode" component={PromoCode}
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" hideNavBar/>
+  
+      <Scene key="askNotification" component={AskNotificationScreen} hideNavBar initial/>
       
       <Scene key="statistics" direction="vertical" type="reset">
         <Scene key="stat" component={ShowStats} title="Report"
