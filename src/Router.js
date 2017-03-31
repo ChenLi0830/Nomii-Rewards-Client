@@ -105,7 +105,7 @@ const RouterComponent = ({user}) => {
              direction="vertical" hideNavBar/>
       <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" hideNavBar/>
   
-      <Scene key="askNotification" component={AskNotificationScreen} hideNavBar initial/>
+      <Scene key="askNotification" component={AskNotificationScreen} hideNavBar/>
       
       <Scene key="statistics" direction="vertical" type="reset">
         <Scene key="stat" component={ShowStats} title="Report"

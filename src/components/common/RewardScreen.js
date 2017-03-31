@@ -71,74 +71,73 @@ const buttonTitles = [
   "AWESOME!"
 ];
 
-async function registerForPushNotificationsAsync(props) {
-  // Android remote notification permissions are granted during the app
-  // install, so this will only ask on iOS
-  let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
-  
-  // Stop here if the user did not grant permissions
-  if (status !== 'granted') {
-    console.log("status", status);
-    return;
-  }
-  
-  // Get the token that uniquely identifies this device
-  let token = await Notifications.getExponentPushTokenAsync();
-  
-  console.log("props.userId", props.userId);
-  console.log("pushToken", token);
-  
-  await props.mutate({
-    variables: {
-      userId: props.userId,
-      pushToken: token,
-  }});
-  
-  AsyncStorage.setItem("@NomiiStore:pushToken", token);
-}
+// async function registerForPushNotificationsAsync(props) {
+//   // Android remote notification permissions are granted during the app
+//   // install, so this will only ask on iOS
+//   let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
+//
+//   // Stop here if the user did not grant permissions
+//   if (status !== 'granted') {
+//     console.log("status", status);
+//     return;
+//   }
+//
+//   // Get the token that uniquely identifies this device
+//   let token = await Notifications.getExponentPushTokenAsync();
+//
+//   console.log("props.userId", props.userId);
+//   console.log("pushToken", token);
+//
+//   await props.mutate({
+//     variables: {
+//       userId: props.userId,
+//       pushToken: token,
+//   }});
+//
+//   AsyncStorage.setItem("@NomiiStore:pushToken", token);
+// }
 
 const btnPressed = async (props) => {
-  try {
-    Toast.loading("Saving Data", 0);
-    await AsyncStorage.removeItem("@NomiiStore:pushToken");
-    const pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
     console.log("pushToken", pushToken);
     if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
-        await registerForPushNotificationsAsync(props);
+      Actions.askNotification();
+    } else {
+      Actions.home();
     }
-    Toast.hide();
-  }
-  catch(error){
-    console.log("error registerForPushNotificationsAsync", error);
-    Toast.hide();
-  }
-  
-  Actions.home();
 };
 
-const RewardScreen = (props) => {
-  console.log("RewardScreen props", props);
-  const index = props.progress;
+let pushToken;
+class RewardScreen extends React.Component{
+  async componentDidMount(){
+    pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
+  }
   
-  return (
-      <View style={styles.slide}>
-        <Image resizeMode="contain"
-               style={styles.image}
-               source = {images[index]}/>
-        
-        <Text style={styles.title}>
-          {titles[index]}
-        </Text>
+  render(){
+    let props = this.props;
+    
+    console.log("RewardScreen props", props);
+    const index = props.progress;
   
-        <Text style={styles.detailText}>
-          {detailText[index]}
-        </Text>
+    return (
+        <View style={styles.slide}>
+          <Image resizeMode="contain"
+                 style={styles.image}
+                 source = {images[index]}/>
         
-        <Button style={styles.button} type="primary" onPress={() => btnPressed(props)}>
-          {buttonTitles[index]}
-        </Button>
-      </View>
-  )
+          <Text style={styles.title}>
+            {titles[index]}
+          </Text>
+        
+          <Text style={styles.detailText}>
+            {detailText[index]}
+          </Text>
+        
+          <Button style={styles.button} type="primary" onPress={() => btnPressed(props)}>
+            {buttonTitles[index]}
+          </Button>
+        </View>
+    )
+  }
 };
 
 //Container
@@ -151,16 +150,16 @@ const mapStateToProps = (state) => {
   // console.log("state.user.userId", state.user.userId);
   return {
     userId: state.user.id,
-    pushToken: state.user.pushToken,
+    // pushToken: state.user.pushToken,
   }
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateUserPushToken: (pushToken) => dispatch(userActions.updateUserPushToken(pushToken)),
-  }
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     updateUserPushToken: (pushToken) => dispatch(userActions.updateUserPushToken(pushToken)),
+//   }
+// };
 
-const containerComponent = connect(mapStateToProps, mapDispatchToProps)(RewardScreenWithGraphQL);
+const containerComponent = connect(mapStateToProps)(RewardScreenWithGraphQL);
 
 export {containerComponent as RewardScreen};

@@ -4,14 +4,22 @@
   "slug": "nomii-rewards-exponentjs-dev",
   "privacy": "public",
   "sdkVersion": "15.0.0",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "orientation": "portrait",
   "primaryColor": "#e8314a",
-  "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards-assets/nomii-rewards-app-icon_512.png",
-  "loading": {
-    "icon": "https://s3-us-west-2.amazonaws.com/nomii-rewards/nomii-rewards-app-icon_192.png",
-    "hideExponentText": true
+  "icon": "./public/images/nomii-rewards-app-icon_512.png",
+  "notification": {
+    "icon": "./public/images/nomii-rewards-app-icon_192.png",
+    "color": "#e8314a",
+    "androidMode": "collapse",
+    "androidCollapsedTitle": "You have several cards expiring soon"
   },
+  "loading": {
+    "icon": "./public/images/nomii-rewards-app-icon_192.png",
+    "hideExponentText": true,
+    "backgroundColor": "#e8314a"
+  },
+  "scheme": "nomii",
   "packagerOpts": {
     "assetExts": ["ttf"]
   },
@@ -21,6 +29,8 @@
   "facebookScheme": "fb1933027890253863",
   "android": {
     "package": "com.nomii.rewards.dev",
-    "versionCode": 4
-  }
+    "versionCode": 5
+  },
+  "androidShowExponentNotificationInShellApp": false
 }
+

@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View, Image, Dimensions, Platform, AsyncStorage} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
@@ -36,35 +36,74 @@ const styles = StyleSheet.create({
   }
 });
 
-const redirectScreen = (location) => {
-  if (location) Actions.home();
-  else Actions.location();
-};
+let pushToken;
 
-const PromoSuccess = ({redeemedCoupons, location}) => {
-  console.log("location", location);
-  let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
-  if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
+class PromoSuccess extends Component {
+  constructor(props){
+    super(props);
+  }
+  async componentDidMount(){
+    pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
+  }
   
-  return (
-      <View style={styles.slide}>
-        <Image resizeMode="contain"
-               style={styles.image}
-               source = {require('../../public/images/reward-icon-onboarding.png')}/>
+  btnClick(){
+    // console.log("pushToken", pushToken);
+    if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
+      Actions.askNotification();
+    } else {
+      Actions.home();
+    }
+  }
+  
+  render(){
+    const {redeemedCoupons} = this.props;
+    // console.log("location", location);
+    let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
+    if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
+  
+    return (
+        <View style={styles.slide}>
+          <Image resizeMode="contain"
+                 style={styles.image}
+                 source = {require('../../public/images/reward-icon-onboarding.png')}/>
         
-        <Text style={styles.title}>
-          SUCCESS!!
-          {'\n'}
-          {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
-        </Text>
+          <Text style={styles.title}>
+            SUCCESS!!
+            {'\n'}
+            {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
+          </Text>
         
-        <Button style={styles.button} type="primary" onPress={() => redirectScreen(location)}>AWESOME!</Button>
-      </View>
-  )
-};
+          <Button style={styles.button} type="primary" onPress={() => this.btnClick()}>AWESOME!</Button>
+        </View>
+    )
+  }
+}
 
-//Container
-const mapStateToProps = (state)=>({
-  location: state.user.location,
-});
-export default connect(mapStateToProps)(PromoSuccess);
+// const PromoSuccess = ({redeemedCoupons}) => {
+//   console.log("location", location);
+//   let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
+//   if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
+//
+//   return (
+//       <View style={styles.slide}>
+//         <Image resizeMode="contain"
+//                style={styles.image}
+//                source = {require('../../public/images/reward-icon-onboarding.png')}/>
+//
+//         <Text style={styles.title}>
+//           SUCCESS!!
+//           {'\n'}
+//           {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
+//         </Text>
+//
+//         <Button style={styles.button} type="primary" onPress={() => redirectScreen()}>AWESOME!</Button>
+//       </View>
+//   )
+// };
+
+// //Container
+// const mapStateToProps = (state)=>({
+//   location: state.user.location,
+// });
+// export default connect(mapStateToProps)(PromoSuccess);
+export default PromoSuccess;
