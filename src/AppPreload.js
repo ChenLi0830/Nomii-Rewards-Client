@@ -41,12 +41,13 @@ class AppPreloading extends React.Component {
   }
 
   async initAmplitude() {
+    let apiKey;
     switch (config.slug) {
       case "nomii-rewards-exponentjs":
-        const apiKey = '803bfb08c172b8c368784b020106cfd7' // production
+        apiKey = '803bfb08c172b8c368784b020106cfd7' // production
         break;
       default:
-        const apiKey = 'c0e8baedac6e93c09a242c7efeedcf68' // staging
+        apiKey = 'c0e8baedac6e93c09a242c7efeedcf68' // staging
         break;
     }
 
