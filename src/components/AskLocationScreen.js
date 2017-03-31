@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Platform} from 'react-native';
 import {Button} from './common';
 import {Location, Permissions} from 'expo';
 import {Toast} from 'antd-mobile';
@@ -57,24 +57,27 @@ const askLocationPermission = async (props)=>{
         props.updateUserLocation(updateResult.coords);
       });
   
-      //Get instant location
-      let location = {};
-
-      await Promise.race([
-        Location.getCurrentPositionAsync({enableHighAccuracy: true}),
-        new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
-      ])
-          .then(result => {
-            console.log("location", result);
-            location = result;
-          })
-          .catch(error => {
-            // console.log("error", error);
-            Toast.offline("There is something wrong with\nyour system location settings", 3);
-          });
-      
-      // console.log("location", location);
-      props.updateUserLocation(location.coords);
+      // iOS will update location right away while android will wait, the current location is obtained here for android
+      if (Platform.OS === 'android'){
+        //Get instant location
+        let location = {};
+  
+        await Promise.race([
+          Location.getCurrentPositionAsync({enableHighAccuracy: true}),
+          new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
+        ])
+            .then(result => {
+              console.log("location", result);
+              location = result;
+            })
+            .catch(error => {
+              // console.log("error", error);
+              Toast.offline("There is something wrong with\nyour system location settings", 3);
+            });
+  
+        // console.log("location", location);
+        props.updateUserLocation(location.coords);
+      }
       
       setTimeout(() => {
         Toast.hide();

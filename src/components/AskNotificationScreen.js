@@ -51,7 +51,7 @@ const registerForPushNotificationsAsync = async (props) => {
 
   // Stop here if the user did not grant permissions
   if (status === 'granted') {
-    Toast.loading("Saving Data", 0);
+    Toast.loading("Saving...", 0);
   
     // Get the token that uniquely identifies this device
     let token = await Notifications.getExponentPushTokenAsync();
