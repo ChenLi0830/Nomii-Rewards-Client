@@ -64,7 +64,23 @@ class RouterWrapper extends Component{
       // console.log("locationPermission", locationPermission);
 
       let location = {};
-
+  
+      // Keep track of User's location
+      const options = {
+        enableHighAccuracy: true,
+        timeInterval: 5000,
+        distanceInterval: 5
+      };
+      
+      Location.watchPositionAsync(options, (updateResult) => {
+        console.log("updateResult", updateResult);
+        this.props.updateUserLocation(updateResult.coords);
+      })
+          .catch(error=>{
+            console.log("error", error);
+            console.log("location not permitted");
+          });
+      
       await Promise.race([
           Location.getCurrentPositionAsync({enableHighAccuracy: true}),
           // 2s Timeout for Android phones system version < 6
@@ -83,6 +99,7 @@ class RouterWrapper extends Component{
     }
     catch(error) {
       console.log("App doesn't have location permission");
+      console.log("error", error);
     }
   }
 
