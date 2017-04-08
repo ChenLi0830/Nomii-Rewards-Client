@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 
 const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, userSkipPromo, userId}) => {
   const submitPromo = ()=>{
-    console.log("userId", userId);
+    // console.log("userId", userId);
     const variables = {
       userId: userId,
       code: code
@@ -75,7 +75,7 @@ const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, use
     userSubmitPromo(mutate, variables);
   };
   
-  console.log(width, height);
+  // console.log(width, height);
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
     <Image style={styles.image} resizeMode="contain"

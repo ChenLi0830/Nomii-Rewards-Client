@@ -1,6 +1,7 @@
 import {Actions} from 'react-native-router-flux';
 import { Toast } from 'antd-mobile';
 import dismissKeyboard from 'dismissKeyboard';
+import {getUserQuery} from '../graphql/user';
 
 // Action types
 const USER_CHANGE_PROMO = "USER_CHANGE_PROMO";
@@ -36,9 +37,12 @@ export const userSubmitPromo = (redeemPromoMutation, variables) => {
       
       // if (getState().promoCode.code === "code") {
     Toast.loading('Loading...', 0);
-    redeemPromoMutation({variables: {...variables}})
+    redeemPromoMutation({
+      variables: {...variables},
+      refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
+    })
         .then(result => {
-          // console.log("redeem coupon result", result);
+          console.log("redeem coupon result", result);
           Toast.hide();
           dismissKeyboard();
           Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
