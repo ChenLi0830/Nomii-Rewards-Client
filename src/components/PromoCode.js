@@ -1,15 +1,13 @@
 import React from 'react';
-import {Text, View, StyleSheet, Dimensions, TextInput, Image} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, TextInput, Image, Keyboard} from 'react-native';
 import {Button} from './common';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {promoActions} from '../modules';
 import {redeemCouponMutation} from '../graphql/coupon';
 import {Actions} from 'react-native-router-flux';
-import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
-import { Keyboard } from 'react-native';
 import {getUserQuery} from '../graphql/user';
 import {compose, withHandlers} from 'recompose';
 
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
     height: 150,
     // height: height * 0.4,
   },
-  inputBox:{
+  inputBox: {
     // alignItems: "center"
   },
   inputText: {
@@ -71,7 +69,7 @@ const styles = StyleSheet.create({
 
 const PromoCode = (props) => {
   const {code, message, userChangePromo, userSkipPromo} = props;
-
+  
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
     <Image style={styles.image} resizeMode="contain"
@@ -128,7 +126,7 @@ export default compose(
       submitPromo: props => () => {
         Toast.loading('Loading...', 0);
         // console.log("start submit");
-  
+        
         props.mutate({
           variables: {
             userId: props.userId,

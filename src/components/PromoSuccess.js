@@ -79,31 +79,4 @@ class PromoSuccess extends Component {
   }
 }
 
-// const PromoSuccess = ({redeemedCoupons}) => {
-//   console.log("location", location);
-//   let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
-//   if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
-//
-//   return (
-//       <View style={styles.slide}>
-//         <Image resizeMode="contain"
-//                style={styles.image}
-//                source = {require('../../public/images/reward-icon-onboarding.png')}/>
-//
-//         <Text style={styles.title}>
-//           SUCCESS!!
-//           {'\n'}
-//           {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
-//         </Text>
-//
-//         <Button style={styles.button} type="primary" onPress={() => redirectScreen()}>AWESOME!</Button>
-//       </View>
-//   )
-// };
-
-// //Container
-// const mapStateToProps = (state)=>({
-//   location: state.user.location,
-// });
-// export default connect(mapStateToProps)(PromoSuccess);
 export default PromoSuccess;
