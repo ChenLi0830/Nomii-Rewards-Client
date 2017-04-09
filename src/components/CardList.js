@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
-import {StyleSheet, ListView, Dimensions, View, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {StyleSheet, ListView, Dimensions, View} from 'react-native';
 import Card from './common/Card';
 import {connect} from 'react-redux';
-import {homeActions} from '../modules';
 import {graphql} from 'react-apollo';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {calculateCardsWithDistances} from './api';
+import {compose} from 'recompose';
+import {WithLoadingComponent} from './common';
 
 const {width, height} = Dimensions.get("window");
 
@@ -27,10 +28,12 @@ const styles = StyleSheet.create({
 
 const CardList = (props) => {
   // console.log("props", props);
-  // !props.data.loading && console.log("calculateCardsWithDistances(props.data.allRestaurantCards)", calculateCardsWithDistances(props.data.allRestaurantCards, props.location));
+  // !props.data.loading &&
+  // console.log("calculateCardsWithDistances(props.data.allRestaurantCards)",
+  // calculateCardsWithDistances(props.data.allRestaurantCards, props.location));
   if (!props.location) console.warn("props.location doesn't exist");
-    
-  let cardsSortedByDistance =  (props.data.loading) ?  [] : calculateCardsWithDistances(props.data.allRestaurantCards, props.location);
+  
+  let cardsSortedByDistance = calculateCardsWithDistances(props.data.allRestaurantCards, props.location);
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const dataSource = ds.cloneWithRows(cardsSortedByDistance);
   
@@ -54,20 +57,21 @@ const CardList = (props) => {
 }
 
 // Container
-
-const CardListWithGraphQL = graphql(getAllRestaurantCardsQuery, {
-  options: (ownProps) => ({variables: {userId: ownProps.userId}}),
-})(CardList);
-
-const mapStateToProps = (state) => ({
-  userId: state.user.id,
-  location: state.user.location,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    pressCard: (card) => dispatch(homeActions.pressCard(card))
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CardListWithGraphQL);
+export default compose(
+    connect(
+        state => ({
+          userId: state.user.id,
+          location: state.user.location,
+        }),
+        null
+    ),
+    graphql(
+        getAllRestaurantCardsQuery,
+        {
+          options: (ownProps) => ({
+            variables: {userId: ownProps.userId}
+          }),
+        }
+    ),
+    WithLoadingComponent,
+)(CardList);
