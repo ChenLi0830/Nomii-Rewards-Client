@@ -1,15 +1,12 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
-import {Button} from './common';
+import {Button, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
-import {Tabs} from 'antd-mobile';
 import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
-
-const TabPane = Tabs.TabPane;
-
+import {compose} from 'recompose';
 
 const {width, height} = Dimensions.get('window');
 
@@ -88,24 +85,24 @@ const styles = StyleSheet.create({
   assignPINView: {
     marginVertical: 40,
   },
-  assignPINView2:{
+  assignPINView2: {
     marginBottom: height * 0.02,
     justifyContent: "space-around",
-    flex:1.5,
+    flex: 1.5,
     alignItems: "center",
     // backgroundColor: "yellow",
   },
   statsView: {
     marginTop: 20,
   },
-  introView:{
+  introView: {
     justifyContent: "center",
-    flex:1,
+    flex: 1,
     alignItems: "center",
     // backgroundColor: "green",
     // marginTop: 0,
   },
-  text:{
+  text: {
     textAlign: "center",
     fontSize: 18,
     color: "#808080",
@@ -189,18 +186,18 @@ const renderNoPINs = (props) => {
       </View>
     </View>
     
-      <View style={styles.introView}>
-        <Image resizeMode="contain"
-               style={styles.image}
-               source={require('../../public/images/DEALS2.png')}/>
-        
-        <Text style={styles.text}>
-          Check out the total
-          {`\n`}
-          of your monthly visits!
-        </Text>
-      </View>
+    <View style={styles.introView}>
+      <Image resizeMode="contain"
+             style={styles.image}
+             source={require('../../public/images/DEALS2.png')}/>
       
+      <Text style={styles.text}>
+        Check out the total
+        {`\n`}
+        of your monthly visits!
+      </Text>
+    </View>
+    
     <View style={styles.assignPINView2}>
       <Text style={styles.assignPINTitle}>
         Assign PINs
@@ -208,7 +205,7 @@ const renderNoPINs = (props) => {
       <Image resizeMode="contain"
              style={styles.image}
              source={require('../../public/images/PIN.png')}/>
-  
+      
       <Text style={styles.text}>
         Give your staff PIN numbers
       </Text>
@@ -222,7 +219,6 @@ const renderNoPINs = (props) => {
 };
 
 const ShowStats = (props) => {
-  if (props.data.loading) return <View></View>
   if (!props.data.restaurant) {
     throw new Error("user doesn't own restaurant! props.data.restaurant", props.data.restaurant);
     return <View></View>
@@ -242,14 +238,15 @@ const ShowStats = (props) => {
 };
 
 // Container
-const ShowStatsWithGraphQL = graphql(getRestaurantStatsQuery, {
-  options: (ownProps) => ({
-    variables: {
-      restaurantId: ownProps.ownedRestaurant,
-      daysToCover: 30,
-      endTo: getTimeInSec()
-    }
-  })
-})(ShowStats);
-
-export default ShowStatsWithGraphQL;
+export default compose(
+    graphql(getRestaurantStatsQuery, {
+      options: (ownProps) => ({
+        variables: {
+          restaurantId: ownProps.ownedRestaurant,
+          daysToCover: 30,
+          endTo: getTimeInSec()
+        }
+      })
+    }),
+    WithLoadingComponent,
+)(ShowStats);
