@@ -7,9 +7,11 @@ import {promoActions} from '../modules';
 import {redeemCouponMutation} from '../graphql/coupon';
 import {Actions} from 'react-native-router-flux';
 import gql from 'graphql-tag';
-import {graphql, compose} from 'react-apollo';
+import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import { Keyboard } from 'react-native';
+import {getUserQuery} from '../graphql/user';
+import {compose, withHandlers} from 'recompose';
 
 
 const {width, height} = Dimensions.get("window");
@@ -67,35 +69,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoCode = ({code, mutate, message, userChangePromo, userSkipPromo, userId, submitPromoFailed, userChangedScreen}) => {
-  const submitPromo = () => {
-    // console.log("userId", userId);
-    // userSubmitPromo(mutate, variables);
-    Toast.loading('Loading...', 0);
-    console.log("start submit");
-    
-    mutate({
-      variables: {
-        userId: userId,
-        code: code
-      },
-      refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
-    })
-        .then(result => {
-          console.log("redeem coupon result", result);
-          Toast.hide();
-          Keyboard.dismiss();
-          Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
-          userChangedScreen();
-        })
-        .catch(err => {
-          Toast.hide();
-          // console.log("error", err);
-          submitPromoFailed(err.graphQLErrors[0].message);
-        });
-  };
-  
-  // console.log(width, height);
+const PromoCode = (props) => {
+  const {code, message, userChangePromo, userSkipPromo} = props;
+
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
     <Image style={styles.image} resizeMode="contain"
@@ -109,7 +85,7 @@ const PromoCode = ({code, mutate, message, userChangePromo, userSkipPromo, userI
           autoCapitalize="none"
           //placeholder="Promo Code"
           value={code}
-          onChangeText={(text) => userChangePromo(text)}
+          onChangeText={userChangePromo}
           underlineColorAndroid='rgba(0,0,0,0)'
       />
       {
@@ -123,41 +99,55 @@ const PromoCode = ({code, mutate, message, userChangePromo, userSkipPromo, userI
     
     {
       code.length > 0 ?
-          <Button type="primary" onPress={() => submitPromo()}>DONE</Button>
+          <Button type="primary" onPress={props.submitPromo}>DONE</Button>
           :
-          <Button type="ghost" onPress={() => userSkipPromo()}>Skip</Button>
+          <Button type="ghost" onPress={userSkipPromo}>Skip</Button>
     }
     <KeyboardSpacer/>
   </View>
 };
 
+
 //Container
-const PromoCodeWithGraphQL = graphql(redeemCouponMutation)(PromoCode);
-
-const mapStateToProps = (state) => {
-  const {promoCode} = state;
-  return {
-    code: promoCode.code,
-    // loading: promoCode.loading,
-    message: promoCode.message,
-    userId: state.user.id,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    submitPromoFailed: (message) => dispatch(promoActions.submitPromoFailed(message)),
-    userChangedScreen: () => dispatch(promoActions.userChangedScreen()),
-    // userSubmitPromo: (redeemPromoMutation, variables) => {
-    //   dispatch(promoActions.userSubmitPromo(redeemPromoMutation, variables))
-    // },
-    userChangePromo: (promo) => {
-      dispatch(promoActions.userChangePromo(promo))
-    },
-    userSkipPromo: () => {
-      dispatch(promoActions.userSkipPromo())
-    },
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PromoCodeWithGraphQL);
+export default compose(
+    connect(
+        state => ({
+          code: state.promoCode.code,
+          message: state.promoCode.message,
+          userId: state.user.id,
+        }),
+        {
+          submitPromoFailed: promoActions.submitPromoFailed,
+          userChangedScreen: promoActions.userChangedScreen,
+          userChangePromo: promoActions.userChangePromo,
+          userSkipPromo: promoActions.userSkipPromo,
+        }
+    ),
+    graphql(redeemCouponMutation),
+    withHandlers({
+      submitPromo: props => () => {
+        Toast.loading('Loading...', 0);
+        // console.log("start submit");
+  
+        props.mutate({
+          variables: {
+            userId: props.userId,
+            code: props.code
+          },
+          refetchQueries: [{query: getUserQuery, variables: {id: props.userId}}]
+        })
+            .then(result => {
+              console.log("redeem coupon result", result);
+              Toast.hide();
+              Keyboard.dismiss();
+              Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
+              props.userChangedScreen();
+            })
+            .catch(err => {
+              Toast.hide();
+              // console.log("error", err);
+              props.submitPromoFailed(err.graphQLErrors[0].message);
+            });
+      },
+    }),
+)(PromoCode);
