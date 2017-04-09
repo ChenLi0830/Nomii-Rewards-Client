@@ -18,12 +18,12 @@ export const userChangePromo = (newPromo) => ({
   payload: newPromo,
 });
 
-const submitPromoFailed = (message) => ({
+export const submitPromoFailed = (message) => ({
   type: USER_SUBMIT_PROMO_FAILED,
   payload: message,
 });
 
-const userChangedScreen = () => ({
+export const userChangedScreen = () => ({
   type: USER_CHANGED_SCREEN,
 });
 
@@ -31,30 +31,30 @@ const userChangedScreen = () => ({
 //   type: USER_SUBMIT_PROMO_START,
 // });
 
-export const userSubmitPromo = (redeemPromoMutation, variables) => {
-  return (dispatch, getState) => {
-    // dispatch(userSubmitPromoStart());
-      
-      // if (getState().promoCode.code === "code") {
-    Toast.loading('Loading...', 0);
-    redeemPromoMutation({
-      variables: {...variables},
-      refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
-    })
-        .then(result => {
-          console.log("redeem coupon result", result);
-          Toast.hide();
-          dismissKeyboard();
-          Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
-          dispatch(userChangedScreen());
-        })
-        .catch(err => {
-          Toast.hide();
-          // console.log("error", err);
-          dispatch(submitPromoFailed(err.graphQLErrors[0].message));
-        });
-  }
-};
+// export const userSubmitPromo = (redeemPromoMutation, variables) => {
+//   return (dispatch, getState) => {
+//     // dispatch(userSubmitPromoStart());
+//
+//       // if (getState().promoCode.code === "code") {
+//     Toast.loading('Loading...', 0);
+//     redeemPromoMutation({
+//       variables: {...variables},
+//       // refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
+//     })
+//         .then(result => {
+//           console.log("redeem coupon result", result);
+//           Toast.hide();
+//           dismissKeyboard();
+//           Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
+//           dispatch(userChangedScreen());
+//         })
+//         .catch(err => {
+//           Toast.hide();
+//           // console.log("error", err);
+//           dispatch(submitPromoFailed(err.graphQLErrors[0].message));
+//         });
+//   }
+// };
 
 export const userSkipPromo = () => {
   return (dispatch, getState) => {

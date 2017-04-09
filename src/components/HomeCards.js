@@ -16,8 +16,10 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
+import {compose, branch, withHandlers, renderComponent} from 'recompose';
 import {calculateCardsWithDistances, cardIsExpired} from './api';
 import NoLocationScreen from './NoLocationScreen';
+import {WithLoadingComponent} from './common';
 
 const {width, height} = Dimensions.get('window');
 
@@ -82,31 +84,32 @@ const styles = StyleSheet.create({
   }
 });
 
-const noCardsContent = (
-    <View style={styles.slide}>
-      <Image resizeMode="contain"
-             style={styles.image}
-             source={require('../../public/images/Home-empty-screen-card.png')}/>
-      <View>
-        <Text style={styles.title}>
-          Your wallet seems empty.
-          {'\n'}
-          Add a card to start
-        </Text>
-      </View>
-      
-      <View>
-        <Image resizeMode="contain"
-               style={{width: width * 0.2, alignSelf: "center", marginTop: 25}}
-               source={require('../../public/images/down-arrow.png')}/>
-        
-        <Button style={styles.button} type="primary" onPress={() => Actions.cardList()}>ADD
-          CARDS</Button>
-      </View>
+const noCardsContent = props => {
+  return <View style={styles.slide}>
+    <Image resizeMode="contain"
+           style={styles.image}
+           source={require('../../public/images/Home-empty-screen-card.png')}/>
+    <View>
+      <Text style={styles.title}>
+        Your wallet seems empty.
+        {'\n'}
+        Add a card to start
+      </Text>
     </View>
-);
+    
+    <View>
+      <Image resizeMode="contain"
+             style={{width: width * 0.2, alignSelf: "center", marginTop: 25}}
+             source={require('../../public/images/down-arrow.png')}/>
+      
+      <Button style={styles.button} type="primary" onPress={props.NavToCardList}>ADD
+        CARDS</Button>
+    </View>
+  </View>
+};
 
 const getUserCards = (props) => {
+  console.log("props.data", props.data);
   let userCards = [];
   if (props.data.user && props.data.user.cards && props.data.user.cards.length > 0) {
     userCards = props.data.user.cards.filter(card => {
@@ -123,10 +126,9 @@ const hasCardsContent = (props, userCards) => {
   // console.log("sortedCards", sortedCards);
   
   const cards = sortedCards.map(card =>
-      <TouchableOpacity style={{paddingHorizontal: 10}} key={card.id}
-                        activeOpacity={0.5} onPress={() => props.pressCard(card)}>
+      <View style={{paddingHorizontal: 10}} key={card.id}>
         <Card {...card} />
-      </TouchableOpacity>
+      </View>
   );
   
   return <View style={{flex: 1}}>
@@ -140,24 +142,15 @@ const hasCardsContent = (props, userCards) => {
         colors={['rgba(255,255,255, 0.01)', 'rgba(255,255,255, 0.7)', 'rgba(255,255,255, 1)',
           'rgba(255,255,255, 1)']}
         style={styles.gradient}>
-      <Button style={styles.buttonHasContent} type="primary" onPress={() => Actions.cardList()}>ADD
+      <Button style={styles.buttonHasContent} type="primary" onPress={props.NavToCardList}>ADD
         CARDS</Button>
     </LinearGradient>
   </View>
 };
 
 const HomeCards = (props) => {
-  console.log("HomeCards props", props);
-  console.log("props.locationGranted", props.location);
-  if (!props.location) {
-    return <NoLocationScreen/>
-  }
-  
-  if (props.data.loading) {
-    // Toast.loading('Loading...', 0);
-    return <View></View>;
-  }
-  // Toast.hide();
+  // console.log("HomeCards props", props);
+  // console.log("props.locationGranted", props.location);
   
   const userCards = getUserCards(props);
   
@@ -171,31 +164,35 @@ const HomeCards = (props) => {
       userCards.length > 0 ?
           hasCardsContent(props, userCards)
           :
-          noCardsContent
+          noCardsContent(props)
     }
   </View>
 };
 
 // Container
-
-const HomeCardsWithGraphQL = graphql(getUserQuery, {
-  options: (ownProps) => ({variables: {id: ownProps.userId}}),
-})(HomeCards);
-
-const mapStateToProps = (state) => {
-  // console.log("state.user.id", state.user.id);
-  return {
-    showModal: state.home.showModal,
-    userId: state.user.id,
-    location: state.user.location,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    toggleModal: () => dispatch(homeActions.toggleModal()),
-    pressCard: (card) => dispatch(homeActions.pressCard(card))
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeCardsWithGraphQL);
+export default compose(
+    connect(
+        (state) => ({
+          showModal: state.home.showModal,
+          userId: state.user.id,
+          location: state.user.location,
+        }),
+        {toggleModal: homeActions.toggleModal}
+    ),
+    branch(
+        props => !props.location,
+        renderComponent(NoLocationScreen),
+    ),
+    graphql(
+        getUserQuery,
+        {
+          options: (props) => ({
+            variables: {id: props.userId}
+          })
+        }
+    ),
+    WithLoadingComponent,
+    withHandlers({
+      NavToCardList: props => () => Actions.cardList(),
+    })
+)(HomeCards);

@@ -3,7 +3,6 @@ import {StyleSheet, ListView, Dimensions, View, TouchableOpacity} from 'react-na
 import Card from './common/Card';
 import {connect} from 'react-redux';
 import {homeActions} from '../modules';
-import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {calculateCardsWithDistances} from './api';
@@ -37,10 +36,9 @@ const CardList = (props) => {
   
   const renderRow = (card) => {
     return (
-        <TouchableOpacity TouchableOpacity style={{paddingHorizontal: 10}} activeOpacity={0.9}
-                          onPress={() => props.pressCard(card)}>
+        <View style={{paddingHorizontal: 10}}>
           <Card {...card} />
-        </TouchableOpacity>
+        </View>
     )
   };
   

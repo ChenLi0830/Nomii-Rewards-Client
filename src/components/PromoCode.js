@@ -7,7 +7,9 @@ import {promoActions} from '../modules';
 import {redeemCouponMutation} from '../graphql/coupon';
 import {Actions} from 'react-native-router-flux';
 import gql from 'graphql-tag';
-import {graphql} from 'react-apollo';
+import {graphql, compose} from 'react-apollo';
+import {Toast} from 'antd-mobile';
+import { Keyboard } from 'react-native';
 
 
 const {width, height} = Dimensions.get("window");
@@ -65,14 +67,32 @@ const styles = StyleSheet.create({
   }
 });
 
-const PromoCode = ({code, mutate, message, userSubmitPromo, userChangePromo, userSkipPromo, userId}) => {
-  const submitPromo = ()=>{
+const PromoCode = ({code, mutate, message, userChangePromo, userSkipPromo, userId, submitPromoFailed, userChangedScreen}) => {
+  const submitPromo = () => {
     // console.log("userId", userId);
-    const variables = {
-      userId: userId,
-      code: code
-    };
-    userSubmitPromo(mutate, variables);
+    // userSubmitPromo(mutate, variables);
+    Toast.loading('Loading...', 0);
+    console.log("start submit");
+    
+    mutate({
+      variables: {
+        userId: userId,
+        code: code
+      },
+      refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
+    })
+        .then(result => {
+          console.log("redeem coupon result", result);
+          Toast.hide();
+          Keyboard.dismiss();
+          Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
+          userChangedScreen();
+        })
+        .catch(err => {
+          Toast.hide();
+          // console.log("error", err);
+          submitPromoFailed(err.graphQLErrors[0].message);
+        });
   };
   
   // console.log(width, height);
@@ -126,9 +146,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userSubmitPromo: (redeemPromoMutation, variables) => {
-      dispatch(promoActions.userSubmitPromo(redeemPromoMutation, variables))
-    },
+    submitPromoFailed: (message) => dispatch(promoActions.submitPromoFailed(message)),
+    userChangedScreen: () => dispatch(promoActions.userChangedScreen()),
+    // userSubmitPromo: (redeemPromoMutation, variables) => {
+    //   dispatch(promoActions.userSubmitPromo(redeemPromoMutation, variables))
+    // },
     userChangePromo: (promo) => {
       dispatch(promoActions.userChangePromo(promo))
     },

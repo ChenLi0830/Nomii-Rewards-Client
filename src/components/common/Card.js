@@ -2,6 +2,9 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform, Image} from 'react-native';
 import {ProgressBar} from './ProgressBar';
 import {getTimeInSec} from '../api';
+import {compose} from 'recompose';
+import {connect} from 'react-redux';
+import {homeActions} from '../../modules';
 
 const {width, height} = Dimensions.get("window");
 
@@ -78,7 +81,7 @@ const renderDistance = (distance) => {
 };
 
 const getUrgency = (stampValidDays, expireInDays) => {
-  console.log("stampValidDays, expireInDays", stampValidDays, expireInDays);
+  // console.log("stampValidDays, expireInDays", stampValidDays, expireInDays);
   let urgencyArray = [
     [2, 4, 7],
     [3, 7, 14],
@@ -102,7 +105,9 @@ const getUrgency = (stampValidDays, expireInDays) => {
   return urgency;
 };
 
-const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
+const Card = (props) => {
+  // console.log("props", props);
+  let {id, stampCount, lastStampAt, restaurant, distance} = props;
   // console.log("restaurant", restaurant);
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   
@@ -113,29 +118,45 @@ const Card = ({id, stampCount, lastStampAt, restaurant, distance}) => {
   
   const urgency = getUrgency(stampValidDays, expireInDays);
   
-  return <View style={styles.box}>
-    <View style={styles.storeRow}>
-      <View style={styles.storeInfoColumn}>
-        <Text style={styles.name} numberOfLines={2}>{name}</Text>
-        <Text style={styles.distance}>{renderDistance(distance)}</Text>
+  return <TouchableOpacity TouchableOpacity activeOpacity={0.8}
+                           onPress={props.onPress}>
+    <View style={styles.box}>
+      <View style={styles.storeRow}>
+        <View style={styles.storeInfoColumn}>
+          <Text style={styles.name} numberOfLines={2}>{name}</Text>
+          <Text style={styles.distance}>{renderDistance(distance)}</Text>
+        </View>
+        <View style={styles.storeLogoColumn}>
+          <Image resizeMode={Image.resizeMode.contain}
+                 style={styles.storeLogo}
+                 source={{uri: imageURL}}/>
+          {/*<Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}*/}
+                 {/*source={[*/}
+                   {/*{uri: 'https://facebook.github.io/react/img/logo_small.png', width: 38, height: 38},*/}
+                   {/*{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},*/}
+                   {/*{uri: 'https://facebook.github.io/react/img/logo_og.png', width: 400, height: 400}*/}
+                 {/*]}/>*/}
+        </View>
       </View>
-      <View style={styles.storeLogoColumn}>
-        <Image resizeMode={Image.resizeMode.contain}
-               style={styles.storeLogo}
-               source={{uri: imageURL}}/>
-        {/*<Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}*/}
-               {/*source={[*/}
-                 {/*{uri: 'https://facebook.github.io/react/img/logo_small.png', width: 38, height: 38},*/}
-                 {/*{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},*/}
-                 {/*{uri: 'https://facebook.github.io/react/img/logo_og.png', width: 400, height: 400}*/}
-               {/*]}/>*/}
+      
+      <View style={styles.discountRow}>
+        <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency}/>
       </View>
-    </View>
-    
-    <View style={styles.discountRow}>
-      <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency}/>
-    </View>
   </View>
+  </TouchableOpacity>
 };
 
-export default Card;
+// Container - put container into a separate component if you need a different onPress behaviour
+const mapDispatchToProps = (dispatch, props) => {
+  // console.log("card props", props);
+  return {
+    onPress: () => dispatch(homeActions.pressCard(props))
+  }
+};
+
+export default compose(
+    connect(
+        null,
+        mapDispatchToProps,
+    ),
+)(Card);
