@@ -16,15 +16,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "stretch",
-    
-    elevation: 3,
     shadowColor: "rgba(189,195,199,0.61)",
     shadowOpacity: 1,
     shadowRadius: 5,
     shadowOffset: {
       height: 4,
       width: 0
-    }
+    },
+    elevation: 3,
   },
   storeRow: {
     paddingHorizontal: responsiveWidth(5),
@@ -105,8 +104,7 @@ const Card = (props) => {
   const urgency = getUrgency(stampValidDays, expireInDays);
   
   return <TouchableOpacity TouchableOpacity activeOpacity={0.8}
-                           onPress={props.onPress}>
-    <View style={styles.box}>
+                           onPress={props.onPress} style={styles.box}>
       <View style={styles.storeRow}>
         <View style={styles.storeInfoColumn}>
           <Text style={styles.name} numberOfLines={2}>{name}</Text>
@@ -122,7 +120,6 @@ const Card = (props) => {
       <View style={styles.discountRow}>
         <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency} discounts = {props.discounts}/>
       </View>
-  </View>
   </TouchableOpacity>
 };
 
