@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, Dimensions, TextInput, Image, Keyboard} from 'react-native';
+import {Text, View, StyleSheet, TextInput, Image, Keyboard} from 'react-native';
 import {Button} from './common';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
@@ -10,16 +10,15 @@ import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import {getUserQuery} from '../graphql/user';
 import {compose, withHandlers} from 'recompose';
+import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 
-
-const {width, height} = Dimensions.get("window");
 const styles = StyleSheet.create({
   view: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
     flexDirection: 'column',
-    paddingTop: height * 0.1,
+    paddingTop: responsiveHeight(10),
   },
   title: {
     fontSize: 25,
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     color: "#262626",
   },
   image: {
-    width: width * 0.4,
+    width: responsiveWidth(40),
     height: 150,
     // height: height * 0.4,
   },
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     height: 40,
-    width: width * 0.8,
+    width: responsiveWidth(80),
     alignSelf: "center",
     borderWidth: 1,
     borderColor: "#E7E7E7",
@@ -53,8 +52,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "white",
-    // height: 25,
   },
   message: {
     color: "#262626",
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0)",
   },
   button: {
-    width: width * 0.9,
+    width: responsiveWidth(90),
   }
 });
 

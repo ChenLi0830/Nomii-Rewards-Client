@@ -1,23 +1,21 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Platform, Image} from 'react-native';
 import {ProgressBar} from './ProgressBar';
 import {getTimeInSec} from '../api';
 import {compose} from 'recompose';
 import {connect} from 'react-redux';
 import {homeActions} from '../../modules';
-
-const {width, height} = Dimensions.get("window");
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   box: {
-    marginVertical: height * 0.02,
-    paddingVertical: width * 0.03,
-    width: width * 0.9,
+    marginVertical: responsiveHeight(2),
+    paddingVertical: responsiveWidth(3),
+    width: responsiveWidth(90),
     height: 200,
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "stretch",
-    // overflow: "hidden",
     
     elevation: 3,
     shadowColor: "rgba(189,195,199,0.61)",
@@ -29,33 +27,27 @@ const styles = StyleSheet.create({
     }
   },
   storeRow: {
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: responsiveWidth(5),
     flex: 1,
     flexDirection: "row",
-    // backgroundColor: "yellow",
   },
   discountRow: {
     flex: 1,
-    // marginTop: 50,
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "center",
-    // backgroundColor:"green",
   },
   storeInfoColumn: {
     flex: 2,
-    // backgroundColor:"yellow",
     justifyContent: "space-around",
   },
   storeLogoColumn:{
     flex: 1,
-    // backgroundColor: "red",
-    // flexDirection: "column",
     alignItems: "flex-end",
     justifyContent: "center"
   },
   storeLogo: {
-    width: width * 0.20,
+    width: responsiveWidth(20),
     flex:1,
   },
   name: {
@@ -81,7 +73,6 @@ const renderDistance = (distance) => {
 };
 
 const getUrgency = (stampValidDays, expireInDays) => {
-  // console.log("stampValidDays, expireInDays", stampValidDays, expireInDays);
   let urgencyArray = [
     [2, 4, 7],
     [3, 7, 14],
@@ -106,15 +97,10 @@ const getUrgency = (stampValidDays, expireInDays) => {
 };
 
 const Card = (props) => {
-  // console.log("card props", props);
   let {id, stampCount, lastStampAt, restaurant, distance} = props;
-  // console.log("restaurant", restaurant);
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   
   let expireInDays = Math.ceil((parseInt(lastStampAt) + stampValidDays * 24 * 3600 - getTimeInSec())/(3600 * 24));
-  
-  // stampValidDays = 7;
-  // expireInDays = 3;
   
   const urgency = getUrgency(stampValidDays, expireInDays);
   
@@ -130,12 +116,6 @@ const Card = (props) => {
           <Image resizeMode={Image.resizeMode.contain}
                  style={styles.storeLogo}
                  source={{uri: imageURL}}/>
-          {/*<Image style={styles.storeLogo} resizeMode={Image.resizeMode.cover}*/}
-                 {/*source={[*/}
-                   {/*{uri: 'https://facebook.github.io/react/img/logo_small.png', width: 38, height: 38},*/}
-                   {/*{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 76, height: 76},*/}
-                   {/*{uri: 'https://facebook.github.io/react/img/logo_og.png', width: 400, height: 400}*/}
-                 {/*]}/>*/}
         </View>
       </View>
       
@@ -148,7 +128,6 @@ const Card = (props) => {
 
 // Container - put container into a separate component if you need a different onPress behaviour
 const mapDispatchToProps = (dispatch, props) => {
-  // console.log("card props", props);
   return {
     onPress: () => dispatch(homeActions.pressCard(props))
   }

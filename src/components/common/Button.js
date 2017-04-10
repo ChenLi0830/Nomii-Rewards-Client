@@ -1,7 +1,6 @@
 import React from 'react';
-import {Dimensions, Text, TouchableHighlight, StyleSheet} from 'react-native';
-
-const {width, height} = Dimensions.get("window");
+import {Text, TouchableHighlight, StyleSheet} from 'react-native';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const Button = ({onPress, children, style, type="primary"}) => {
   const underlayColor = {
@@ -27,7 +26,7 @@ const styles = new StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
-    width: width * 0.9
+    width: responsiveWidth(90),
   },
   default: {
     backgroundColor: "#3A5998",

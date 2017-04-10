@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View,} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {Button} from 'antd-mobile';
 import {Actions} from 'react-native-router-flux';
@@ -7,8 +7,7 @@ import SwiperContent1 from './SwiperContent1';
 import SwiperContent2 from './SwiperContent2';
 import SwiperContent3 from './SwiperContent3';
 import SwiperDots from './SwiperDots';
-
-const {width, height} = Dimensions.get('window');
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -35,13 +34,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
-  // pagination:{
-  //   bottom: - height * 0.2, //left: null, right: 10,
-  //   alignSelf: "center",
-  // },
   paginationView: {
     alignSelf: "center",
-    bottom: height * 0.2,
+    bottom: responsiveHeight(20),
   },
 });
 

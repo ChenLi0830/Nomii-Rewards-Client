@@ -1,8 +1,6 @@
 import React from 'react';
-import {StyleSheet, Dimensions, Platform} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {Image} from 'react-native-animatable';
-
-// const {width, height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   logo: {

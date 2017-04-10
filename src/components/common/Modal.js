@@ -1,11 +1,6 @@
 import React from 'react';
-import {Modal, TouchableOpacity, StyleSheet, Text, Image, Dimensions, View, Platform} from 'react-native';
+import {Modal, TouchableOpacity, StyleSheet, Text, Image, View} from 'react-native';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
-
-// import {inputPinActions} from '../modules';
-
-
-const {width, height} = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {

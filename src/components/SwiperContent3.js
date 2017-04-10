@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
+import {StyleSheet, Text, View, Image, Platform} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
-
-const {width,height} = Dimensions.get('window');
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -11,7 +10,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: height * 0.1,
+    paddingVertical: responsiveHeight(10),
   },
   title: {
     color: '#262626',
@@ -20,12 +19,12 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   image: {
-    width: width * 0.6,
-    marginTop: - height * 0.1,
+    width: responsiveWidth(60),
+    marginTop: - responsiveHeight(10),
     flex: 1,
   },
   button: {
-    width: width * 0.8,
+    width: responsiveWidth(80),
     height: 40,
     // marginTop: Platform.OS === "ios" ? -30 : 0,
     bottom: Platform.OS === "ios" ? 0 : -40,

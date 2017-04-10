@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TextInput} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -9,7 +9,7 @@ import {graphql} from 'react-apollo';
 import {createPINMutation} from '../graphql/PIN';
 import {Toast} from 'antd-mobile';
 import {compose, withHandlers} from 'recompose';
-const {width,height} = Dimensions.get('window');
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -27,20 +27,20 @@ const styles = StyleSheet.create({
     color: '#262626',
     fontSize: 35,
   },
-  newPINView:{
+  newPINView: {
     alignItems: "center",
   },
-  inputView:{
+  inputView: {
     alignItems: "center",
   },
-  inputTitle:{
+  inputTitle: {
     fontSize: 30,
     color: "#262626",
   },
   inputBox: {
     borderWidth: 1,
     borderColor: "#ECF0F1",
-    width: width,
+    width: responsiveWidth(100),
     // flex: 1,
   },
   inputText: {
@@ -57,17 +57,18 @@ const styles = StyleSheet.create({
 
 const AssignPIN = (props) => {
   const {generateNewPin, pin, employeeName, changeEmployeeName, restaurant} = props;
-  // console.log("AssignPIN props restaurantId, pin, employeeName", restaurantId, pin, employeeName);
+  // console.log("AssignPIN props restaurantId, pin, employeeName", restaurantId, pin,
+  // employeeName);
   generateNewPin(restaurant.PINs);
   
   return (
       <View style={styles.wrapper}>
         
-        <View style = {styles.newPINView}>
+        <View style={styles.newPINView}>
           <Text style={styles.PINTitle}>
             New PIN
           </Text>
-    
+          
           <Text style={styles.PINCode}>
             #{pin}
           </Text>
@@ -77,8 +78,8 @@ const AssignPIN = (props) => {
           <Text style={styles.inputTitle}>
             Enter Employee Name:
           </Text>
-  
-          <View style = {styles.inputBox}>
+          
+          <View style={styles.inputBox}>
             <TextInput style={styles.inputText} autoCorrect={false}
                        value={employeeName} onChangeText={changeEmployeeName}
                        underlineColorAndroid='rgba(0,0,0,0)'>
@@ -90,7 +91,7 @@ const AssignPIN = (props) => {
                 onPress={props.createNewPin}>
           Create
         </Button>
-  
+        
         <KeyboardSpacer />
       </View>
   )

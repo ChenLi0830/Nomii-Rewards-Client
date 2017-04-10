@@ -1,9 +1,7 @@
 import React from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Image, View} from 'react-native-animatable';
-
-const {width, height} = Dimensions.get("window");
-
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const emptyImage = require("../../public/images/circle-empty-highlight 2.png");
 const filledImage = require("../../public/images/circle-1.png");
@@ -17,8 +15,8 @@ const styles = StyleSheet.create({
     // height: 100,
   },
   dotBox: {
-    width: width * 0.1,
-    height: width * 0.1,
+    width: responsiveWidth(10),
+    height: responsiveWidth(10),
   },
   full: {
     position: "absolute",
@@ -26,12 +24,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    width: width * 0.1,
-    height: width * 0.1,
+    width: responsiveWidth(10),
+    height: responsiveWidth(10),
   },
-  empty:{
-    width: width * 0.1,
-    height: width * 0.1,
+  empty: {
+    width: responsiveWidth(10),
+    height: responsiveWidth(10),
   },
   lineBase: {
     borderTopWidth: 3,
@@ -40,10 +38,10 @@ const styles = StyleSheet.create({
     height: 0
   },
   line: {
-    width: width * 0.1,
+    width: responsiveWidth(10),
   },
   halfLine: {
-    width: width * 0.05,
+    width: responsiveWidth(5),
   }
 });
 
@@ -65,7 +63,7 @@ const SwiperDots = ({index}) => {
       {
         index >= 0
         &&
-        <Image style = {styles.empty} source={filledImage}
+        <Image style={styles.empty} source={filledImage}
                animation="fadeIn" duration={500}
                resizeMode="contain"/>
       }
@@ -80,14 +78,14 @@ const SwiperDots = ({index}) => {
       {
         index >= 1
         &&
-        <Image style = {styles.empty} source={filledImage}
+        <Image style={styles.empty} source={filledImage}
                animation="fadeIn" duration={500}
                resizeMode="contain"/>
       }
     </View>
     
     <View style={[styles.lineBase, styles.line]}/>
-  
+    
     <View style={styles.dotBox}>
       <Image style={styles.full}
              source={emptyImage}
@@ -95,7 +93,7 @@ const SwiperDots = ({index}) => {
       {
         index >= 2
         &&
-        <Image style = {styles.empty} source={filledImage}
+        <Image style={styles.empty} source={filledImage}
                animation="fadeIn" duration={500}
                resizeMode="contain"/>
       }

@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import Dash from 'react-native-dash';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 import { getTimeInSec } from '../api';
 
 const checkedImage = require("../../../public/images/card-screens/1st-circle-check.png");
@@ -22,53 +23,41 @@ const percent10Image = [
 const colors = ["#EB2E46", "#E67E22", "#35ABBD"];
 const dashColors = ["rgba(235,46,70,0.2)","rgba(230,126,34,0.2)","rgba(53,171,189,0.2)"];
 
-const {width, height} = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   row1: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "cyan"
-    // flex: 1
   },
   row2: {
     flexDirection: "row",
     justifyContent: "space-around",
-    // justifyContent: "space-around",
-    // backgroundColor: "green",
   },
   row2WhiteSpace: {
-    width: width * 0.25,
+    width: responsiveWidth(25),
   },
   dots: {
-    width: width * 0.1,
-    height: width * 0.15,
+    width: responsiveWidth(10),
+    height: responsiveWidth(15),
   },
-  // elemBox: {
-  //   alignItems: "flex-end",
-  //   justifyContent: "space-around",
-  // },
   dotText: {
     alignSelf: "center",
     fontWeight: "bold"
   },
   lineBase: {
     borderTopWidth: 3,
-    // borderColor: "#35ABBD",
     height: 0
   },
   lineFull: {
-    width: width * 0.1,
+    width: responsiveWidth(10),
   },
   lineHalf: {
-    width: width * 0.05,
+    width: responsiveWidth(5),
   },
   detailBox: {
-    height: width * 0.07,
+    height: responsiveWidth(7),
     borderRadius: 50,
-    width: width * 0.25,
-    // backgroundColor: "#35ABBD",
+    width: responsiveWidth(25),
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
@@ -89,7 +78,6 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     alignSelf:"center",
     textAlign: "center"
-    // flexDirection: "column"
   }
 });
 

@@ -1,7 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions, Platform} from 'react-native';
-
-const {width,height} = Dimensions.get('window');
+import {StyleSheet, Text, View, Image} from 'react-native';
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -9,7 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: height * 0.1,
+    paddingVertical: responsiveHeight(10),
   },
   title: {
     color: '#262626',
@@ -18,8 +17,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   image: {
-    width: width * 0.8,
-    marginTop: - height * 0.10
+    width: responsiveWidth(80),
+    marginTop: -responsiveHeight(10),
   }
 });
 
@@ -33,7 +32,7 @@ const SwiperContent2 = () => {
         </Text>
         <Image resizeMode="contain"
                style={styles.image}
-               source = {require('../../public/images/Hand-over-icon-onboarding.png')}/>
+               source={require('../../public/images/Hand-over-icon-onboarding.png')}/>
         <Text/>
       </View>
   )

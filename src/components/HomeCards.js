@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  ScrollView,
-  TouchableOpacity
-} from 'react-native';
-import {Button, Modal} from './common';
+import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import {Button, Modal, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './common/Card';
 import {LinearGradient} from 'expo';
@@ -19,9 +11,7 @@ import {graphql} from 'react-apollo';
 import {compose, branch, withHandlers, renderComponent, pure} from 'recompose';
 import {calculateCardsWithDistances, cardIsExpired} from './api';
 import NoLocationScreen from './NoLocationScreen';
-import {WithLoadingComponent} from './common';
-
-const {width, height} = Dimensions.get('window');
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   scrollList: {
@@ -38,7 +28,7 @@ const styles = StyleSheet.create({
   },
   listView: {
     paddingTop: 10,
-    paddingBottom: height * 0.15,
+    paddingBottom: responsiveHeight(15),
     justifyContent: 'space-around',
     alignItems: 'center',
     // flex: 0.8,
@@ -49,25 +39,21 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     fontWeight: 'bold',
-    marginTop: -height * 0.1,
-    width: width * 0.9,
+    marginTop: -responsiveHeight(10),
+    width: responsiveWidth(90),
   },
   image: {
-    width: width * 0.6,
+    width: responsiveWidth(60),
     height: 250,
-    marginTop: height * 0.1
+    marginTop: responsiveHeight(10),
   },
   button: {
-    width: width * 0.8,
     height: 40,
     marginTop: 15,
-    // marginTop: Platform.OS === "ios" ? -30 : 0,
-    // bottom: Platform.OS === "ios" ? 10 : -40,
-    // alignSelf: "center",
     borderWidth: 0,
   },
   buttonHasContent: {
-    width: width * 0.8,
+    width: responsiveWidth(80),
     height: 40,
     borderWidth: 0,
   },
@@ -76,11 +62,16 @@ const styles = StyleSheet.create({
   },
   gradient: {
     position: 'absolute',
-    padding: height * 0.1,
+    padding: responsiveHeight(10),
     left: 0,
     right: 0,
     bottom: 0,
-    height: height * 0.15
+    height: responsiveHeight(15)
+  },
+  downArrow: {
+    width: responsiveWidth(20),
+    alignSelf: "center",
+    marginTop: 25
   }
 });
 
@@ -99,7 +90,7 @@ const noCardsContent = props => {
     
     <View>
       <Image resizeMode="contain"
-             style={{width: width * 0.2, alignSelf: "center", marginTop: 25}}
+             style={styles.downArrow}
              source={require('../../public/images/down-arrow.png')}/>
       
       <Button style={styles.button} type="primary" onPress={props.NavToCardList}>ADD

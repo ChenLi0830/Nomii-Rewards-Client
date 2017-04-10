@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Button, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
@@ -7,16 +7,13 @@ import {getRestaurantStatsQuery} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
 import {compose} from 'recompose';
-
-const {width, height} = Dimensions.get('window');
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: 'center',
     marginTop: 74,
-    // paddingVertical: height * 0.1,
-    // backgroundColor: "yellow",
   },
   scrollView: {},
   assignPINTitle: {
@@ -29,7 +26,7 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     borderTopWidth: 1,
     borderTopColor: "#ECF0F1",
-    width: width,
+    width: responsiveWidth(100),
   },
   statsTitle: {
     color: '#262626',
@@ -44,25 +41,17 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
   },
   image: {
-    width: width * 0.4,
-    // marginTop: -height * 0.1
+    width: responsiveWidth(40),
   },
   button: {
     marginTop: 20,
-    // width: width * 0.8,
-    // height: 40,
-    // // marginTop: Platform.OS === "ios" ? -30 : 0,
-    // bottom: Platform.OS === "ios" ? 0 : -40,
-    // alignSelf: "center",
-    // borderWidth: 0,
-    // marginBottom: 30,
   },
   tabListView: {
-    width: width,
+    width: responsiveWidth(100),
     alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#DCDCDC",
-    marginVertical: height > 600 ? 10 : 0,
+    marginVertical: responsiveHeight(100) > 600 ? 10 : 0,
   },
   tabView: {
     // borderBottomWidth: 2,
@@ -86,7 +75,7 @@ const styles = StyleSheet.create({
     marginVertical: 40,
   },
   assignPINView2: {
-    marginBottom: height * 0.02,
+    marginBottom: responsiveHeight(2),
     justifyContent: "space-around",
     flex: 1.5,
     alignItems: "center",

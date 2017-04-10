@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ListView, Dimensions, View} from 'react-native';
+import {StyleSheet, ListView, View} from 'react-native';
 import Card from './common/Card';
 import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
@@ -7,8 +7,7 @@ import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {calculateCardsWithDistances} from './api';
 import {compose, pure} from 'recompose';
 import {WithLoadingComponent} from './common';
-
-const {width, height} = Dimensions.get("window");
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
     flex: 1,
     
     paddingTop: 10,
-    paddingBottom: height * 0.15,
+    paddingBottom: responsiveHeight(15),
   }
 });
 

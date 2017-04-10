@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, Dimensions, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import Card from './common/Card';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
@@ -8,20 +8,16 @@ import {Modal} from './common';
 import gql from 'graphql-tag';
 import {userStampCardMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
-
-const {width, height} = Dimensions.get("window");
+import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    // height: height * 0.7,
     marginTop: 54,
     paddingTop: 10,
-    paddingBottom: height * 0.15,
+    paddingBottom: responsiveHeight(15),
     justifyContent: 'space-around',
     alignItems: 'center',
-    // flex: 0.8,
-    // backgroundColor: "yellow"
   },
   titleText: {
     color: "#3498DB",
@@ -31,8 +27,7 @@ const styles = StyleSheet.create({
   inputBox: {
     borderBottomWidth: 1,
     borderBottomColor: "#ECF0F1",
-    width: width * 0.5,
-    // flex: 1,
+    width: responsiveWidth(50),
   },
   inputText: {
     textAlign: "center",
