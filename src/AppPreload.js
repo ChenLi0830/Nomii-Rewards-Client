@@ -4,6 +4,8 @@ import {AsyncStorage, Text} from 'react-native';
 import App from './App';
 import {Toast} from 'antd-mobile';
 import config from '../exp.json';
+import { Font } from 'expo';
+
 
 class AppPreloading extends React.Component {
   state = {
@@ -15,7 +17,7 @@ class AppPreloading extends React.Component {
     (async ()=>{
       const promises = [
         this.fetchUser(),
-        this._cacheResourcesAsync(),
+        this.cacheResourcesAsync(),
         this.initAmplitude(),
       ];
 
@@ -54,7 +56,7 @@ class AppPreloading extends React.Component {
     await Amplitude.initialize(apiKey)
   }
 
-  async _cacheResourcesAsync() {
+  async cacheResourcesAsync() {
     const images = [
       require('../public/images/1st-circle-check.png'),
       require('../public/images/too-far-icon.png'),
@@ -87,6 +89,9 @@ class AppPreloading extends React.Component {
     for (let image of images) {
       await Asset.fromModule(image).downloadAsync();
     }
+    await Font.loadAsync({
+      'Avenir Next': require('../public/fonts/avenir-next-regular.ttf'),
+    });
     return true;
   }
 

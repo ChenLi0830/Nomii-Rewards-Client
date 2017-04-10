@@ -13,12 +13,14 @@ import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 // Set global fonts for Text component
 const customTextProps = {
   style: {
-    fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif',
+    fontFamily: 'Avenir Next',
+    // fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif',
   }
 };
+
 const customTextInputProps = {
   style: {
-    fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif',
+    fontFamily: 'Avenir Next',
   }
 };
 
