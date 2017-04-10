@@ -35,9 +35,12 @@ query getUser($id:ID){
 			id
       stampCount,
       lastStampAt,
+      discounts,
+      PINSuccessScreens,
+      codeSuccessScreen,
       restaurant{
         id
-        name,
+        name, 
         imageURL,
         longitude,
         latitude,

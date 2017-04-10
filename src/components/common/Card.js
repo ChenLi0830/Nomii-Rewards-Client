@@ -106,7 +106,7 @@ const getUrgency = (stampValidDays, expireInDays) => {
 };
 
 const Card = (props) => {
-  // console.log("props", props);
+  // console.log("card props", props);
   let {id, stampCount, lastStampAt, restaurant, distance} = props;
   // console.log("restaurant", restaurant);
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
@@ -140,7 +140,7 @@ const Card = (props) => {
       </View>
       
       <View style={styles.discountRow}>
-        <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency}/>
+        <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency} discounts = {props.discounts}/>
       </View>
   </View>
   </TouchableOpacity>

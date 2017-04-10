@@ -55,7 +55,12 @@ export const userSubmitPin = (card, stampCardMutation, variables) => {
               Actions.reward({progress: 0});
             }
             else {
-              Actions.reward({progress: card.stampCount % 3});
+              let successScreen = null;
+              if (card.PINSuccessScreens) successScreen = card.PINSuccessScreens[card.stampCount];
+              Actions.reward({
+                progress: card.stampCount,
+                successScreen
+              });
             }
           }, 100);
         })

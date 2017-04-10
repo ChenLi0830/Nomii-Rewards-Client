@@ -34,6 +34,9 @@ query getAllRestaurantCards($userId: ID){
     id,
 		stampCount,
 		lastStampAt,
+    discounts,
+    PINSuccessScreens,
+    codeSuccessScreen,		
     restaurant{
       id,
       name,

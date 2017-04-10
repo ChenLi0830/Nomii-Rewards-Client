@@ -111,7 +111,18 @@ const renderLine = (position, index, urgency) => {
     return <Dash dashGap={3} dashThickness={3} dashColor={dashColors[urgency]} style={[lineStyle]}/>;
 };
 
-const ProgressBar = ({index, expireInDays, urgency}) => {
+const getDiscountImage = (index, discount, urgency) => {
+  if (discount === undefined) discount = index * 5;
+  
+  switch (discount){
+    case 0: return emptyImage[urgency];
+    case 5: return percent5Image[urgency];
+    case 10: return percent10Image[urgency];
+    default: throw new Error("invalid discount");
+  }
+};
+
+const ProgressBar = ({index, expireInDays, urgency, discounts}) => {
   // Card is expired
   if (expireInDays<0) {
     // shown as new card with no stamp
@@ -119,10 +130,18 @@ const ProgressBar = ({index, expireInDays, urgency}) => {
     index = 0;
   }
   
+  if (!discounts) discounts = [];
+  let discountImage = [];
+  for (let i=0; i<3; i++){
+    discountImage[i] = getDiscountImage(i, discounts[i], urgency);
+  }
+  
   const ImageSources = [
-    index === 0 ? emptyImage[urgency] : checkedImage,
-    index === 0 && emptyImage[urgency] || index === 1 && percent5Image[urgency] || index === 2 && checkedImage,
-    index > 1 ? percent10Image[urgency] : emptyImage[urgency],
+    index === 0 ? discountImage[0] : checkedImage,
+    index === 0 && discountImage[1] || index === 1 && discountImage[1] || index === 2 && checkedImage,
+    discountImage[2],
+    // index === 0 && emptyImage[urgency] || index === 1 && discountImage[1] || index === 2 && checkedImage,
+    // index > 1 ? discountImage[2] : emptyImage[urgency],
   ];
   
   const opacity = [

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {calculateCardsWithDistances} from './api';
-import {compose} from 'recompose';
+import {compose, pure} from 'recompose';
 import {WithLoadingComponent} from './common';
 
 const {width, height} = Dimensions.get("window");
@@ -27,10 +27,6 @@ const styles = StyleSheet.create({
 });
 
 const CardList = (props) => {
-  // console.log("props", props);
-  // !props.data.loading &&
-  // console.log("calculateCardsWithDistances(props.data.allRestaurantCards)",
-  // calculateCardsWithDistances(props.data.allRestaurantCards, props.location));
   if (!props.location) console.warn("props.location doesn't exist");
   
   let cardsSortedByDistance = calculateCardsWithDistances(props.data.allRestaurantCards, props.location);
@@ -74,4 +70,5 @@ export default compose(
         }
     ),
     WithLoadingComponent,
+    pure,
 )(CardList);

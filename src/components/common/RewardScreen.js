@@ -47,55 +47,33 @@ const styles = StyleSheet.create({
   }
 });
 
-const images = [
-  require('../../../public/images/big-check.png'),
-  require('../../../public/images/big-five-percent.png'),
-  require('../../../public/images/big-ten-percent.png'),
-];
+const images = {
+  0:require('../../../public/images/big-check.png'),
+  1:require('../../../public/images/big-five-percent.png'),
+  2:require('../../../public/images/big-ten-percent.png'),
+  firstTime10Off: require('../../../public/images/big-ten-percent.png'),
+};
 
-const titles = [
-  "Noiceee!",
-  "Littt!",
-  "Radical!",
-];
+const titles = {
+  0:"Noiceee!",
+  1:"Littt!",
+  2:"Radical!",
+  firstTime10Off: "Awesome!",
+};
 
-const detailText = [
-  "Thanks for the visit!\nGet 5% on your next visit!",
-  "5% off your total\nGet 10% on your next visit!",
-  "10% off your total!\nYou’re a warrior for completing the card!"
-];
+const detailText = {
+  0:"Thanks for the visit!\nGet 5% on your next visit!",
+  1:"5% off your total\nGet 10% on your next visit!",
+  2:"10% off your total!\nYou’re a warrior for completing the card!",
+  firstTime10Off: "Special reward for you!\n10% off your 1st stamp!",
+};
 
-const buttonTitles = [
-  "AWESOME!",
-  "SWEET!",
-  "AWESOME!"
-];
-
-// async function registerForPushNotificationsAsync(props) {
-//   // Android remote notification permissions are granted during the app
-//   // install, so this will only ask on iOS
-//   let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
-//
-//   // Stop here if the user did not grant permissions
-//   if (status !== 'granted') {
-//     console.log("status", status);
-//     return;
-//   }
-//
-//   // Get the token that uniquely identifies this device
-//   let token = await Notifications.getExponentPushTokenAsync();
-//
-//   console.log("props.userId", props.userId);
-//   console.log("pushToken", token);
-//
-//   await props.mutate({
-//     variables: {
-//       userId: props.userId,
-//       pushToken: token,
-//   }});
-//
-//   AsyncStorage.setItem("@NomiiStore:pushToken", token);
-// }
+const buttonTitles = {
+  0:"AWESOME!",
+  1:"SWEET!",
+  2:"AWESOME!",
+  firstTime10Off: "SWEET!",
+};
 
 const btnPressed = async (props) => {
     console.log("pushToken", pushToken);
@@ -115,9 +93,9 @@ class RewardScreen extends React.Component{
   render(){
     let props = this.props;
     
-    console.log("RewardScreen props", props);
-    const index = props.progress;
-  
+    // console.log("RewardScreen props", props);
+    let index = props.successScreen ? props.successScreen : props.progress;
+    
     return (
         <View style={styles.slide}>
           <Image resizeMode="contain"
@@ -138,7 +116,7 @@ class RewardScreen extends React.Component{
         </View>
     )
   }
-};
+}
 
 //Container
 const RewardScreenWithGraphQL = graphql(userAddPushTokenMutation, {
@@ -146,7 +124,7 @@ const RewardScreenWithGraphQL = graphql(userAddPushTokenMutation, {
 })(RewardScreen);
 
 const mapStateToProps = (state) => {
-  console.log("state.user", state.user);
+  // console.log("state.user", state.user);
   // console.log("state.user.userId", state.user.userId);
   return {
     userId: state.user.id,

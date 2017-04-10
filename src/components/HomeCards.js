@@ -16,7 +16,7 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
-import {compose, branch, withHandlers, renderComponent} from 'recompose';
+import {compose, branch, withHandlers, renderComponent, pure} from 'recompose';
 import {calculateCardsWithDistances, cardIsExpired} from './api';
 import NoLocationScreen from './NoLocationScreen';
 import {WithLoadingComponent} from './common';
@@ -194,5 +194,6 @@ export default compose(
     WithLoadingComponent,
     withHandlers({
       NavToCardList: props => () => Actions.cardList(),
-    })
+    }),
+    pure
 )(HomeCards);

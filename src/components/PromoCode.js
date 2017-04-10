@@ -138,12 +138,21 @@ export default compose(
               console.log("redeem coupon result", result);
               Toast.hide();
               Keyboard.dismiss();
-              Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
+
+              // Calc PromoSuccess Screen content
+              const redeemedCoupons = result.data.redeemPromo.redeemedCoupons;
+              const redeemedCoupon = redeemedCoupons[redeemedCoupons.length-1];
+              
+              let codeSuccessScreen = redeemedCoupon.coupon.codeSuccessScreen;
+              let restaurantName = redeemedCoupon.restaurantName;
+              
+              console.log("restaurantName", restaurantName);
+              Actions.promoSuccess({codeSuccessScreen, restaurantName});
               props.userChangedScreen();
             })
             .catch(err => {
               Toast.hide();
-              // console.log("error", err);
+              console.log("error", err);
               props.submitPromoFailed(err.graphQLErrors[0].message);
             });
       },

@@ -36,6 +36,18 @@ const styles = StyleSheet.create({
   }
 });
 
+const images = {
+  one:require('../../public/images/reward-icon-onboarding.png'),
+  all:require('../../public/images/reward-icon-onboarding.png'),
+  firstTime10Off: require('../../public/images/reward-icon-onboarding.png'),
+};
+
+const buttonText = {
+  one:`AWESOME!`,
+  all:`AWESOME!`,
+  firstTime10Off: `AWESOME!`,
+};
+
 let pushToken;
 
 class PromoSuccess extends Component {
@@ -56,24 +68,37 @@ class PromoSuccess extends Component {
   }
   
   render(){
-    const {redeemedCoupons} = this.props;
+    let {codeSuccessScreen, restaurantName} = this.props;
+    console.log("promo success this.props", this.props);
     // console.log("location", location);
-    let restaurantName = redeemedCoupons[redeemedCoupons.length-1].restaurantName;
-    if (!restaurantName || restaurantName.length===0) restaurantName = "all restaurants";
+    
+    let index; // index of the images and contents to be shown
+    if (codeSuccessScreen) {
+      index = codeSuccessScreen;
+    }
+    else {
+      if (!restaurantName || restaurantName.length===0) index = "all";
+      else index = "one";
+    }
+    console.log("promo success  index", index);
   
+    const texts = {
+      one:`SUCCESS!!\nYou unlocked 5% off at ${restaurantName} on your 1st visit`,
+      all:`SUCCESS!!\nYou unlocked 5% off at all restaurants on your 1st visit`,
+      firstTime10Off: `SUCCESS!!\nYou unlocked 10% off at selected restaurants on your 1st visit`,
+    };
+    
     return (
         <View style={styles.slide}>
           <Image resizeMode="contain"
                  style={styles.image}
-                 source = {require('../../public/images/reward-icon-onboarding.png')}/>
+                 source = {images[index]}/>
         
           <Text style={styles.title}>
-            SUCCESS!!
-            {'\n'}
-            {`You unlocked 5% off at ${restaurantName} on your 1st visit`}
+            {texts[index]}
           </Text>
         
-          <Button style={styles.button} type="primary" onPress={() => this.btnClick()}>AWESOME!</Button>
+          <Button style={styles.button} type="primary" onPress={() => this.btnClick()}>{buttonText[index]}</Button>
         </View>
     )
   }
