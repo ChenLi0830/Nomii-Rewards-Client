@@ -9,8 +9,9 @@ import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import {getUserQuery} from '../graphql/user';
-import {compose, withHandlers} from 'recompose';
+import {compose, withHandlers, lifecycle} from 'recompose';
 import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   view: {
@@ -65,8 +66,6 @@ const styles = StyleSheet.create({
 });
 
 const PromoCode = (props) => {
-  const {code, message, userChangePromo, userSkipPromo} = props;
-  
   return <View style={styles.view}>
     <Text style={styles.title}> Have a Promo Code?</Text>
     <Image style={styles.image} resizeMode="contain"
@@ -79,29 +78,28 @@ const PromoCode = (props) => {
           maxLength={10}
           autoCapitalize="none"
           //placeholder="Promo Code"
-          value={code}
-          onChangeText={userChangePromo}
+          value={props.code}
+          onChangeText={props.userChangePromo}
           underlineColorAndroid='rgba(0,0,0,0)'
       />
       {
-        message.length > 0
+        props.message.length > 0
         &&
         <View style={styles.messageBox}>
-          <Text style={styles.message}>{message}</Text>
+          <Text style={styles.message}>{props.message}</Text>
         </View>
       }
     </View>
     
     {
-      code.length > 0 ?
+      props.code.length > 0 ?
           <Button type="primary" onPress={props.submitPromo}>DONE</Button>
           :
-          <Button type="ghost" onPress={userSkipPromo}>Skip</Button>
+          <Button type="ghost" onPress={props.userSkipPromo}>Skip</Button>
     }
     <KeyboardSpacer/>
   </View>
 };
-
 
 //Container
 export default compose(
@@ -110,12 +108,12 @@ export default compose(
           code: state.promoCode.code,
           message: state.promoCode.message,
           userId: state.user.id,
+          location: state.user.location,
         }),
         {
           submitPromoFailed: promoActions.submitPromoFailed,
           userChangedScreen: promoActions.userChangedScreen,
           userChangePromo: promoActions.userChangePromo,
-          userSkipPromo: promoActions.userSkipPromo,
         }
     ),
     graphql(redeemCouponMutation),
@@ -132,7 +130,7 @@ export default compose(
           refetchQueries: [{query: getUserQuery, variables: {id: props.userId}}]
         })
             .then(result => {
-              console.log("redeem coupon result", result);
+              // console.log("redeem coupon result", result);
               Toast.hide();
               Keyboard.dismiss();
 
@@ -142,16 +140,26 @@ export default compose(
               
               let codeSuccessScreen = redeemedCoupon.coupon.codeSuccessScreen;
               let restaurantName = redeemedCoupon.restaurantName;
+  
+              Amplitude.logEventWithProperties("Redeem coupon succeeded", {...redeemedCoupon});
               
-              console.log("restaurantName", restaurantName);
               Actions.promoSuccess({codeSuccessScreen, restaurantName});
               props.userChangedScreen();
             })
             .catch(err => {
               Toast.hide();
               console.log("error", err);
+              Amplitude.logEventWithProperties("Redeem coupon failed", {...err});
               props.submitPromoFailed(err.graphQLErrors[0].message);
             });
       },
+      userSkipPromo: props => () => {
+        Keyboard.dismiss();
+        setTimeout(() => {
+          if (props.location) Actions.home();
+          else Actions.location();
+          props.userChangedScreen();
+          Amplitude.logEvent("Skip promo code");
+        },300)}
     }),
 )(PromoCode);

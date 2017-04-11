@@ -11,17 +11,6 @@ export const toggleModal = () => ({
   type: TOGGLE_DISTANCE_WARN_MODAL,
 });
 
-export const pressCard = (card) => {
-  return (dispatch, getState) => {
-    if (card.distance <= 150)
-    {
-      Actions.inputPin({card});
-    } else {
-      dispatch(toggleModal());
-    }
-  }
-};
-
 // Reducer
 const initialState = {
   showModal: false,

@@ -1,13 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View,} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Swiper from 'react-native-swiper';
-import {Button} from 'antd-mobile';
-import {Actions} from 'react-native-router-flux';
 import SwiperContent1 from './SwiperContent1';
 import SwiperContent2 from './SwiperContent2';
 import SwiperContent3 from './SwiperContent3';
 import SwiperDots from './SwiperDots';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -41,9 +40,14 @@ const styles = StyleSheet.create({
 });
 
 const renderPagination = (index, total, context) => {
+  switch (index) {
+    case 0: Amplitude.logEvent('Step 1 of onboarding'); break;
+    case 1: Amplitude.logEvent('Step 2 of onboarding'); break;
+    case 2: Amplitude.logEvent('Step 3 of onboarding'); break;
+  }
   return (
       <View style={styles.paginationView}>
-        <SwiperDots index={index} />
+        <SwiperDots index={index}/>
       </View>
   )
 };
@@ -51,7 +55,7 @@ const renderPagination = (index, total, context) => {
 const SwiperComponent = () => {
   return (
       <Swiper renderPagination={renderPagination}
-          style={styles.wrapper} loop={false} >
+              style={styles.wrapper} loop={false}>
         <SwiperContent1/>
         <SwiperContent2/>
         <SwiperContent3/>

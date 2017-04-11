@@ -6,6 +6,8 @@ import {graphql} from 'react-apollo';
 import {connect} from 'react-redux';
 import {userAddPushTokenMutation} from '../../graphql/user';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {compose, lifecycle, withHandlers} from 'recompose';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -70,69 +72,53 @@ const buttonTitles = {
   firstTime10Off: "SWEET!",
 };
 
-const btnPressed = async(props) => {
-  console.log("pushToken", pushToken);
-  if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
-    Actions.askNotification();
-  } else {
-    Actions.home();
-  }
-};
-
 let pushToken;
-class RewardScreen extends React.Component {
-  async componentDidMount() {
-    pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
-  }
+const RewardScreenComponent = (props) => {
+  let index = props.successScreen ? props.successScreen : props.progress;
   
-  render() {
-    let props = this.props;
-    
-    // console.log("RewardScreen props", props);
-    let index = props.successScreen ? props.successScreen : props.progress;
-    
-    return (
-        <View style={styles.slide}>
-          <Image resizeMode="contain"
-                 style={styles.image}
-                 source={images[index]}/>
-          
-          <Text style={styles.title}>
-            {titles[index]}
-          </Text>
-          
-          <Text style={styles.detailText}>
-            {detailText[index]}
-          </Text>
-          
-          <Button style={styles.button} type="primary" onPress={() => btnPressed(props)}>
-            {buttonTitles[index]}
-          </Button>
-        </View>
-    )
-  }
-}
+  return (
+      <View style={styles.slide}>
+        <Image resizeMode="contain"
+               style={styles.image}
+               source={images[index]}/>
+        
+        <Text style={styles.title}>
+          {titles[index]}
+        </Text>
+        
+        <Text style={styles.detailText}>
+          {detailText[index]}
+        </Text>
+        
+        <Button style={styles.button} type="primary" onPress={props.btnPressed}>
+          {buttonTitles[index]}
+        </Button>
+      </View>
+  )
+};
 
 //Container
-const RewardScreenWithGraphQL = graphql(userAddPushTokenMutation, {
-  options: (ownProps) => ({variables: {id: ownProps.userId}}),
-})(RewardScreen);
-
-const mapStateToProps = (state) => {
-  // console.log("state.user", state.user);
-  // console.log("state.user.userId", state.user.userId);
-  return {
-    userId: state.user.id,
-    // pushToken: state.user.pushToken,
-  }
-};
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     updateUserPushToken: (pushToken) => dispatch(userActions.updateUserPushToken(pushToken)),
-//   }
-// };
-
-const containerComponent = connect(mapStateToProps)(RewardScreenWithGraphQL);
+const containerComponent = compose(
+    connect(
+        state => ({
+          userId: state.user.id,
+        })
+    ),
+    withHandlers({
+      btnPressed: props => () => {
+        // console.log("pushToken", pushToken);
+        if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
+          Actions.askNotification();
+        } else {
+          Actions.home();
+        }
+      }
+    }),
+    lifecycle({
+      async componentDidMount() {
+        pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
+      }
+    }),
+)(RewardScreenComponent);
 
 export {containerComponent as RewardScreen};

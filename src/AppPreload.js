@@ -53,7 +53,8 @@ class AppPreloading extends React.Component {
         break;
     }
 
-    await Amplitude.initialize(apiKey)
+    await Amplitude.initialize(apiKey);
+    Amplitude.logEvent("Open Nomii Rewards");
   }
 
   async cacheResourcesAsync() {
@@ -107,12 +108,19 @@ class AppPreloading extends React.Component {
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
         const result = await response.json();
 
-        if (result.error) return null;
-        else return {...result, token: token};// result is user with token
+        if (result.error) {
+          Amplitude.logEventWithProperties("login user with stored token - fail", {error: result.error});
+          return null;
+        }
+        else {
+          Amplitude.logEvent("login user with stored token - success");
+          return {...result, token: token};// result is user with token
+        }
       }
     }
     catch (err) {
       console.log("err", err);
+      Amplitude.logEvent("Something went wrong (most likely network issue)");
       Toast.fail("Something is wrong\nPlease try again", 2);
     }
   }

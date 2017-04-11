@@ -12,6 +12,7 @@ import {compose, branch, withHandlers, renderComponent, pure} from 'recompose';
 import {calculateCardsWithDistances, cardIsExpired} from './api';
 import NoLocationScreen from './NoLocationScreen';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   scrollList: {
@@ -184,7 +185,10 @@ export default compose(
     ),
     WithLoadingComponent,
     withHandlers({
-      NavToCardList: props => () => Actions.cardList(),
+      NavToCardList: props => () => {
+        Amplitude.logEvent("Pressed 'Add Cards' Btn");
+        Actions.cardList();
+      },
     }),
     pure
 )(HomeCards);

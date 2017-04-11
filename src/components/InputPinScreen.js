@@ -1,14 +1,20 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View, Keyboard} from 'react-native';
 import Card from './common/Card';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {inputPinActions} from '../modules';
 import {Modal} from './common';
-import gql from 'graphql-tag';
 import {userStampCardMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+//Container dependency
+import {compose, withHandlers, lifecycle} from 'recompose';
+import {Toast} from 'antd-mobile';
+import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
+import {cardIsExpired} from '../components/api';
+import {Actions} from 'react-native-router-flux';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   view: {
@@ -35,7 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "#3498DB",
   },
-  messageBox:{
+  messageBox: {
     top: 0,
     bottom: 0,
     left: 0,
@@ -61,8 +67,8 @@ const styles = StyleSheet.create({
 });
 
 class InputPinScreen extends Component {
-  componentWillMount(){
-    this.props.onEnterScreen();
+  componentWillMount() {
+    this.props.onEnterScreen(); // <-- props is not defined
   }
   
   componentDidMount() {
@@ -73,22 +79,15 @@ class InputPinScreen extends Component {
     // console.log(this.props);
     if (text.length === 4) {
       this.props.onChangePin(text);
-      
-      const variables = {
-        userId: this.props.userId,
-        cardId: card.id,
-        PIN: text,
-      };
-      
-      this.props.onSubmitPin(card, this.props.mutate, variables);
+      this.props.onSubmitPin(card, text);
     } else {
       this.props.onChangePin(text)
     }
   };
   
-  toggleModal(){
+  toggleModal() {
     this.props.toggleModal();
-    setTimeout(()=>{
+    setTimeout(() => {
       // focus input text box
       this.refs.input.focus();
     }, 100);
@@ -97,14 +96,16 @@ class InputPinScreen extends Component {
   render() {
     const {card, pin, message, showModal, toggleModal} = this.props;
     
-    return <View style={{flex:1}}>
+    return <View style={{flex: 1}}>
       <Modal visible={showModal}
              image={require("../../public/images/Hand-over-icon.png")}
              text={"PASS PHONE TO STAFF\nCOLLECT STAMP"}
-             toggle={() => {this.toggleModal()}}/>
+             toggle={() => {
+               this.toggleModal()
+             }}/>
       
       <View style={styles.view}>
-        <Card {...card} canPress={false} />
+        <Card {...card} canPress={false}/>
         <Text style={styles.titleText}>
           Enter Restaurant PIN
         </Text>
@@ -132,27 +133,60 @@ class InputPinScreen extends Component {
 
 // Container
 
-const InputPinWithGraphQL = graphql(userStampCardMutation)(InputPinScreen);
-
-const mapStateToProps = (state) => {
-  const {inputPin, user} = state;
-  return {
-    pin: inputPin.pin,
-    message: inputPin.message,
-    showModal: inputPin.showModal,
-    userId: user.id,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onChangePin: (pin) => dispatch(inputPinActions.changePin(pin)),
-    onSubmitPin: (card, stampCardMutation, variables) => {
-      return dispatch(inputPinActions.userSubmitPin(card, stampCardMutation, variables))
-    },
-    onEnterScreen: () => dispatch(inputPinActions.userEnterScreen()),
-    toggleModal: () => dispatch(inputPinActions.toggleModal()),
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(InputPinWithGraphQL);
+export default compose(
+    connect(
+        (state) => ({
+          pin: state.inputPin.pin,
+          message: state.inputPin.message,
+          showModal: state.inputPin.showModal,
+          userId: state.user.id,
+        }),
+        {
+          onChangePin: inputPinActions.changePin,
+          onEnterScreen: inputPinActions.userEnterScreen,
+          toggleModal: inputPinActions.toggleModal,
+          submitPinSuccess: inputPinActions.submitPinSuccess,
+          submitPinFailed: inputPinActions.submitPinFailed,
+        }
+    ),
+    graphql(userStampCardMutation),
+    withHandlers({
+      onSubmitPin: props => (card, text) => {
+        Toast.loading('Loading...', 0);
+        props.mutate({
+          variables: {
+            userId: props.userId,
+            cardId: card.id,
+            PIN: text,
+          },
+          refetchQueries: [{query: getAllRestaurantCardsQuery, variables: {userId: props.userId}}]
+        })
+            .then(result =>{
+              // console.log("result", result);
+              Amplitude.logEvent("Input PIN Success");
+              Toast.hide();
+              props.submitPinSuccess();
+              Keyboard.dismiss();
+              setTimeout(()=>{
+                // console.warn("cardIsExpired(card)", cardIsExpired(card));
+                if (cardIsExpired(card)) {
+                  Actions.reward({progress: 0});
+                }
+                else {
+                  let successScreen = null;
+                  if (card.PINSuccessScreens) successScreen = card.PINSuccessScreens[card.stampCount];
+                  Actions.reward({
+                    progress: card.stampCount,
+                    successScreen
+                  });
+                }
+              }, 100);
+            })
+            .catch(err => {
+              Toast.hide();
+              Amplitude.logEventWithProperties("Input PIN Error", {err: err.graphQLErrors[0]});
+              props.submitPinFailed(err.graphQLErrors[0].message)
+            });
+      }
+    }),
+)(InputPinScreen);

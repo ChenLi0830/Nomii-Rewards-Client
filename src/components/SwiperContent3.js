@@ -3,6 +3,8 @@ import {StyleSheet, Text, View, Image, Platform} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {compose, withHandlers} from 'recompose';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const SwiperContent3 = () => {
+const SwiperContent3 = (props) => {
   return (
       <View style={styles.slide}>
         <Text style={styles.title}>
@@ -44,9 +46,16 @@ const SwiperContent3 = () => {
         <Image resizeMode="contain"
                style={styles.image}
                source = {require('../../public/images/reward-icon-onboarding.png')}/>
-        <Button style={styles.button} type="primary" onPress={() => Actions.promoCode()}>GET STARTED</Button>
+        <Button style={styles.button} type="primary" onPress={props.onBtnClick}>GET STARTED</Button>
       </View>
   )
 };
 
-export default SwiperContent3;
+export default compose(
+    withHandlers({
+      onBtnClick: (props) => () => {
+        Amplitude.logEvent('Click "Get Started"');
+        Actions.promoCode();
+      },
+    }),
+)(SwiperContent3);

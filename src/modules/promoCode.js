@@ -27,45 +27,6 @@ export const userChangedScreen = () => ({
   type: USER_CHANGED_SCREEN,
 });
 
-// const userSubmitPromoStart = () => ({
-//   type: USER_SUBMIT_PROMO_START,
-// });
-
-// export const userSubmitPromo = (redeemPromoMutation, variables) => {
-//   return (dispatch, getState) => {
-//     // dispatch(userSubmitPromoStart());
-//
-//       // if (getState().promoCode.code === "code") {
-//     Toast.loading('Loading...', 0);
-//     redeemPromoMutation({
-//       variables: {...variables},
-//       // refetchQueries: [{query: getUserQuery, variables: {id: getState().user.id}}]
-//     })
-//         .then(result => {
-//           console.log("redeem coupon result", result);
-//           Toast.hide();
-//           dismissKeyboard();
-//           Actions.promoSuccess({redeemedCoupons: result.data.redeemPromo.redeemedCoupons});
-//           dispatch(userChangedScreen());
-//         })
-//         .catch(err => {
-//           Toast.hide();
-//           // console.log("error", err);
-//           dispatch(submitPromoFailed(err.graphQLErrors[0].message));
-//         });
-//   }
-// };
-
-export const userSkipPromo = () => {
-  return (dispatch, getState) => {
-    dismissKeyboard();
-    setTimeout(() => {
-      if (getState().user.location) Actions.home();
-      else Actions.location();
-      dispatch(userChangedScreen());
-    },300)}
-};
-
 // Reducer
 const initialState = {
   code: "",

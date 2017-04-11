@@ -2,10 +2,12 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Platform, Image} from 'react-native';
 import {ProgressBar} from './ProgressBar';
 import {getTimeInSec} from '../api';
-import {compose} from 'recompose';
+import {compose, withHandlers} from 'recompose';
 import {connect} from 'react-redux';
 import {homeActions} from '../../modules';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
+import {Actions} from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
   box: {
@@ -124,15 +126,20 @@ const Card = (props) => {
 };
 
 // Container - put container into a separate component if you need a different onPress behaviour
-const mapDispatchToProps = (dispatch, props) => {
-  return {
-    onPress: () => dispatch(homeActions.pressCard(props))
-  }
-};
-
 export default compose(
     connect(
         null,
-        mapDispatchToProps,
+        {toggleModal: homeActions.toggleModal},
     ),
+    withHandlers({
+      onPress: props => () => {
+        Amplitude.logEventWithProperties("Card selected", {restaurant: props.restaurant, stampCount: props.stampCount});
+        if (props.distance <= 150)
+        {
+          Actions.inputPin({card:props});
+        } else {
+          props.toggleModal();
+        }
+      }
+    }),
 )(Card);

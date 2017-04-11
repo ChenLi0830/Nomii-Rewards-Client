@@ -8,6 +8,8 @@ import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
 import {Actions} from 'react-native-router-flux';
 import {Toast} from 'antd-mobile';
+import {Amplitude} from 'expo';
+import {compose} from 'recompose';
 
 const styles = new StyleSheet.create({
   wrapperView: {
@@ -78,6 +80,8 @@ const AskNotificationScreen = (props) => {
     await registerForPushNotificationsAsync(props);
   };
   
+  Amplitude.logEvent("Ask notification screen shows up");
+  
   return <View style={styles.wrapperView}>
       <View>
         <Text style={styles.title}>
@@ -117,4 +121,8 @@ const mapStateToProps = (state) => {
   }
 };
 
+// export default compose(
+//     connect(),
+//     graphql(),
+// )(AskNotificationScreen);
 export default connect(mapStateToProps)(AskNotificationWithGraphQL);

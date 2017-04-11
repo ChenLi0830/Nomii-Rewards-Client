@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {userActions} from '../modules';
 import {Actions} from 'react-native-router-flux';
 import {responsiveFontSize, responsiveWidth} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = new StyleSheet.create({
   wrapper: {
@@ -97,6 +98,7 @@ const askLocationPermission = async (props)=>{
 };
 
 const AskLocationScreen = (props) => {
+  Amplitude.logEvent("Ask location screen shows up");
   return <View style={styles.wrapper}>
     <View style={styles.contentView}>
       <Image resizeMode="contain"

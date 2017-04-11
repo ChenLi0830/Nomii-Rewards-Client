@@ -86,7 +86,7 @@ const facebookLogin = async(props) => {
   if (type === 'success') {
     // Get the user's name using Facebook's Graph API
     const user = await upsertUser(token, expires, props);
-    
+    await Amplitude.setUserId(user.id);
     Amplitude.logEvent('FB login successful');
     
   } else {
