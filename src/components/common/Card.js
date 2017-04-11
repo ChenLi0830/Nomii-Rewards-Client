@@ -96,15 +96,15 @@ const getUrgency = (stampValidDays, expireInDays) => {
 };
 
 const Card = (props) => {
-  let {id, stampCount, lastStampAt, restaurant, distance} = props;
+  let {id, stampCount, lastStampAt, restaurant, distance, canPress = true} = props;
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
+  const timeStamp = getTimeInSec();
   
-  let expireInDays = Math.ceil((parseInt(lastStampAt) + stampValidDays * 24 * 3600 - getTimeInSec())/(3600 * 24));
-  
+  let expireInDays = Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStamp)/(3600 * 24));
   const urgency = getUrgency(stampValidDays, expireInDays);
   
-  return <TouchableOpacity TouchableOpacity activeOpacity={0.8}
-                           onPress={props.onPress} style={styles.box}>
+  return <TouchableOpacity activeOpacity={canPress ? 0.8 : 1}
+                           onPress={canPress ? props.onPress : null} style={styles.box}>
       <View style={styles.storeRow}>
         <View style={styles.storeInfoColumn}>
           <Text style={styles.name} numberOfLines={2}>{name}</Text>

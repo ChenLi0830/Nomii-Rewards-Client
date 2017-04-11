@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import Dash from 'react-native-dash';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
-import { getTimeInSec } from '../api';
 
 const checkedImage = require("../../../public/images/card-screens/1st-circle-check.png");
 const emptyImage = [
@@ -24,6 +23,9 @@ const colors = ["#EB2E46", "#E67E22", "#35ABBD"];
 const dashColors = ["rgba(235,46,70,0.2)","rgba(230,126,34,0.2)","rgba(53,171,189,0.2)"];
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   row1: {
     flexDirection: "row",
     justifyContent: "center",
@@ -148,10 +150,12 @@ const ProgressBar = ({index, expireInDays, urgency, discounts}) => {
   const expirationText = daysLeft > 1 ? `${daysLeft} days left` : `${daysLeft} day left`;
   const expirationIsInvalid = isNaN(daysLeft) || daysLeft < 0;
   
+  const urgencyBgColor = {backgroundColor: colors[urgency]};
+  
   //The elements on the right hand side takes 0.1*3 + 0.05 + 0.1*2 = 0.55
-  return <View style={{flex: 1}}>
+  return <View style={styles.wrapper}>
     <View style={styles.row1}>
-      <View style={[styles.detailBox, {backgroundColor: colors[urgency]}, expirationIsInvalid && styles.detailBoxInvalid]}>
+      <View style={[styles.detailBox, urgencyBgColor, expirationIsInvalid && styles.detailBoxInvalid]}>
         <Text style={[styles.detailText, expirationIsInvalid && styles.detailTextInvalid]}>{expirationText}</Text>
       </View>
       

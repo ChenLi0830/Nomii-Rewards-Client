@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ListView, View} from 'react-native';
+import {StyleSheet, ListView, View, Text} from 'react-native';
 import Card from './common/Card';
 import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
@@ -25,6 +25,14 @@ const styles = StyleSheet.create({
   }
 });
 
+const renderRow = (card) => {
+  return (
+      <View style={{paddingHorizontal: 10}}>
+        <Card {...card} />
+      </View>
+  )
+};
+
 const CardList = (props) => {
   if (!props.location) console.warn("props.location doesn't exist");
   
@@ -32,24 +40,15 @@ const CardList = (props) => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const dataSource = ds.cloneWithRows(cardsSortedByDistance);
   
-  const renderRow = (card) => {
-    return (
-        <View style={{paddingHorizontal: 10}}>
-          <Card {...card} />
-        </View>
-    )
-  };
-  
-  
   return <View style={styles.wrapper}>
     <ListView dataSource={dataSource}
               enableEmptySections
-              renderRow={(card) => renderRow(card)}
+              renderRow={renderRow}
               style={styles.list}>
     </ListView>
   
   </View>
-}
+};
 
 // Container
 export default compose(

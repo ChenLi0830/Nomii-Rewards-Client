@@ -104,7 +104,7 @@ class InputPinScreen extends Component {
              toggle={() => {this.toggleModal()}}/>
       
       <View style={styles.view}>
-        <Card {...card}/>
+        <Card {...card} canPress={false} />
         <Text style={styles.titleText}>
           Enter Restaurant PIN
         </Text>
