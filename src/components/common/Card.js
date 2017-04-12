@@ -105,7 +105,7 @@ const Card = (props) => {
   let expireInDays = Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStamp)/(3600 * 24));
   const urgency = getUrgency(stampValidDays, expireInDays);
   
-  return <TouchableOpacity activeOpacity={canPress ? 0.8 : 1}
+  return <TouchableOpacity activeOpacity={canPress ? 0.9 : 1}
                            onPress={canPress ? props.onPress : null} style={styles.box}>
       <View style={styles.storeRow}>
         <View style={styles.storeInfoColumn}>
