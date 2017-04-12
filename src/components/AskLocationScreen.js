@@ -68,12 +68,15 @@ const AskLocationScreen = (props) => {
 
 // Container
 export default compose(
-    connect(),
+    connect(
+        null,
+        {updateUserLocation: userActions.updateUserLocation}
+    ),
     withHandlers({
       askLocationPermission: (props) => async ()=>{
         try {
           const { status } = await Permissions.askAsync(Permissions.LOCATION);
-          console.log("status",status);
+          // console.log("status",status);
           if (status === 'granted') {
             Toast.loading('', 0);
         
@@ -85,7 +88,7 @@ export default compose(
             };
         
             Location.watchPositionAsync(options, (updateResult) => {
-              console.log("updateResult", updateResult);
+              // console.log("updateResult", updateResult);
               props.updateUserLocation(updateResult.coords);
             });
         
@@ -99,7 +102,6 @@ export default compose(
                 new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
               ])
                   .then(result => {
-                    console.log("location", result);
                     location = result;
                   })
                   .catch(error => {
