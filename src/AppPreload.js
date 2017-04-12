@@ -113,6 +113,7 @@ class AppPreloading extends React.Component {
           return null;
         }
         else {
+          Amplitude.setUserId(result.id);
           Amplitude.logEvent("login user with stored token - success");
           return {...result, token: token};// result is user with token
         }
