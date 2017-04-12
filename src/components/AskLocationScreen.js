@@ -8,6 +8,7 @@ import {userActions} from '../modules';
 import {Actions} from 'react-native-router-flux';
 import {responsiveFontSize, responsiveWidth} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
+import {lifecycle, withHandlers, compose} from 'recompose';
 
 const styles = new StyleSheet.create({
   wrapper: {
@@ -38,67 +39,7 @@ const styles = new StyleSheet.create({
   }
 });
 
-const askLocationPermission = async (props)=>{
-  try {
-    // const { Location, Permissions } = Expo;
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.log("status",status);
-    if (status === 'granted') {
-      Toast.loading('', 0);
-      
-      // Keep track of User's location
-      const options = {
-        enableHighAccuracy: true,
-        timeInterval: 5000,
-        distanceInterval: 5
-      };
-    
-      Location.watchPositionAsync(options, (updateResult) => {
-        console.log("updateResult", updateResult);
-        props.updateUserLocation(updateResult.coords);
-      });
-  
-      // iOS will update location right away while android will wait, the current location is obtained here for android
-      if (Platform.OS === 'android'){
-        //Get instant location
-        let location = {};
-  
-        await Promise.race([
-          Location.getCurrentPositionAsync({enableHighAccuracy: true}),
-          new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
-        ])
-            .then(result => {
-              console.log("location", result);
-              location = result;
-            })
-            .catch(error => {
-              // console.log("error", error);
-              Toast.offline("There is something wrong with\nyour system location settings", 3);
-            });
-  
-        // console.log("location", location);
-        props.updateUserLocation(location.coords);
-      }
-      
-      setTimeout(() => {
-        Toast.hide();
-        Actions.home();
-      }, 300);
-    }
-    else { // location is not granted
-      console.log(new Error('Location permission not granted'));
-      Actions.home();
-    }
-    return status;
-  }
-  catch (error){
-    console.log("error", error);
-    Toast.fail("Something is wrong\nPlease try again", 2);
-  }
-};
-
 const AskLocationScreen = (props) => {
-  Amplitude.logEvent("Ask location screen shows up");
   return <View style={styles.wrapper}>
     <View style={styles.contentView}>
       <Image resizeMode="contain"
@@ -118,19 +59,78 @@ const AskLocationScreen = (props) => {
     </View>
     
     <View style={styles.buttonView}>
-      <Button onPress = {()=> askLocationPermission(props)}>
+      <Button onPress = {props.askLocationPermission}>
         ENABLE LOCATION
       </Button>
     </View>
   </View>
 };
 
-
 // Container
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateUserLocation: (location) => dispatch(userActions.updateUserLocation(location)),
-  }
-};
-
-export default connect(null, mapDispatchToProps)(AskLocationScreen);
+export default compose(
+    connect(),
+    withHandlers({
+      askLocationPermission: (props) => async ()=>{
+        try {
+          const { status } = await Permissions.askAsync(Permissions.LOCATION);
+          console.log("status",status);
+          if (status === 'granted') {
+            Toast.loading('', 0);
+        
+            // Keep track of User's location
+            const options = {
+              enableHighAccuracy: true,
+              timeInterval: 5000,
+              distanceInterval: 5
+            };
+        
+            Location.watchPositionAsync(options, (updateResult) => {
+              console.log("updateResult", updateResult);
+              props.updateUserLocation(updateResult.coords);
+            });
+        
+            // iOS will update location right away while android will wait, the current location is obtained here for android
+            if (Platform.OS === 'android'){
+              //Get instant location
+              let location = {};
+          
+              await Promise.race([
+                Location.getCurrentPositionAsync({enableHighAccuracy: true}),
+                new Promise((resolve, reject) => setTimeout(()=>reject(new Error("Get Location Timeout")), 5000))
+              ])
+                  .then(result => {
+                    console.log("location", result);
+                    location = result;
+                  })
+                  .catch(error => {
+                    // console.log("error", error);
+                    Toast.offline("There is something wrong with\nyour system location settings", 3);
+                  });
+          
+              // console.log("location", location);
+              props.updateUserLocation(location.coords);
+            }
+        
+            setTimeout(() => {
+              Toast.hide();
+              Actions.home();
+            }, 300);
+          }
+          else { // location is not granted
+            console.log(new Error('Location permission not granted'));
+            Actions.home();
+          }
+          return status;
+        }
+        catch (error){
+          console.log("error", error);
+          Toast.fail("Something is wrong\nPlease try again", 2);
+        }
+      }
+    }),
+    lifecycle({
+      componentDidMount(){
+        Amplitude.logEvent("Ask location screen shows up");
+      }
+    }),
+)(AskLocationScreen);

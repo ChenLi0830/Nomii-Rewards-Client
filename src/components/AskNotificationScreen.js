@@ -9,7 +9,7 @@ import {graphql} from 'react-apollo';
 import {Actions} from 'react-native-router-flux';
 import {Toast} from 'antd-mobile';
 import {Amplitude} from 'expo';
-import {compose} from 'recompose';
+import {compose, withHandlers, lifecycle} from 'recompose';
 
 const styles = new StyleSheet.create({
   wrapperView: {
@@ -41,47 +41,7 @@ const styles = new StyleSheet.create({
   },
 });
 
-const redirectScreen = (location) => {
-  if (location) Actions.home();
-  else Actions.location();
-};
-
-const registerForPushNotificationsAsync = async (props) => {
-  // Android remote notification permissions are granted during the app
-  // install, so this will only ask on iOS
-  let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
-
-  // Stop here if the user did not grant permissions
-  if (status === 'granted') {
-    Toast.loading("Saving...", 0);
-  
-    // Get the token that uniquely identifies this device
-    let token = await Notifications.getExponentPushTokenAsync();
-  
-    console.log("props.userId", props.userId);
-    console.log("pushToken", token);
-  
-    await props.mutate({
-      variables: {
-        userId: props.userId,
-        pushToken: token,
-      }});
-  
-    AsyncStorage.setItem("@NomiiStore:pushToken", token);
-  
-    Toast.hide();
-  }
-
-  redirectScreen(props.location);
-};
-
 const AskNotificationScreen = (props) => {
-  const btnPressed = async () => {
-    await registerForPushNotificationsAsync(props);
-  };
-  
-  Amplitude.logEvent("Ask notification screen shows up");
-  
   return <View style={styles.wrapperView}>
       <View>
         <Text style={styles.title}>
@@ -102,27 +62,56 @@ const AskNotificationScreen = (props) => {
         </Text>
       </View>
       
-      <Button onPress={() => btnPressed(props)}>
+      <Button onPress={props.onBtnPressed}>
         Ok, Got it!
       </Button>
     </View>
 };
 
-//Container
-const AskNotificationWithGraphQL = graphql(userAddPushTokenMutation, {
-  options: (ownProps) => ({variables: {id: ownProps.userId}}),
-})(AskNotificationScreen);
-
-const mapStateToProps = (state) => {
-  return {
-    userId: state.user.id,
-    location: state.user.location,
-    // pushToken: state.user.pushToken,
-  }
-};
-
-// export default compose(
-//     connect(),
-//     graphql(),
-// )(AskNotificationScreen);
-export default connect(mapStateToProps)(AskNotificationWithGraphQL);
+export default compose(
+    connect(
+        (state) => ({
+          userId: state.user.id,
+          location: state.user.location,
+        })
+    ),
+    graphql(userAddPushTokenMutation),
+    withHandlers({
+      //registerForPushNotificationsAsync
+      onBtnPressed: props => async () => {
+        // Android remote notification permissions are granted during the app
+        // install, so this will only ask on iOS
+        let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
+  
+        // Stop here if the user did not grant permissions
+        if (status === 'granted') {
+          Toast.loading("Saving...", 0);
+    
+          // Get the token that uniquely identifies this device
+          let token = await Notifications.getExponentPushTokenAsync();
+    
+          // console.log("props.userId", props.userId);
+          // console.log("pushToken", token);
+    
+          await props.mutate({
+            variables: {
+              userId: props.userId,
+              pushToken: token,
+            }});
+    
+          AsyncStorage.setItem("@NomiiStore:pushToken", token);
+    
+          Toast.hide();
+        }
+  
+        // redirect screen
+        if (props.location) Actions.home();
+        else Actions.location();
+      }
+    }),
+    lifecycle({
+      componentDidMount(){
+        Amplitude.logEvent("Ask notification screen shows up");
+      }
+    }),
+)(AskNotificationScreen);
