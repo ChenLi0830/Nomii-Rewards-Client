@@ -74,6 +74,7 @@ const renderDistance = (distance) => {
 };
 
 const getUrgency = (stampValidDays, expireInDays) => {
+  if (isNaN(expireInDays)) return 2; //Card is not stamped
   let urgencyArray = [
     [2, 4, 7],
     [3, 7, 14],
@@ -102,7 +103,7 @@ const Card = (props) => {
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   const timeStamp = getTimeInSec();
   
-  let expireInDays = Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStamp)/(3600 * 24));
+  let expireInDays = lastStampAt === null ? undefined : Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStamp)/(3600 * 24));
   const urgency = getUrgency(stampValidDays, expireInDays);
   
   return <TouchableOpacity activeOpacity={canPress ? 0.9 : 1}
@@ -120,7 +121,7 @@ const Card = (props) => {
       </View>
       
       <View style={styles.discountRow}>
-        <ProgressBar index={stampCount % 3} expireInDays={expireInDays} urgency={urgency} discounts = {props.discounts}/>
+        <ProgressBar index={stampCount} expireInDays={expireInDays} urgency={urgency} discounts = {props.discounts}/>
       </View>
   </TouchableOpacity>
 };
