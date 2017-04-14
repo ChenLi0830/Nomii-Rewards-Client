@@ -4,7 +4,7 @@ import Card from './common/Card';
 import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
-import {calculateCardsWithDistances} from './api';
+import {sortCardsByDistance, addDistanceToCards} from './api';
 import {compose, pure} from 'recompose';
 import {WithLoadingComponent} from './common';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
@@ -36,7 +36,9 @@ const renderRow = (card) => {
 const CardList = (props) => {
   if (!props.location) console.warn("props.location doesn't exist");
   
-  let cardsSortedByDistance = calculateCardsWithDistances(props.data.allRestaurantCards, props.location);
+  let cardsSortedByDistance = sortCardsByDistance(
+      addDistanceToCards(props.data.allRestaurantCards, props.location)
+  );
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const dataSource = ds.cloneWithRows(cardsSortedByDistance);
   

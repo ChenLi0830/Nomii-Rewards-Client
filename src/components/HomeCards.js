@@ -3,16 +3,16 @@ import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
 import {Button, Modal, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './common/Card';
-import {LinearGradient} from 'expo';
+import {LinearGradient, Amplitude} from 'expo';
 import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {compose, branch, withHandlers, renderComponent, pure} from 'recompose';
-import {calculateCardsWithDistances, cardIsExpired} from './api';
-import NoLocationScreen from './NoLocationScreen';
+import {sortCardsByDistance, sortCardsByUrgency, cardIsExpired, getCardUrgency, getTimeInSec, addDistanceToCards} from './api';
+import NoLocationScreen from './NoLocationScreen'; // android and ios versions
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
-import {Amplitude} from 'expo';
+import _ from 'lodash';
 
 const styles = StyleSheet.create({
   scrollList: {
@@ -100,8 +100,9 @@ const noCardsContent = props => {
   </View>
 };
 
-const getUserCards = (props) => {
-  console.log("props.data", props.data);
+// Get cards that are not expired and have at least 1 stamp
+const getValidCards = (props) => {
+  // console.log("props.data", props.data);
   let userCards = [];
   if (props.data.user && props.data.user.cards && props.data.user.cards.length > 0) {
     userCards = props.data.user.cards.filter(card => {
@@ -113,8 +114,30 @@ const getUserCards = (props) => {
   return userCards;
 };
 
-const hasCardsContent = (props, userCards) => {
-  let sortedCards = calculateCardsWithDistances(userCards, props.location);
+// Sort cards based on urgency and distance
+const sortCards = (visibleCards, userLocation) => {
+  const timeStampNow = getTimeInSec();
+  
+  //Add urgency to cards
+  let cardsWithUrgency = visibleCards.map(card => {
+    const {lastStampAt} = card;
+    const stampValidDays = card.restaurant.stampValidDays;
+    const expireInDays = lastStampAt === null ? undefined :
+        Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStampNow) / (3600 * 24));
+    return {...card, urgency: getCardUrgency(stampValidDays, expireInDays), expireInDays}
+  });
+  
+  //Add distance to cards
+  cardsWithUrgency = addDistanceToCards(cardsWithUrgency, userLocation);
+  
+  let urgentCards = _.filter(cardsWithUrgency, {urgency: 0});
+  let nonUrgentCards = _.filter(cardsWithUrgency, card => card.urgency !== 0);
+  
+  return [...sortCardsByUrgency(urgentCards), ...sortCardsByDistance(nonUrgentCards)];
+};
+
+const hasCardsContent = (props, visibleCards) => {
+  let sortedCards = sortCards(visibleCards, props.location);
   // console.log("sortedCards", sortedCards);
   
   const cards = sortedCards.map(card =>
@@ -144,7 +167,7 @@ const HomeCards = (props) => {
   // console.log("HomeCards props", props);
   // console.log("props.locationGranted", props.location);
   
-  const userCards = getUserCards(props);
+  const visibleCards = getValidCards(props);
   
   return <View style={{flex: 1}}>
     <Modal visible={props.showModal}
@@ -153,8 +176,8 @@ const HomeCards = (props) => {
            textStyle={{color: "#FF0033"}}
            toggle={props.toggleModal}/>
     {
-      userCards.length > 0 ?
-          hasCardsContent(props, userCards)
+      visibleCards.length > 0 ?
+          hasCardsContent(props, visibleCards)
           :
           noCardsContent(props)
     }

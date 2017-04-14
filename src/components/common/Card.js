@@ -8,6 +8,7 @@ import {homeActions} from '../../modules';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import {Actions} from 'react-native-router-flux';
+import {getCardUrgency} from '../api';
 
 const styles = StyleSheet.create({
   box: {
@@ -73,38 +74,13 @@ const renderDistance = (distance) => {
   return `${distance}${unit}`
 };
 
-const getUrgency = (stampValidDays, expireInDays) => {
-  if (isNaN(expireInDays)) return 2; //Card is not stamped
-  let urgencyArray = [
-    [2, 4, 7],
-    [3, 7, 14],
-    [5, 15, 30],
-  ];
-  // Get correct row
-  let row;
-  for (row=0; row<urgencyArray.length; row++){
-    // row is found
-    if (urgencyArray[row][2]>=stampValidDays) break;
-  }
-  if (row === urgencyArray.length) row--;
-  
-  // Get urgency
-  let urgency;
-  for (urgency = 0; urgency<urgencyArray[row].length; urgency++){
-    // urgencyLevel is found
-    if (urgencyArray[row][urgency] >= expireInDays) break;
-  }
-  if (urgency === urgencyArray[0].length) urgency--;
-  return urgency;
-};
-
 const Card = (props) => {
   let {id, stampCount, lastStampAt, restaurant, distance, canPress = true} = props;
   let {name, imageURL, longitude, latitude, stampValidDays} = restaurant;
   const timeStamp = getTimeInSec();
   
   let expireInDays = lastStampAt === null ? undefined : Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStamp)/(3600 * 24));
-  const urgency = getUrgency(stampValidDays, expireInDays);
+  const urgency = getCardUrgency(stampValidDays, expireInDays);
   
   return <TouchableOpacity activeOpacity={canPress ? 0.9 : 1}
                            onPress={canPress ? props.onPress : null} style={styles.box}>
