@@ -8,7 +8,7 @@ import {homeActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
-import {compose, branch, withHandlers, renderComponent, pure} from 'recompose';
+import {compose, branch, withHandlers, renderComponent, pure, lifecycle} from 'recompose';
 import {sortCardsByDistance, sortCardsByUrgency, cardIsExpired, getCardUrgency, getTimeInSec, addDistanceToCards} from './api';
 import NoLocationScreen from './NoLocationScreen'; // android and ios versions
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
@@ -212,6 +212,11 @@ export default compose(
         Amplitude.logEvent("Pressed 'Add Cards' Btn");
         Actions.cardList();
       },
+    }),
+    lifecycle({
+      componentDidMount() {
+        Amplitude.logEvent('Home screen shows');
+      }
     }),
     pure
 )(HomeCards);

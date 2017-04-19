@@ -6,8 +6,9 @@ import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
-import {compose} from 'recompose';
+import {compose, lifecycle, withHandlers} from 'recompose';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -156,7 +157,7 @@ const renderHasPINs = (props) => {
         </View>
         
         <Button style={styles.button} type="primary"
-                onPress={() => Actions.assignPin({restaurant: props.data.restaurant})}>
+                onPress={props.onAddPIN}>
           ADD NEW PIN
         </Button>
       </View>
@@ -200,7 +201,7 @@ const renderNoPINs = (props) => {
       </Text>
       
       <Button style={styles.button} type="primary"
-              onPress={() => Actions.assignPin({restaurant: props.data.restaurant})}>
+              onPress={props.onAddPIN}>
         ADD NEW PIN
       </Button>
     </View>
@@ -238,4 +239,15 @@ export default compose(
       })
     }),
     WithLoadingComponent,
+    withHandlers({
+      onAddPIN: props => () => {
+        Amplitude.logEvent('Add PIN btn is pressed');
+        Actions.assignPin({restaurant: props.data.restaurant});
+      }
+    }),
+    lifecycle({
+      componentDidMount() {
+        Amplitude.logEvent('Restaurant stats screen shows');
+      }
+    }),
 )(ShowStats);

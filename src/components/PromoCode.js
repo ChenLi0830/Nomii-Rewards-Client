@@ -162,4 +162,9 @@ export default compose(
           Amplitude.logEvent("Skip promo code");
         },300)}
     }),
+    lifecycle({
+      componentDidMount() {
+        Amplitude.logEvent('PromoCode screen shows');
+      }
+    }),
 )(PromoCode);

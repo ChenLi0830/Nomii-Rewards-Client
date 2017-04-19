@@ -5,9 +5,10 @@ import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
 import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {sortCardsByDistance, addDistanceToCards} from './api';
-import {compose, pure} from 'recompose';
+import {compose, pure, lifecycle} from 'recompose';
 import {WithLoadingComponent} from './common';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -70,5 +71,10 @@ export default compose(
         }
     ),
     WithLoadingComponent,
+    lifecycle({
+      componentDidMount() {
+        Amplitude.logEvent('CardList screen shows');
+      }
+    }),
     pure,
 )(CardList);
