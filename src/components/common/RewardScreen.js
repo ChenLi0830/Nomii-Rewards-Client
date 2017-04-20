@@ -8,6 +8,7 @@ import {userAddPushTokenMutation} from '../../graphql/user';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, lifecycle, withHandlers} from 'recompose';
 import {Amplitude} from 'expo';
+import {getIfPermissionAsked} from '../api';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -72,7 +73,6 @@ const buttonTitles = {
   firstTime10Off: "SWEET!",
 };
 
-let pushToken;
 const RewardScreenComponent = (props) => {
   let index = props.successScreen ? props.successScreen : props.progress;
   
@@ -105,18 +105,14 @@ const containerComponent = compose(
         })
     ),
     withHandlers({
-      btnPressed: props => () => {
-        // console.log("pushToken", pushToken);
-        if (!pushToken || typeof pushToken !== "string" || pushToken.length === 0) {
-          Actions.askNotification();
-        } else {
+      btnPressed: props => async () => {
+        let notificationPermissionAsked = await getIfPermissionAsked("notification");
+        // console.log("location screen notificationPermissionAsked", notificationPermissionAsked);
+        if (notificationPermissionAsked) {
           Actions.home();
+        } else {
+          Actions.askNotification();
         }
-      }
-    }),
-    lifecycle({
-      async componentDidMount() {
-        pushToken = await AsyncStorage.getItem("@NomiiStore:pushToken");
       }
     }),
 )(RewardScreenComponent);

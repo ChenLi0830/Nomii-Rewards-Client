@@ -68,7 +68,7 @@ const AskNotificationScreen = (props) => {
     
     <View>
       <Button onPress={props.onBtnPressed}>
-        Enable Notification Services
+        ENABLE NOTIFICATION
       </Button>
       <Button onPress={props.onSkipPressed} type = "skip">
         Not now
@@ -91,7 +91,7 @@ export default compose(
         // Android remote notification permissions are granted during the app
         // install, so this will only ask on iOS
         try {
-          await setIfPermissionAsked("location");
+          await setIfPermissionAsked("notification");
           let {status} = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
           
           // Stop here if the user did not grant permissions
@@ -120,12 +120,10 @@ export default compose(
           console.warn("error", error);
         }
         // redirect screen
-        if (props.location) Actions.home();
-        else Actions.location();
+        Actions.home();
       },
       onSkipPressed: props => () => {
-        if (props.location) Actions.home();
-        else Actions.location();
+        Actions.home();
       },
     }),
     lifecycle({

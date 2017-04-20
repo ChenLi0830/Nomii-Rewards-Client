@@ -157,7 +157,7 @@ export default compose(
         Keyboard.dismiss();
         setTimeout(() => {
           if (props.location) Actions.home();
-          else Actions.location();
+          else Actions.askLocation();
           props.userChangedScreen();
           Amplitude.logEvent("Skip promo code");
         },300)}

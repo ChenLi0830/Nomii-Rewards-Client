@@ -9,6 +9,7 @@ import {Actions} from 'react-native-router-flux';
 import {responsiveFontSize, responsiveWidth} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import {lifecycle, withHandlers, compose} from 'recompose';
+import {setIfPermissionAsked, getIfPermissionAsked} from './api';
 
 const styles = new StyleSheet.create({
   wrapper: {
@@ -75,6 +76,8 @@ export default compose(
     withHandlers({
       askLocationPermission: (props) => async ()=>{
         try {
+          await setIfPermissionAsked("location");
+          
           const { status } = await Permissions.askAsync(Permissions.LOCATION);
           // console.log("status",status);
           if (status === 'granted') {
@@ -113,9 +116,15 @@ export default compose(
               props.updateUserLocation(location.coords);
             }
         
-            setTimeout(() => {
+            setTimeout(async () => {
               Toast.hide();
-              Actions.home();
+              let notificationPermissionAsked = await getIfPermissionAsked("notification");
+              // console.log("location screen notificationPermissionAsked", notificationPermissionAsked);
+              if (notificationPermissionAsked) {
+                Actions.home();
+              } else {
+                Actions.askNotification();
+              }
             }, 300);
           }
           else { // location is not granted

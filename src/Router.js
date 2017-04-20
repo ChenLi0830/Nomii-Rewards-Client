@@ -14,15 +14,9 @@ import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
 
 import {connect} from 'react-redux';
-
-// import PanAnimation from './components/animations/PanAnimation';
-// import AnimatableExample from './components/animations/AnimatableExample';
-// import LottieAnimatedExample from './components/playgound/lottie/LottieAnimatedExample';
-import LottieAnimatedExample from './components/playgound/lottie/SimpleExample';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
-import LocationComponent from './components/playgound/Location';
-import SimpleExampleNomii from './components/playgound/lottie/SimpleExampleNomii';
+import {compose, withHandlers, branch, renderComponent} from 'recompose';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -51,30 +45,20 @@ const styles = StyleSheet.create({
   }
 });
 
-const determineInitialScreen = (isNewUser, locationNotGranted) => {
-  if (isNewUser) return "swiper";
-  else {
-    if (locationNotGranted) return "location";
-    else return "home";
-  }
-};
-
-const RouterComponent = ({user}) => {
-  console.log("RouterComponent user", user);
-  const notLoggedIn = !user || !user.id;
-  // Todo: update GraphQL and make this user.lastLoginAt!==user.registeredAt
+const RouterComponent = (props) => {
+  let {user} = props;
+  // Todo: update GraphQL and make use this condition: user.lastLoginAt!==user.registeredAt
   const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
   const locationNotGranted = !user.location;
   
-  let initialScreen = determineInitialScreen(isNewUser, locationNotGranted);
+  let initialScreen = props.determineInitialScreen(isNewUser, locationNotGranted);
   
   // console.log("initialScreen", initialScreen);
   // console.log("locationNotGranted", locationNotGranted);
   
-  if (notLoggedIn) return <Login/>;
-  else return <Router>
+  return <Router>
     <Scene key="main">
-      <Scene key="location" component = {AskLocationScreen} initial={initialScreen === "location"}
+      <Scene key="askLocation" component = {AskLocationScreen} initial={initialScreen === "location"}
              navigationBarStyle={styles.cardListNavBar}
              titleStyle = {styles.cardListTitle} title="Location Services"/>
   
@@ -123,8 +107,24 @@ const RouterComponent = ({user}) => {
 };
 
 //Container
-const mapStateToProps = (state)=> ({
-  user: state.user,
-});
-
-export default connect(mapStateToProps)(RouterComponent);
+export default compose(
+    connect(
+        state => ({
+          user: state.user,
+        })
+    ),
+    branch(
+        props => !props.user || !props.user.id,
+        renderComponent(Login),
+    ),
+    withHandlers({
+      determineInitialScreen: props => (isNewUser, locationNotGranted) => {
+        if (isNewUser) return "swiper";
+        else {
+          if (locationNotGranted) return "location";
+          else return "home";
+        }
+      },
+      
+    }),
+)(RouterComponent);
