@@ -6,7 +6,8 @@ const Button = ({onPress, children, style, type="primary"}) => {
   const underlayColor = {
       default: "#37447f",
       ghost: "#FFF",
-      primary: "#3b74b6"
+      primary: "#3b74b6",
+      skip: "rgba(0,0,0,0)"
     };
   
   return <TouchableHighlight underlayColor={underlayColor[type]}
@@ -71,6 +72,9 @@ const styles = new StyleSheet.create({
     color: "#FFF",
     fontWeight: "bold",
     // fontWeight: "",
+  },
+  skipText:{
+    color: "#5c5c5c",
   },
 });
 

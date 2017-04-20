@@ -1,5 +1,6 @@
 import geolib from 'geolib';
 import _ from 'lodash';
+import {AsyncStorage} from 'react-native';
 
 const addDistanceToCards = (cards, userLocation) => {
   return cards.map(card => {
@@ -56,4 +57,37 @@ const getCardUrgency = (stampValidDays, expireInDays) => {
   return urgency;
 };
 
-export {sortCardsByDistance, sortCardsByUrgency, getTimeInSec, cardIsExpired, getCardUrgency, addDistanceToCards};
+const getIfPermissionAsked = async (permission)=>{
+  let permissionList = ["location", "notification"];
+  if (!_.includes(permissionList, permission)){
+    throw new Error("no such permission");
+  }
+  try {
+    return !!await AsyncStorage.getItem(`@NomiiStore:${permission}PermissionAsked`);
+  } catch (error){
+    console.error("getIfPermissionAsked error", error);
+  }
+};
+
+const setIfPermissionAsked = async (permission) => {
+  let permissionList = ["location", "notification"];
+  if (!_.includes(permissionList, permission)){
+    throw new Error("no such permission");
+  }
+  try {
+    return !!(await AsyncStorage.setItem(`@NomiiStore:${permission}PermissionAsked`, JSON.stringify(true)))
+  } catch (error){
+    console.error("getIfPermissionAsked error", error);
+  }
+};
+
+export {
+  sortCardsByDistance,
+  sortCardsByUrgency,
+  getTimeInSec,
+  cardIsExpired,
+  getCardUrgency,
+  addDistanceToCards,
+  getIfPermissionAsked,
+  setIfPermissionAsked,
+};
