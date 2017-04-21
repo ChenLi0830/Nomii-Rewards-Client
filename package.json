@@ -40,7 +40,9 @@
     "remote-redux-devtools": "^0.5.7"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build-ios": "exp build:ios",
+    "build-android": "exp build:android"
   },
   "jest": {
     "preset": "react-native",
