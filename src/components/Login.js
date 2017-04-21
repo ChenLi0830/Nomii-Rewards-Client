@@ -9,6 +9,7 @@ import {UpsertUserMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {compose, lifecycle, pure} from 'recompose';
 
 const styles = StyleSheet.create({
   view: {
@@ -119,12 +120,6 @@ class Login extends Component {
              resizeMode="contain"
              source={require('../../public/images/slogan.png')}/>
       
-      {/*<Text style={styles.title} animation="bounceInDown">*/}
-      {/*Stamp cards that*/}
-      {/*{"\n"}*/}
-      {/*reward you instantly*/}
-      {/*</Text>*/}
-      
       <Image style={styles.image}
              animation="bounceInDown"
              delay={300}
@@ -159,13 +154,17 @@ class Login extends Component {
 }
 
 // Container
-const LoginWithGraphQL = graphql(UpsertUserMutation)(Login);
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    // updateUserId: (id) => dispatch(userActions.updateUserId(id)),
-    updateUser: (user) => dispatch(userActions.updateUser(user)),
-  }
-};
-
-export default connect(null, mapDispatchToProps)(LoginWithGraphQL);
+export default compose(
+    connect(
+        null,
+        {
+          updateUser: userActions.updateUser,
+        }
+    ),
+    graphql(UpsertUserMutation),
+    lifecycle({
+      componentDidMount(){
+        Amplitude.logEvent('Login screen shows up');
+      }
+    }),
+)(Login);
