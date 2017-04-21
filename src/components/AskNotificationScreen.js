@@ -101,9 +101,6 @@ export default compose(
             // Get the token that uniquely identifies this device
             let token = await Notifications.getExponentPushTokenAsync();
             
-            // console.log("props.userId", props.userId);
-            // console.log("pushToken", token);
-            
             await props.mutate({
               variables: {
                 userId: props.userId,
