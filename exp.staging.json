@@ -15,7 +15,7 @@
     "androidCollapsedTitle": "You have several cards expiring soon"
   },
   "loading": {
-    "icon": "./public/images/nomii-rewards-app-icon_192.png",
+    "icon": "./public/images/round-corner-app-icon_192.png",
     "hideExponentText": true,
     "backgroundColor": "#e8314a"
   },
