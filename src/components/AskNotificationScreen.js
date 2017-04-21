@@ -97,6 +97,8 @@ export default compose(
           // Stop here if the user did not grant permissions
           if (status === 'granted') {
             Toast.loading("Saving...", 0);
+  
+            Amplitude.logEvent("User allowed notification request");
             
             // Get the token that uniquely identifies this device
             let token = await Notifications.getExponentPushTokenAsync();
@@ -114,12 +116,14 @@ export default compose(
           }
         } catch (error) {
           // alert(error.message);
+          Amplitude.logEvent("User denied notification request");
           console.warn("error", error);
         }
         // redirect screen
         Actions.home();
       },
       onSkipPressed: props => () => {
+        Amplitude.logEvent("User skipped notification request");
         Actions.home();
       },
     }),

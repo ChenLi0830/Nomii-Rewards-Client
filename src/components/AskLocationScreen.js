@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, Platform} from 'react-native';
 import {Button} from './common';
-import {Location, Permissions} from 'expo';
+import {Location, Permissions, Amplitude} from 'expo';
 import {Toast} from 'antd-mobile';
 import {connect} from 'react-redux';
 import {userActions} from '../modules';
 import {Actions} from 'react-native-router-flux';
 import {responsiveFontSize, responsiveWidth} from 'react-native-responsive-dimensions';
-import {Amplitude} from 'expo';
 import {lifecycle, withHandlers, compose} from 'recompose';
 import {setIfPermissionAsked, getIfPermissionAsked} from './api';
 
@@ -82,7 +81,9 @@ export default compose(
           // console.log("status",status);
           if (status === 'granted') {
             Toast.loading('', 0);
-        
+  
+            Amplitude.logEvent("User allowed location request");
+            
             // Keep track of User's location
             const options = {
               enableHighAccuracy: true,
@@ -128,6 +129,7 @@ export default compose(
             }, 300);
           }
           else { // location is not granted
+            Amplitude.logEvent("User denied location request");
             console.log(new Error('Location permission not granted'));
             Actions.home();
           }
