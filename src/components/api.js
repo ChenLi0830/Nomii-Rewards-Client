@@ -30,6 +30,13 @@ const cardIsExpired = (card) => {
   return card.lastStampAt + card.restaurant.stampValidDays * 24 * 3600 < getTimeInSec()
 };
 
+const getExpireInDays = (lastStampAt, stampValidDays) => {
+  if (cardIsExpired({lastStampAt, restaurant: {stampValidDays}})) return undefined;
+  
+  return lastStampAt === null ? undefined :
+      Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - getTimeInSec()) / (3600 * 24));
+};
+
 // The smaller the number the more urgent it is
 const getCardUrgency = (stampValidDays, expireInDays) => {
   if (isNaN(expireInDays)) return 2; //Card is not stamped
@@ -90,4 +97,5 @@ export {
   addDistanceToCards,
   getIfPermissionAsked,
   setIfPermissionAsked,
+  getExpireInDays,
 };

@@ -9,7 +9,14 @@ import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {compose, branch, withHandlers, renderComponent, pure, lifecycle} from 'recompose';
-import {sortCardsByDistance, sortCardsByUrgency, cardIsExpired, getCardUrgency, getTimeInSec, addDistanceToCards} from './api';
+import {
+  sortCardsByDistance,
+  sortCardsByUrgency,
+  cardIsExpired,
+  getCardUrgency,
+  addDistanceToCards,
+  getExpireInDays
+} from './api';
 import NoLocationScreen from './NoLocationScreen'; // android and ios versions
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import _ from 'lodash';
@@ -116,14 +123,12 @@ const getValidCards = (props) => {
 
 // Sort cards based on urgency and distance
 const sortCards = (visibleCards, userLocation) => {
-  const timeStampNow = getTimeInSec();
   
   //Add urgency to cards
   let cardsWithUrgency = visibleCards.map(card => {
     const {lastStampAt} = card;
     const stampValidDays = card.restaurant.stampValidDays;
-    const expireInDays = lastStampAt === null ? undefined :
-        Math.ceil((lastStampAt + stampValidDays * 24 * 3600 - timeStampNow) / (3600 * 24));
+    const expireInDays = getExpireInDays(lastStampAt, stampValidDays);
     return {...card, urgency: getCardUrgency(stampValidDays, expireInDays), expireInDays}
   });
   
