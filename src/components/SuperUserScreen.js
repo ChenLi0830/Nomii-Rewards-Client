@@ -42,28 +42,6 @@ const SuperUserScreen = (props) => {
   let restaurants = [
     {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
     {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
   ];
   
   console.log("props.offsetX", props.offsetX);
@@ -81,26 +59,24 @@ const SuperUserScreen = (props) => {
     }
   };
   
-  let key = 0;
-  const sideMenu = <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
-    <ScrollView>
-    <View {...panResponder.panHandlers} style={{flex: 1}}>
-      <List renderHeader={() => 'Restaurant List'}
-            style={{left: responsiveWidth(20), width: responsiveWidth(60)}}>
-        {restaurants.map(restaurant => {
-          return <List.Item key={key++}>{restaurant.name}</List.Item>
-        })}
-      </List>
-    </View>
-    </ScrollView>
-  </Animated.View>;
-  
+  const restaurantList = restaurants.map(restaurant => {
+    return <List.Item key={restaurant.id}>{restaurant.name}</List.Item>
+  });
+
   return <View style={styles.wrapper}>
     <Button onPress={props.onToggleSlider}>
       Open Slider
     </Button>
-    
-    {sideMenu}
+  
+    {/* Side Menu */}
+    <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
+      <ScrollView {...panResponder.panHandlers} style={{flex: 1}}>
+          <List renderHeader={() => 'Restaurant List'}
+                style={{left: responsiveWidth(20), width: responsiveWidth(60)}}>
+            {restaurantList}
+          </List>
+      </ScrollView>
+    </Animated.View>
   </View>;
 };
 
