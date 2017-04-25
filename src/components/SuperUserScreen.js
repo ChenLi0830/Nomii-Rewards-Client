@@ -13,9 +13,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   sideMenu: {
-    position: "absolute", top: 0, bottom: 0,
-    left: -responsiveWidth(80), width: responsiveWidth(80), backgroundColor: "#f6f6f6"
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: -responsiveWidth(80),
+    width: responsiveWidth(80),
+    backgroundColor: "#f6f6f6",
+    elevation: 2,
+    overflow: null,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 3,
+      width: 0
+    },
   },
+  
 });
 
 const SuperUserScreen = (props) => {
@@ -27,21 +41,19 @@ const SuperUserScreen = (props) => {
     onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
       if (props.isVisible) return false;
       if (gestureState.dx > 0) return false;
-      if (Math.abs(gestureState.dy)>30) return false;
+      // if (Math.abs(gestureState.dy)>30) return false;
       return true;
     },
     onPanResponderMove: (evt, gestureState) => {
-      if (gestureState.dx < -50 && props.isVisible) {
+      if (gestureState.dx < -30 && props.isVisible) {
         props.onToggleSlider();
       }
     },
   });
   
-  console.log("panResponder.panHandlers", panResponder.panHandlers);
-  
   let restaurants = [
     {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "Kosoo", id: "c964fbf4-9329-4562-b041-1d1d428e0881"},
+    {name: "La Catrina", id: "92b16601-9fe0-47cc-9fb7-03293bae23b0"},
   ];
   
   console.log("props.offsetX", props.offsetX);
@@ -52,7 +64,7 @@ const SuperUserScreen = (props) => {
         {
           translateX: props.offsetX.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, responsiveWidth(60)],
+            outputRange: [0, responsiveWidth(70)],
           })
         }
       ],
@@ -60,19 +72,21 @@ const SuperUserScreen = (props) => {
   };
   
   const restaurantList = restaurants.map(restaurant => {
-    return <List.Item key={restaurant.id}>{restaurant.name}</List.Item>
+    return <List.Item key={restaurant.id} onClick={() => props.onChooseRestaurant(restaurant.id)}>
+      {restaurant.name}
+    </List.Item>
   });
 
   return <View style={styles.wrapper}>
     <Button onPress={props.onToggleSlider}>
-      Open Slider
+      Restaurant List
     </Button>
   
     {/* Side Menu */}
     <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
-      <ScrollView {...panResponder.panHandlers} style={{flex: 1}}>
+      <ScrollView {...panResponder.panHandlers}>
           <List renderHeader={() => 'Restaurant List'}
-                style={{left: responsiveWidth(20), width: responsiveWidth(60)}}>
+                style={{left: responsiveWidth(10), width: responsiveWidth(70)}}>
             {restaurantList}
           </List>
       </ScrollView>
@@ -101,9 +115,8 @@ export default compose(
         }).start();
       },
       
-      onChooseRestaurant: props => (args) => {
-        console.log("args", args);
-        Actions.statistics({ownedRestaurant: args.restaurantId});
+      onChooseRestaurant: props => (restaurantId) => {
+        Actions.statistics({ownedRestaurant: restaurantId});
       }
     }),
 )(SuperUserScreen);

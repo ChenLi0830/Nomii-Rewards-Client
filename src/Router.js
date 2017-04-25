@@ -103,10 +103,8 @@ const RouterComponent = (props) => {
                navigationBarStyle={styles.homeNavBar} titleStyle={styles.navTitle}/>
       </Scene>
       
-      <Scene key="superUserScreen" component = {SuperUserScreen}
-             navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
+      <Scene key="superUserScreen" component = {SuperUserScreen} hideNavBar
              initial>
-        
       </Scene>
       
     </Scene>

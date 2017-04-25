@@ -230,13 +230,15 @@ const ShowStats = (props) => {
 // Container
 export default compose(
     graphql(getRestaurantStatsQuery, {
-      options: (ownProps) => ({
-        variables: {
-          restaurantId: ownProps.ownedRestaurant,
-          daysToCover: 30,
-          endTo: getTimeInSec()
+      options: (props) => {
+        return {
+          variables: {
+            restaurantId: props.ownedRestaurant,
+            daysToCover: 30,
+            endTo: getTimeInSec()
+          }
         }
-      })
+      }
     }),
     WithLoadingComponent,
     withHandlers({
