@@ -7,6 +7,7 @@ mutation upsertUser($id:ID, $fbName: String, $token: String){
     fbName,
     registeredAt,
     lastLoginAt,
+    isNomiiAdmin,
     cards {
       id,
       stampCount,
@@ -31,6 +32,7 @@ query getUser($id:ID){
   user(id:$id){
     id,
     fbName,
+    isNomiiAdmin,
     cards{
 			id
       stampCount,

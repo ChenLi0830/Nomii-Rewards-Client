@@ -67,8 +67,8 @@ const RouterComponent = (props) => {
              hideNavBar={false} navigationBarStyle={styles.homeNavBar}
              leftButtonImage={require('../public/images/promo.png')}
              onLeft={()=>{Actions.promoCode()}}
-             rightButtonImage={(user && user.ownedRestaurants.length > 0) ? require('../public/images/insight-icon.png') : null}
-             onRight={()=>Actions.statistics()}
+             rightButtonImage={(user && (user.ownedRestaurants.length > 0 || user.isNomiiAdmin)) ? require('../public/images/insight-icon.png') : null}
+             onRight={()=>user.isNomiiAdmin ? Actions.nomiiAdminScreen() : Actions.statistics()}
              renderTitle={() => <NavBarLogo/>} />
       
       <Scene key="cardList" component={CardList}
@@ -103,8 +103,7 @@ const RouterComponent = (props) => {
                navigationBarStyle={styles.homeNavBar} titleStyle={styles.navTitle}/>
       </Scene>
       
-      <Scene key="superUserScreen" component = {SuperUserScreen} hideNavBar
-             initial>
+      <Scene key="nomiiAdminScreen" component = {SuperUserScreen} type="reset" hideNavBar>
       </Scene>
       
     </Scene>

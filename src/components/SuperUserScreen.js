@@ -2,7 +2,7 @@ import React from 'react';
 import {compose, withHandlers, withState} from 'recompose';
 import {View, PanResponder, ScrollView, StyleSheet, Animated} from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import {List} from 'antd-mobile';
+import {List, Toast} from 'antd-mobile';
 import {Button} from './common';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
@@ -79,7 +79,7 @@ const SuperUserScreen = (props) => {
 
   return <View style={styles.wrapper}>
     <Button onPress={props.onToggleSlider}>
-      Restaurant List
+      Restaurant Dashboards
     </Button>
   
     {/* Side Menu */}
@@ -101,7 +101,6 @@ export default compose(
     withState('offsetX', 'updateOffsetX', new Animated.Value(0)),
     withHandlers({
       onToggleSlider: props => () => {
-        console.log("clicked");
         props.updateVisible(!props.isVisible);
         
         Animated.spring(props.offsetX, {
@@ -116,7 +115,20 @@ export default compose(
       },
       
       onChooseRestaurant: props => (restaurantId) => {
-        Actions.statistics({ownedRestaurant: restaurantId});
+        Toast.loading('Loading', 0);
+        Animated.spring(props.offsetX, {
+          toValue: 0,
+          friction: 15,
+          tension: 80,
+          // duration: 300,
+          // easing: Easing.in(Easing.ease),
+          // easing: Easing.linear,
+          // easing: Easing.elastic(2), // Springy
+        }).start(()=>{
+              Toast.hide();
+              Actions.statistics({ownedRestaurant: restaurantId});
+            }
+        );
       }
     }),
 )(SuperUserScreen);
