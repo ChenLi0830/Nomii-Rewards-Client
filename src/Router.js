@@ -12,6 +12,7 @@ import AssignPIN from './components/AssignPIN'
 import ShowStats from './components/ShowStats';
 import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
+import SuperUserScreen from './components/SuperUserScreen';
 
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
@@ -91,15 +92,21 @@ const RouterComponent = (props) => {
   
       <Scene key="askNotification" component={AskNotificationScreen} hideNavBar/>
       
-      <Scene key="statistics" direction="vertical" type="reset">
+      <Scene key="statistics" direction="vertical" type="reset" passProps>
         <Scene key="stat" component={ShowStats} title="Report"
                leftButtonImage={require('../public/images/close-button.png')}
                navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
-               ownedRestaurant = {user && user.ownedRestaurants[0]} titleStyle={styles.navTitle}
+               ownedRestaurant = {props.SUPickedRestaurant || user && user.ownedRestaurants[0]} titleStyle={styles.navTitle}
                onLeft={()=>{Actions.home()}}/>
         
         <Scene key="assignPin" component={AssignPIN} title="Assign PIN"
                navigationBarStyle={styles.homeNavBar} titleStyle={styles.navTitle}/>
+      </Scene>
+      
+      <Scene key="superUserScreen" component = {SuperUserScreen}
+             navigationBarStyle={[styles.homeNavBar, {borderBottomWidth: 0}]}
+             initial>
+        
       </Scene>
       
     </Scene>
