@@ -20,9 +20,6 @@ import InputPinScreen from './components/InputPinScreen';
 import {compose, withHandlers, branch, renderComponent} from 'recompose';
 
 const styles = StyleSheet.create({
-  wrapper: {
-    paddingTop: /*(Platform.OS === 'ios') ? 0 : */50,
-  },
   homeNavBar: {
     backgroundColor: null,
     borderBottomWidth: 1,
@@ -103,7 +100,7 @@ const RouterComponent = (props) => {
                navigationBarStyle={styles.homeNavBar} titleStyle={styles.navTitle}/>
       </Scene>
       
-      <Scene key="nomiiAdminScreen" component = {SuperUserScreen} type="reset" hideNavBar>
+      <Scene key="nomiiAdminScreen" component = {SuperUserScreen} navigationBarStyle={styles.homeNavBar} title="Nomii Admin">
       </Scene>
       
     </Scene>

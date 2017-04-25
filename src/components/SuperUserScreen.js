@@ -4,10 +4,15 @@ import {View, PanResponder, ScrollView, StyleSheet, Animated} from 'react-native
 import {Actions} from 'react-native-router-flux';
 import {List, Toast} from 'antd-mobile';
 import {Button} from './common';
+import {graphql} from 'react-apollo';
+import {connect} from 'react-redux';
+import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {WithLoadingComponent} from './common';
 
 const styles = StyleSheet.create({
   wrapper: {
+    marginTop: 74,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -16,8 +21,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     bottom: 0,
-    left: -responsiveWidth(80),
-    width: responsiveWidth(80),
+    left: -responsiveWidth(70),
+    width: responsiveWidth(70),
     backgroundColor: "#f6f6f6",
     elevation: 2,
     overflow: null,
@@ -29,7 +34,7 @@ const styles = StyleSheet.create({
       width: 0
     },
   },
-  
+  list: {width: responsiveWidth(70)}
 });
 
 const SuperUserScreen = (props) => {
@@ -41,7 +46,7 @@ const SuperUserScreen = (props) => {
     onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
       if (props.isVisible) return false;
       if (gestureState.dx > 0) return false;
-      // if (Math.abs(gestureState.dy)>30) return false;
+      if (Math.abs(gestureState.dy)>Math.abs(gestureState.dx)) return false;
       return true;
     },
     onPanResponderMove: (evt, gestureState) => {
@@ -50,13 +55,6 @@ const SuperUserScreen = (props) => {
       }
     },
   });
-  
-  let restaurants = [
-    {name: "Poke Bar", id: "ea596b9d-da36-4737-aef5-0296f9297bc8"},
-    {name: "La Catrina", id: "92b16601-9fe0-47cc-9fb7-03293bae23b0"},
-  ];
-  
-  console.log("props.offsetX", props.offsetX);
   
   let animStyles = {
     sideMenu: {
@@ -68,10 +66,12 @@ const SuperUserScreen = (props) => {
           })
         }
       ],
+      opacity: props.offsetX,
     }
   };
   
-  const restaurantList = restaurants.map(restaurant => {
+  const restaurantList = props.data.allRestaurantCards.map(card => {
+    let {restaurant} = card;
     return <List.Item key={restaurant.id} onClick={() => props.onChooseRestaurant(restaurant.id)}>
       {restaurant.name}
     </List.Item>
@@ -83,20 +83,37 @@ const SuperUserScreen = (props) => {
     </Button>
   
     {/* Side Menu */}
-    <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
+    {
+      <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
       <ScrollView {...panResponder.panHandlers}>
           <List renderHeader={() => 'Restaurant List'}
-                style={{left: responsiveWidth(10), width: responsiveWidth(70)}}>
+                style={styles.list}>
             {restaurantList}
           </List>
       </ScrollView>
     </Animated.View>
+    }
   </View>;
 };
 
 //需要allRestaurants, Names and ids
 
 export default compose(
+    connect(
+        state => ({
+          userId: state.user.id,
+        }),
+        null
+    ),
+    graphql(
+        getAllRestaurantCardsQuery,
+        {
+          options: (props) => ({
+            variables: {userId: props.userId}
+          }),
+        }
+    ),
+    WithLoadingComponent,
     withState('isVisible', 'updateVisible', false),
     withState('offsetX', 'updateOffsetX', new Animated.Value(0)),
     withHandlers({
