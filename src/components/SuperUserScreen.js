@@ -85,7 +85,7 @@ const SuperUserScreen = (props) => {
     {/* Side Menu */}
     {
       <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
-      <ScrollView {...panResponder.panHandlers}>
+      <ScrollView>
           <List renderHeader={() => 'Restaurant List'}
                 style={styles.list}>
             {restaurantList}

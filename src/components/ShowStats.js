@@ -9,6 +9,7 @@ import {getTimeInSec} from './api';
 import {compose, lifecycle, withHandlers} from 'recompose';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
+import _ from 'lodash';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -104,7 +105,13 @@ const renderHasPINs = (props) => {
   const {PINs, statistics, id} = props.data.restaurant;
   
   const PINList = PINs.map(PIN => {
-    return <EmployeePINItem key={PIN.code} restaurantId={id} {...PIN}/>
+    // PIN usage count within certain period
+    let PINCountOverDays = _.find(statistics.PINsCount, {employeeName: PIN.employeeName});
+    // If the count is available, use this number instead of PIN's total usage number
+  
+    return <EmployeePINItem key={PIN.code} restaurantId={id}
+                            code = {PIN.code} employeeName = {PIN.employeeName}
+                            usageCount={PINCountOverDays ? PINCountOverDays.count: 0}/>;
   });
   
   return <View style={styles.wrapper}>
@@ -116,8 +123,12 @@ const renderHasPINs = (props) => {
           <View style={styles.tabSelected}/>
         </View>
       </View>
-      
+  
       <View style={styles.statsView}>
+        <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -20}}>
+          {`Coupons redeemed: ${statistics.couponsCount}`}
+        </Text>
+        
         <Text style={styles.statsTitle}>
           New Customers
         </Text>

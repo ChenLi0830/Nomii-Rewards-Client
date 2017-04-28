@@ -54,18 +54,23 @@ const getRestaurantStatsQuery = gql`
 query getRestaurantStats($restaurantId: ID, $daysToCover: Float, $endTo: Int){
     restaurant(id: $restaurantId){
     id,
+    name,
     PINs{
       code,
       employeeName,
-      usageCount,
-      id
+      usageCount
     }
     statistics(daysToCover: $daysToCover, endTo: $endTo){
       id,
       newUserCount,
       returnUserCount,
       newVisitCount,
-      returnVisitCount
+      returnVisitCount,
+      PINsCount{
+        employeeName,
+        count
+      },
+      couponsCount
     }
   }
 }
