@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
-const Button = ({onPress, children, style, type="primary"}) => {
+const Button = ({onPress, children, style, type="primary", rounded=true}) => {
   const underlayColor = {
       default: "#37447f",
       ghost: "#FFF",
@@ -11,7 +11,7 @@ const Button = ({onPress, children, style, type="primary"}) => {
     };
   
   return <TouchableHighlight underlayColor={underlayColor[type]}
-                             style={[styles.buttonBase, styles[type], style]}
+                             style={[styles.buttonBase, styles[type], style, {borderRadius: rounded ? 50 : 7}]}
                              onPress={() => onPress()}>
     <Text style={[styles.textBase, styles[type+"Text"]]}>
       {children}
@@ -23,7 +23,6 @@ const styles = new StyleSheet.create({
   buttonBase: {
     overflow: "hidden",
     alignSelf: 'center',
-    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,

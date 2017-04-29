@@ -8,7 +8,6 @@ import { View } from 'react-native';
 // Third party imports
 import Button from 'react-native-button';
 import { FontAwesome } from '@expo/vector-icons';
-// import {FontAwesome} from '@expo';
 
 // import EntypoIcons from 'react-native-vector-icons/Entypo';
 // import EvilIconsIcons from 'react-native-vector-icons/EvilIcons';
