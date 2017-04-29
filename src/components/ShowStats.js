@@ -125,7 +125,7 @@ const renderHasPINs = (props) => {
       </View>
   
       <View style={styles.statsView}>
-        <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -20}}>
+        <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
           {`Coupons redeemed: ${statistics.couponsCount}`}
         </Text>
         
