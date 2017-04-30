@@ -74,7 +74,7 @@ export default compose(
             };
   
             Location.watchPositionAsync(options, (updateResult) => {
-              console.log("updateResult", updateResult);
+              console.log("updateResult.coords", updateResult.coords);
               props.updateUserLocation(updateResult.coords);
             })
                 .catch(error => {
@@ -96,7 +96,7 @@ export default compose(
                 });
           }
           
-          console.log("location", location);
+          // console.log("location.coords", location.coords);
           props.updateUserLocation(location.coords);
         }
         catch (error) {
