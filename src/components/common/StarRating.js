@@ -2,6 +2,7 @@
 import {
   StyleSheet,
   View,
+  Animated,
 } from 'react-native';
 
 import React, {
@@ -19,6 +20,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * forked from react-native-star-rating
+ * */
+
 class StarRating extends Component {
   
   constructor(props) {
@@ -26,6 +31,7 @@ class StarRating extends Component {
     
     this.state = {
       maxStars: this.props.maxStars,
+      scale: new Animated.Value(0),
     };
     
     this.onStarButtonPress = this.onStarButtonPress.bind(this);
@@ -33,6 +39,16 @@ class StarRating extends Component {
   
   onStarButtonPress(rating) {
     this.props.selectedStar(rating);
+  
+    this.setState({scale: new Animated.Value(0)}, ()=>{
+      Animated.spring(
+          this.state.scale,
+          {
+            toValue: 2,
+            friction: 3,
+          }
+      ).start();
+    });
   }
   
   round(number) {
@@ -62,6 +78,7 @@ class StarRating extends Component {
               disabled={this.props.disabled}
               key={i}
               rating={i + 1}
+              scale={this.props.rating > i ? this.state.scale : new Animated.Value(0)}
               onStarButtonPress={this.onStarButtonPress}
               iconSet={this.props.iconSet}
               starSize={this.props.starSize}

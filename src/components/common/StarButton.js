@@ -3,7 +3,7 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import { View } from 'react-native';
+import { View, Animated, TouchableWithoutFeedback } from 'react-native';
 
 // Third party imports
 import Button from 'react-native-button';
@@ -29,11 +29,14 @@ const iconSets = {
   // Zocial: ZocialIcons,
 };
 
+/**
+ * forked from react-native-star-rating
+ * */
+
 class StarButton extends Component {
   
   constructor(props) {
     super(props);
-    
     this.onButtonPress = this.onButtonPress.bind(this);
   }
   
@@ -44,24 +47,36 @@ class StarButton extends Component {
   render() {
     const Icon = iconSets[this.props.iconSet];
     
+    const animatedStyles = {
+      bouncyStar: {
+        transform: [
+          {
+            scale: this.props.scale.interpolate({
+              inputRange: [0, 0.75, 2],
+              outputRange: [1, 0.5, 1],
+            })
+          }
+        ]
+      }
+    };
+    
     return (
-        <Button
-            activeOpacity={0.20}
+        <TouchableWithoutFeedback
+            //activeOpacity={0.20}
             disabled={this.props.disabled}
             onPress={this.onButtonPress}
-            containerStyle={this.props.buttonStyle}
-            style={{
-              height: this.props.starSize,
-              width: this.props.starSize,
-            }}
+            //containerStyle={this.props.buttonStyle}
+            //style={{height: this.props.starSize,width: this.props.starSize,}}
         >
+          <Animated.View style={animatedStyles.bouncyStar}>
           <Icon
               name={this.props.starIconName}
               size={this.props.starSize}
               color={this.props.starColor}
               style={this.props.starStyle}
           />
-        </Button>
+          </Animated.View>
+        </TouchableWithoutFeedback>
     );
   }
 }
