@@ -163,7 +163,6 @@ export default compose(
         })
             .then(result =>{
               // console.log("result", result);
-              Amplitude.logEvent("Input PIN Success");
               Toast.hide();
               props.submitPinSuccess();
               Keyboard.dismiss();
@@ -171,8 +170,13 @@ export default compose(
                 // console.warn("cardIsExpired(card)", cardIsExpired(card));
                 if (cardIsExpired(card)) {
                   Actions.reward({progress: 0});
+                  Amplitude.logEventWithProperties("Input PIN Success",
+                      {restaurantName: card.restaurant.name, stampCount: 0});
                 }
                 else {
+                  Amplitude.logEventWithProperties("Input PIN Success",
+                      {restaurantName: card.restaurant.name, stampCount: card.stampCount});
+                  
                   let successScreen = null;
                   if (card.PINSuccessScreens) successScreen = card.PINSuccessScreens[card.stampCount];
                   Actions.reward({
