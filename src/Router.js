@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Platform, Alert} from 'react-native';
+import {StyleSheet, Platform, Alert, View} from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import Login from './components/Login';
 import Swiper from './components/Swiper';
@@ -13,6 +13,7 @@ import ShowStats from './components/ShowStats';
 import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
 import SuperUserScreen from './components/SuperUserScreen';
+import FeedBackModal from './components/FeedBackModal';
 
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
@@ -106,7 +107,10 @@ const RouterComponent = (props) => {
       </Scene>
   );
   
-  return <Router scenes={scenes}/>
+  return <View style={{flex: 1}}>
+        <Router scenes={scenes}/>
+        <FeedBackModal/>
+      </View>
 };
 
 //Container
