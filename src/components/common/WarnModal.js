@@ -1,6 +1,10 @@
 import React from 'react';
 import {Modal, TouchableOpacity, StyleSheet, Text, Image, View} from 'react-native';
-import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const NomiiModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = {}}) => {
+const WarnModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = {}}) => {
   
   return <Modal
       animationType={"fade"}
@@ -91,4 +95,4 @@ const NomiiModal = ({visible, image, text, toggle, imageStyle = {}, textStyle = 
   </Modal>
 };
 
-export {NomiiModal as Modal};
+export {WarnModal as Modal};

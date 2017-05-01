@@ -3,7 +3,7 @@ import {StyleSheet, Text, TextInput, View, Keyboard} from 'react-native';
 import Card from './common/Card';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
-import {inputPinActions} from '../modules';
+import {inputPinActions, appActions} from '../modules';
 import {Modal} from './common';
 import {userStampCardMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';

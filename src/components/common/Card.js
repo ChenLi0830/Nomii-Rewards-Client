@@ -4,7 +4,7 @@ import {ProgressBar} from './ProgressBar';
 import {getCardUrgency, getExpireInDays, cardIsExpired} from '../api';
 import {compose, withHandlers} from 'recompose';
 import {connect} from 'react-redux';
-import {homeActions} from '../../modules';
+import {appActions} from '../../modules';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import {Actions} from 'react-native-router-flux';
@@ -108,7 +108,7 @@ const Card = (props) => {
 export default compose(
     connect(
         null,
-        {toggleModal: homeActions.toggleModal},
+        {toggleModal: appActions.toggleModal},
     ),
     withHandlers({
       onPress: props => () => {

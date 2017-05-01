@@ -4,7 +4,7 @@ import {Button, Modal, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import Card from './common/Card';
 import {LinearGradient, Amplitude} from 'expo';
-import {homeActions} from '../modules';
+import {appActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
 import {graphql} from 'react-apollo';
@@ -175,17 +175,21 @@ const HomeCards = (props) => {
   const visibleCards = getValidCards(props);
   
   return <View style={{flex: 1}}>
+    
     <Modal visible={props.showModal}
            image={require("../../public/images/too-far-icon.png")}
            text={"YOU SEEM FAR!\nMUST BE IN STORE\nTO GET A STAMP"}
            textStyle={{color: "#FF0033"}}
            toggle={props.toggleModal}/>
+    
     {
       visibleCards.length > 0 ?
           hasCardsContent(props, visibleCards)
           :
           noCardsContent(props)
     }
+    
+    {/*<FeedBackModal/>*/}
   </View>
 };
 
@@ -193,11 +197,14 @@ const HomeCards = (props) => {
 export default compose(
     connect(
         (state) => ({
-          showModal: state.home.showModal,
+          showModal: state.app.showModal,
           userId: state.user.id,
           location: state.user.location,
         }),
-        {toggleModal: homeActions.toggleModal}
+        {
+          toggleModal: appActions.toggleModal,
+          toggleFeedbackModal: appActions.toggleFeedbackModal,
+        }
     ),
     branch(
         props => !props.location,
@@ -221,6 +228,9 @@ export default compose(
     lifecycle({
       componentDidMount() {
         Amplitude.logEvent('Home screen shows');
+        setTimeout(() => {
+          this.props.toggleFeedbackModal()
+        }, 1000);
       }
     }),
     pure

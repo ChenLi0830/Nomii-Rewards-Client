@@ -1,15 +1,13 @@
 import thunk from 'redux-thunk';
-import {createStore, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import reducer from './reducer';
-import createLogger from 'redux-logger';
 import * as promoActions from './promoCode';
 import * as inputPinActions from './inputPin';
-import * as homeActions from './home';
+import * as appActions from './app';
 import * as userActions from './user';
 import * as createPinActions from './createPin';
 import {client} from './apollo';
-import { composeWithDevTools } from 'remote-redux-devtools';
-
+import {composeWithDevTools} from 'remote-redux-devtools';
 
 // const logger = createLogger();
 const middleware = [
@@ -24,4 +22,4 @@ const store = createStore(reducer, /* preloadedState, */ composeWithDevTools(
 
 export default store;
 
-export {promoActions, inputPinActions, homeActions, userActions, createPinActions};
+export {promoActions, inputPinActions, appActions, userActions, createPinActions};
