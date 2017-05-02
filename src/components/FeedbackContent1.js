@@ -5,7 +5,7 @@ import {StarRating} from './common';
 import {compose, withHandlers, withState} from 'recompose';
 import {Button} from './common';
 import {connect} from 'react-redux';
-import {appActions} from '../modules';
+import {feedbackActions} from '../modules';
 
 
 let styles = StyleSheet.create({
@@ -101,11 +101,11 @@ const FeedbackContent1 = (props) => {
 export default compose(
     connect(
         (state) => ({
-          rating: state.app.feedbackRating,
+          rating: state.feedback.rating,
         }),
         {
-          setFeedbackRating: appActions.setFeedbackRating,
-          nextFeedbackStep: appActions.nextFeedbackStep,
+          setFeedbackRating: feedbackActions.setFeedbackRating,
+          nextFeedbackStep: feedbackActions.nextFeedbackStep,
         }
     ),
 )(FeedbackContent1);

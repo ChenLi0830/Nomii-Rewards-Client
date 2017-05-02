@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, Modal} from 'react-native';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, withHandlers, lifecycle, branch, renderComponent} from 'recompose';
 import {connect} from 'react-redux';
-import {appActions} from '../modules';
+import {feedbackActions} from '../modules';
 import ModalBox from 'react-native-modalbox';
 import FeedbackContent1 from './FeedbackContent1';
 import {graphql} from 'react-apollo';
@@ -41,8 +41,8 @@ const FeedBackModal = (props) => {
               backdropOpacity={0.7}
               style={styles.wrapper}>
       <View style={styles.container}>
-        {/*{feedBackContent}*/}
-        <FeedbackContent2 awaitFeedback={awaitFeedback}/>
+        {feedBackContent}
+        {/*<FeedbackContent2 awaitFeedback={awaitFeedback}/>*/}
       </View>
     </ModalBox>
   )
@@ -51,13 +51,13 @@ const FeedBackModal = (props) => {
 export default compose(
     connect(
         (state) => ({
-          showModal: state.app.showFeedbackModal,
-          step: state.app.feedBackStep,
+          showModal: state.feedback.showFeedbackModal,
+          step: state.feedback.step,
           userId: state.user.id,
         }),
         {
-          toggleFeedbackModal: appActions.toggleFeedbackModal,
-          nextFeedbackStep: appActions.nextFeedbackStep,
+          toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
+          nextFeedbackStep: feedbackActions.nextFeedbackStep,
         }
     ),
     graphql(getUserQuery, {

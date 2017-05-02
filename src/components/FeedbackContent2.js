@@ -5,7 +5,7 @@ import {StarRating} from './common';
 import {compose, withHandlers, withState} from 'recompose';
 import {Button} from './common';
 import {connect} from 'react-redux';
-import {appActions} from '../modules';
+import {feedbackActions} from '../modules';
 import TagButton from './TagButton';
 
 let styles = StyleSheet.create({
@@ -43,12 +43,12 @@ const FeedbackContent2 = (props) => {
   for (let i=0; i<3; i++){
     tagButtonGroup.push(
         <View key={i} style={{flexDirection: "row", alignSelf: "center"}}>
-          <View style={{paddingRight: 10, paddingBottom: 15}}>
+          <View style={{paddingRight: responsiveWidth(3), paddingBottom: responsiveWidth(2.5)}}>
             <TagButton key={feedbackTags[i].id}>
               {feedbackTags[i].content}
             </TagButton>
           </View>
-          <View style={{paddingBottom: 15}}>
+          <View style={{paddingBottom: responsiveWidth(2.5)}}>
             <TagButton key={feedbackTags[i+1].id}>
               {feedbackTags[i+1].content}
             </TagButton>
@@ -91,11 +91,11 @@ const FeedbackContent2 = (props) => {
 export default compose(
     connect(
         (state) => ({
-          rating: state.app.feedbackRating,
+          rating: state.feedback.rating,
         }),
         {
-          setFeedbackRating: appActions.setFeedbackRating,
-          nextFeedbackStep: appActions.nextFeedbackStep,
+          setFeedbackRating: feedbackActions.setFeedbackRating,
+          nextFeedbackStep: feedbackActions.nextFeedbackStep,
         }
     ),
 )(FeedbackContent2);

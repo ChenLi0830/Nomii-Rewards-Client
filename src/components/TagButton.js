@@ -5,8 +5,9 @@ import {responsiveWidth, responsiveFontSize} from 'react-native-responsive-dimen
 const styles = StyleSheet.create({
   container:{
     borderColor: "#E41856",
-    width: responsiveWidth(30),
-    backgroundColor: "#E41856",
+    borderWidth: 1,
+    width: responsiveWidth(36.5),
+    // backgroundColor: "#E41856",
     borderRadius: 5,
     overflow: "hidden",
     height: 42,
@@ -14,7 +15,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text:{
-    color: "#fff",
+    //color: "#fff",
+    color: "#E41856",
     fontSize: responsiveFontSize(1.5),
   }
 });
