@@ -56,6 +56,20 @@ query getUser($id:ID){
     }
     visitedRestaurants,
     ownedRestaurants,
+    awaitFeedbacks{
+      restaurantId,
+      visitedAt,
+      stampCountOfCard,
+      employeeName,
+      restaurant{
+        name,
+        imageURL
+      }
+      feedbackTags{
+        id,
+        content,
+      }
+    }    
   }
 }
 `;
@@ -84,4 +98,64 @@ mutation userUpsertPushToken($userId: ID, $pushToken: String){
 }
 `;
 
-export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation};
+const userAddAwaitFeedback = gql`
+mutation addAwaitFeedback($userId:ID, $restaurantId:ID,$stampCountOfCard:Int, $employeeName:String){
+  addAwaitFeedbackToUser(userId: $userId, restaurantId: $restaurantId, stampCountOfCard: $stampCountOfCard, employeeName: $employeeName){
+    id,
+    fbName,
+    awaitFeedbacks{
+      restaurantId,
+      visitedAt,
+      stampCountOfCard,
+      employeeName,
+      restaurant{
+        name,
+        imageURL,
+        address
+      },
+      feedbackTags{
+        id,
+        content
+      }
+    }
+  }
+}
+`;
+
+const userSubmitFeedback = gql`
+mutation userSubmitFeedback(
+  $restaurantId: ID,
+	$userId: ID,
+	$userVisitedRestaurantAt: Int,
+	$stampCountOfCard: Int,
+	$employeeName:String ,
+	$rating: Float,
+	$tags: [ID],
+	$comment: String,
+	$userContact: String,
+){
+  submitUserFeedback(
+  restaurantId: $restaurantId
+	userId: $userId,
+	userVisitedRestaurantAt: $userVisitedRestaurantAt,
+	stampCountOfCard: $stampCountOfCard,
+	employeeName: $employeeName,
+	rating: $rating,
+	tags: $tags,
+	comment: $comment,
+	userContact: $userContact,
+  ){
+    restaurantId,
+    userId,
+    restaurantName,
+    userName,
+    userVisitedRestaurantAt,
+    stampCountOfCard,
+    tags,
+    comment,
+    rating
+  }
+}
+`;
+
+export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation, userAddAwaitFeedback, userSubmitFeedback};

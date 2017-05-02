@@ -76,4 +76,14 @@ query getRestaurantStats($restaurantId: ID, $daysToCover: Float, $endTo: Int){
 }
 `;
 
-export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery};
+const restaurantCreateFeedbackTag = gql`
+mutation createFeedbackTag($content: String){
+  createFeedBackTag(content: $content){
+    id,
+    content,
+    createdAt
+  }
+}
+`;
+
+export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, restaurantCreateFeedbackTag};
