@@ -9,6 +9,7 @@ import FeedbackContent1 from './FeedbackContent1';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from '../graphql/user';
 import {WithInvisibleLoadingComponent} from '../components/common';
+import FeedbackContent2 from './FeedbackContent2';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -31,7 +32,7 @@ const FeedBackModal = (props) => {
   
   let feedBackContent;
   props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback}/>);
-  props.step === 1 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback}/>);
+  props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback}/>);
   
   return (
     <ModalBox isOpen={props.showModal}
@@ -40,7 +41,8 @@ const FeedBackModal = (props) => {
               backdropOpacity={0.7}
               style={styles.wrapper}>
       <View style={styles.container}>
-        {feedBackContent}
+        {/*{feedBackContent}*/}
+        <FeedbackContent2 awaitFeedback={awaitFeedback}/>
       </View>
     </ModalBox>
   )

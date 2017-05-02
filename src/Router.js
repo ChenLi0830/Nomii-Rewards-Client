@@ -18,7 +18,6 @@ import FeedBackModal from './components/FeedBackModal';
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
-import Feedback1 from './components/Feedback1';
 import {compose, withHandlers, branch, renderComponent, pure, onlyUpdateForKeys} from 'recompose';
 
 const styles = StyleSheet.create({
@@ -102,8 +101,6 @@ const RouterComponent = (props) => {
       
         <Scene key="nomiiAdminScreen" component = {SuperUserScreen} navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
       
-        <Scene key="feedback1" component={Feedback1} hideNavBar/>
-    
       </Scene>
   );
   
