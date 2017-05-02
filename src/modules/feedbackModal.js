@@ -45,7 +45,7 @@ const initialState = {
   showFeedbackModal: false,
   rating: 0,
   step: 0,
-  tags: {},
+  selectedTags: {},
   comment: "",
   contact: "",
 };
@@ -61,9 +61,11 @@ const reducer = (state = initialState, action) => {
     case "FEEDBACK_NEXT_STEP":
       return {...state, step: state.step + 1};
     case "TOGGLE_FEEDBACK_TAG":
-      let newTags = state.tags;
-      newTags[action.payload] = !newTags[action.payload];
-      return {...state, tags: newTags};
+      return {...state,
+        selectedTags: {
+          ...state.selectedTags, [action.payload]:!state.selectedTags[action.payload]
+        }
+      };
     case "CHANGE_FEEDBACK_COMMENT":
       return {...state, comment: action.payload};
     case "CHANGE_CONTACT":

@@ -37,20 +37,18 @@ const FeedbackContent2 = (props) => {
   // props.awaitFeedback
   const {visitedAt, stampCountOfCard, employeeName, restaurant, feedbackTags} = props.awaitFeedback;
   
-  console.log("feedbackTags", feedbackTags);
-  
   let tagButtonGroup = [];
   for (let i=0; i<3; i++){
     tagButtonGroup.push(
         <View key={i} style={{flexDirection: "row", alignSelf: "center"}}>
           <View style={{paddingRight: responsiveWidth(3), paddingBottom: responsiveWidth(2.5)}}>
-            <TagButton key={feedbackTags[i].id}>
+            <TagButton key={i*2} id = {feedbackTags[i*2].id} selected = {!!props.selectedTags[feedbackTags[i*2].id]}>
               {feedbackTags[i].content}
             </TagButton>
           </View>
           <View style={{paddingBottom: responsiveWidth(2.5)}}>
-            <TagButton key={feedbackTags[i+1].id}>
-              {feedbackTags[i+1].content}
+            <TagButton key={i*2+1} id = {feedbackTags[i*2+1].id} selected = {!!props.selectedTags[feedbackTags[i*2+1].id]}>
+              {feedbackTags[i*2+1].content}
             </TagButton>
           </View>
         </View>
@@ -92,9 +90,11 @@ export default compose(
     connect(
         (state) => ({
           rating: state.feedback.rating,
+          selectedTags: state.feedback.selectedTags,
+          comment: state.feedback.comment,
         }),
         {
-          setFeedbackRating: feedbackActions.setFeedbackRating,
+          changeFeedbackComment: feedbackActions.changeFeedbackComment,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
         }
     ),
