@@ -3,10 +3,9 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import { View, Animated, TouchableWithoutFeedback } from 'react-native';
+import { View, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 
 // Third party imports
-import Button from 'react-native-button';
 import { FontAwesome } from '@expo/vector-icons';
 
 // import EntypoIcons from 'react-native-vector-icons/Entypo';
@@ -28,6 +27,12 @@ const iconSets = {
   // Octicons: OcticonsIcons,
   // Zocial: ZocialIcons,
 };
+
+const styles = StyleSheet.create({
+  iconView: {
+    backgroundColor: "rgba(0,0,0,0)",
+  },
+});
 
 /**
  * forked from react-native-star-rating
@@ -52,8 +57,8 @@ class StarButton extends Component {
         transform: [
           {
             scale: this.props.scale.interpolate({
-              inputRange: [0, 0.75, 2],
-              outputRange: [1, 0.5, 1],
+              inputRange: [0, 1, 2],
+              outputRange: [1, 0.7, 1],
             })
           }
         ]
@@ -68,7 +73,7 @@ class StarButton extends Component {
             //containerStyle={this.props.buttonStyle}
             //style={{height: this.props.starSize,width: this.props.starSize,}}
         >
-          <Animated.View style={animatedStyles.bouncyStar}>
+          <Animated.View style={[styles.iconView, animatedStyles.bouncyStar]}>
           <Icon
               name={this.props.starIconName}
               size={this.props.starSize}
