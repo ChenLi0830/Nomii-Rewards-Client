@@ -203,7 +203,6 @@ export default compose(
         }),
         {
           toggleModal: appActions.toggleModal,
-          toggleFeedbackModal: appActions.toggleFeedbackModal,
         }
     ),
     branch(
@@ -228,9 +227,6 @@ export default compose(
     lifecycle({
       componentDidMount() {
         Amplitude.logEvent('Home screen shows');
-        setTimeout(() => {
-          this.props.toggleFeedbackModal()
-        }, 1000);
       }
     }),
     pure
