@@ -86,7 +86,8 @@ export default compose(
         const selectedTags = [];
         for (let tagId of Object.keys(props.selectedTags)){
           if (props.selectedTags[tagId]){ // if tag is selected
-            selectedTags.push(_.find(feedbackTags, {id: tagId}));
+            let tag = _.find(feedbackTags, {id: tagId});
+            selectedTags.push({id: tag.id, content: tag.content});
           }
         }
         // submit feedback
@@ -106,6 +107,10 @@ export default compose(
         })
             .then(()=>{
               Toast.hide();
+              props.toggleFeedbackModal();
+            })
+            .catch(err => {
+              console.log("err", err);
             });
       },
     }),

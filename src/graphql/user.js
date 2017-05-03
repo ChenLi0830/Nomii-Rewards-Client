@@ -130,7 +130,7 @@ mutation userSubmitFeedback(
 	$stampCountOfCard: Int,
 	$employeeName:String ,
 	$rating: Float,
-	$tags: [ID],
+	$tags: [FeedbackTagInput],
 	$comment: String,
 	$userContact: String,
 ){
@@ -151,7 +151,10 @@ mutation userSubmitFeedback(
     userName,
     userVisitedRestaurantAt,
     stampCountOfCard,
-    tags,
+    tags{
+      id,
+      content
+    },
     comment,
     rating
   }

@@ -48,7 +48,7 @@ const FeedbackContent2 = (props) => {
           <View style={{paddingRight: responsiveWidth(3), paddingBottom: responsiveWidth(2.5)}}>
             <TagButton key={i * 2} id={feedbackTags[i * 2].id}
                        selected={!!props.selectedTags[feedbackTags[i * 2].id]}>
-              {feedbackTags[i].content}
+              {feedbackTags[i * 2].content}
             </TagButton>
           </View>
           <View style={{paddingBottom: responsiveWidth(2.5)}}>
