@@ -91,9 +91,21 @@ const FeedbackContent1 = (props) => {
           />
         </View>
         
-        <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.nextFeedbackStep}>
-          Next
-        </Button>
+        {
+          props.rating === 5
+            &&
+          <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.submitFeedback}>
+            Submit
+          </Button>
+        }
+        
+        {
+          props.rating !== 5
+              &&
+          <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.nextFeedbackStep}>
+            Next
+          </Button>
+        }
       </View>
   );
 };

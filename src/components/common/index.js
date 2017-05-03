@@ -7,3 +7,4 @@ export * from './StarRating';
 export * from './WithInvisibleLoadingComponent';
 export * from './InputBox';
 export * from './ModalBox';
+export * from './BackButton';

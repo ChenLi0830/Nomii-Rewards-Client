@@ -133,6 +133,7 @@ mutation userSubmitFeedback(
 	$tags: [FeedbackTagInput],
 	$comment: String,
 	$userContact: String,
+  $userContactName: String,
 ){
   submitUserFeedback(
   restaurantId: $restaurantId
@@ -144,6 +145,7 @@ mutation userSubmitFeedback(
 	tags: $tags,
 	comment: $comment,
 	userContact: $userContact,
+  userContactName: $userContactName,
   ){
     restaurantId,
     userId,
@@ -156,7 +158,9 @@ mutation userSubmitFeedback(
       content
     },
     comment,
-    rating
+    rating,
+    userContact,
+    userContactName
   }
 }
 `;

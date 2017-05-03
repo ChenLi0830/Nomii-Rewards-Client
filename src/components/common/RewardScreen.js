@@ -5,6 +5,7 @@ import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
 import {connect} from 'react-redux';
 import {userAddPushTokenMutation} from '../../graphql/user';
+import {feedbackActions} from '../../modules';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, lifecycle, withHandlers} from 'recompose';
 import {Amplitude} from 'expo';
@@ -102,7 +103,8 @@ const containerComponent = compose(
     connect(
         state => ({
           userId: state.user.id,
-        })
+        }),
+        {toggleFeedbackModal: feedbackActions.toggleFeedbackModal}
     ),
     withHandlers({
       btnPressed: props => async () => {
@@ -110,6 +112,8 @@ const containerComponent = compose(
         // console.log("location screen notificationPermissionAsked", notificationPermissionAsked);
         if (notificationPermissionAsked) {
           Actions.home();
+          console.log("toggleFeedbackModal from congrats screen");
+          props.toggleFeedbackModal();
         } else {
           Actions.askNotification();
         }

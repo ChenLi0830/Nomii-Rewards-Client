@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TextInput, Keyboard, Platform} from 'react-native';
+import {View, StyleSheet, TextInput, Keyboard} from 'react-native';
 
 styles = StyleSheet.create({
   input: {
@@ -10,20 +10,25 @@ styles = StyleSheet.create({
     color: "#717171",
     fontSize: 13,
     paddingLeft: 10,
-    paddingTop: Platform.OS === "android" ? 0 : 10,
+  },
+  multilineStyle: {
+    paddingTop: 10,
+    textAlignVertical: "top",
   }
 });
 
-const InputBox = ({height = 50, width = 200, onChange, text, multiline = false}) => {
-  return <View style={{}}>
+const InputBox = ({height = 46, width = 200, onChange, text, multiline = false, placeholder = "", keyboardType = "default"}) => {
+  return <View style={{justifyContent: "center",}}>
     <TextInput
-        style={[{height, width}, styles.input]}
+        style={[{height, width}, styles.input, multiline && styles.multilineStyle]}
         onChangeText={onChange}
         value={text}
         multiline={multiline}
         onBlur={() => Keyboard.dismiss()}
         underlineColorAndroid="rgba(0,0,0,0)"
         blurOnSubmit
+        placeholder={placeholder}
+        keyboardType={keyboardType}
     />
   </View>
 };

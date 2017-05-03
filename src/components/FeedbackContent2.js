@@ -11,16 +11,22 @@ import {connect} from 'react-redux';
 import {feedbackActions, appActions} from '../modules';
 import TagButton from './TagButton';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import {BackButton} from './common';
 
 let styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: responsiveHeight(7),
+    paddingTop: responsiveHeight(2),
     paddingBottom: responsiveWidth(5),
   },
+  backBtnView:{
+    alignSelf: "flex-start",
+    left: -responsiveWidth(4),
+  },
   titleView: {
+    marginTop: -responsiveHeight(6),
     alignSelf: "flex-start",
     alignItems: "flex-start"
   },
@@ -62,9 +68,16 @@ const FeedbackContent2 = (props) => {
   }
   
   return (
-      
       <View style={{flex: 1}}>
         <View style={styles.wrapper}>
+          {
+            !props.keyboardIsShown
+            &&
+            <View style={styles.backBtnView}>
+              <BackButton size={responsiveFontSize(3.6)} onPress={()=>props.prevFeedbackStep()}/>
+            </View>
+          }
+          
           {
             !props.keyboardIsShown
             &&
@@ -82,12 +95,9 @@ const FeedbackContent2 = (props) => {
           }
           
           <View>
-            {
-              
-              <View>
-                {tagButtonGroup}
-              </View>
-            }
+            <View>
+              {tagButtonGroup}
+            </View>
             
             <View>
               <InputBox text={props.comment}
@@ -98,11 +108,25 @@ const FeedbackContent2 = (props) => {
               />
             </View>
           </View>
+  
+          {
+            props.rating <= 2
+            &&
+            <Button rounded={false} shadow={false} style={styles.button}
+                    onPress={props.nextFeedbackStep}>
+              Next
+            </Button>
+          }
           
-          <Button rounded={false} shadow={false} style={styles.button}
-                  onPress={props.submitFeedback}>
-            Submit
-          </Button>
+          {
+            props.rating > 2
+              &&
+            <Button rounded={false} shadow={false} style={styles.button}
+                    onPress={props.submitFeedback}>
+              Submit
+            </Button>
+          }
+  
         </View>
         <KeyboardSpacer/>
       </View>
@@ -120,6 +144,7 @@ export default compose(
         }),
         {
           changeFeedbackComment: feedbackActions.changeFeedbackComment,
+          prevFeedbackStep: feedbackActions.prevFeedbackStep,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
           toggleKeyboardVisibility: appActions.toggleKeyboardVisibility,
         }

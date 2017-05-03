@@ -5,11 +5,12 @@ import {compose, withHandlers, lifecycle, branch, renderComponent, onlyUpdateFor
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
 import {ModalBox} from './common';
-import FeedbackContent1 from './FeedbackContent1';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from '../graphql/user';
 import {WithInvisibleLoadingComponent} from '../components/common';
+import FeedbackContent1 from './FeedbackContent1';
 import FeedbackContent2 from './FeedbackContent2';
+import FeedbackContent3 from './FeedbackContent3';
 import {userSubmitFeedbackMutation} from '../graphql/user';
 import _ from 'lodash';
 import {Toast} from 'antd-mobile';
@@ -30,11 +31,11 @@ const styles = StyleSheet.create({
 
 const FeedBackModal = (props) => {
   const awaitFeedback = props.data.user.awaitFeedbacks[0];
-  console.log("props.data.user.awaitFeedbacks[0]", awaitFeedback);
   
   let feedBackContent;
-  props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback}/>);
+  props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
+  props.step === 2 && (feedBackContent = <FeedbackContent3 submitFeedback={props.onSubmitFeedback}/>);
   
   return (
     <ModalBox isOpen={props.showModal}
@@ -45,7 +46,6 @@ const FeedBackModal = (props) => {
               style={styles.wrapper}>
       <View style={styles.container}>
         {feedBackContent}
-        {/*<FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>*/}
       </View>
     </ModalBox>
   )
@@ -60,11 +60,13 @@ export default compose(
           selectedTags: state.feedback.selectedTags,
           comment: state.feedback.comment,
           contact: state.feedback.contact,
+          contactName: state.feedback.contactName,
           userId: state.user.id,
         }),
         {
           toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
+          resetFeedbackState: feedbackActions.resetState,
         }
     ),
     graphql(getUserQuery, {
@@ -80,6 +82,10 @@ export default compose(
     graphql(userSubmitFeedbackMutation),
     withHandlers({
       onSubmitFeedback: props => () =>{
+        // dismiss feedback modal
+        props.toggleFeedbackModal();
+        props.resetFeedbackState();
+        
         // calc selected tags
         const awaitFeedback = props.data.user.awaitFeedbacks[0];
         const {restaurantId, visitedAt, stampCountOfCard, employeeName, restaurant, feedbackTags} = awaitFeedback;
@@ -90,39 +96,39 @@ export default compose(
             selectedTags.push({id: tag.id, content: tag.content});
           }
         }
+
         // submit feedback
-        Toast.loading('Loading...', 0);
+        const feedback = {
+          restaurantId,
+          userId: props.userId,
+          userVisitedRestaurantAt:visitedAt,
+          stampCountOfCard,
+          employeeName,
+          rating: props.rating,
+          tags: selectedTags,
+          comment: props.comment,
+          userContact: props.contact,
+          userContactName: props.contactName,
+        };
         props.mutate({
-          variables: {
-            restaurantId,
-            userId: props.userId,
-            userVisitedRestaurantAt:visitedAt,
-            stampCountOfCard,
-            employeeName,
-            rating: props.rating,
-            tags: selectedTags,
-            comment: props.comment,
-            userContact: props.userContact,
-          },
+          variables: {...feedback},
         })
-            .then(()=>{
-              Toast.hide();
-              props.toggleFeedbackModal();
-            })
             .catch(err => {
               console.log("err", err);
             });
       },
     }),
-    lifecycle({
-      componentDidMount() {
-        const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
-        if (awaitFeedbacks.length === 0) return;
-        
-        setTimeout(() => {
-          this.props.toggleFeedbackModal()
-        }, 1000);
-      }
-    }),
+    // lifecycle({
+    //   componentDidMount() {
+    //     const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
+    //     console.log("awaitFeedbacks", awaitFeedbacks);
+    //     if (awaitFeedbacks.length === 0) return;
+    //
+    //     setTimeout(() => {
+    //       console.log("toggleFeedbackModal from life cycle");
+    //       this.props.toggleFeedbackModal()
+    //     }, 1000);
+    //   }
+    // }),
     onlyUpdateForKeys(['showModal', 'step'])
 )(FeedBackModal);

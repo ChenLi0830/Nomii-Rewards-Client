@@ -2,15 +2,20 @@
 const TOGGLE_FEEDBACK_MODAL = "TOGGLE_FEEDBACK_MODAL";
 const SET_FEEDBACK_RATING = "SET_FEEDBACK_RATING";
 const FEEDBACK_NEXT_STEP = "FEEDBACK_NEXT_STEP";
+const FEEDBACK_PREV_STEP = "FEEDBACK_PREV_STEP";
 const TOGGLE_FEEDBACK_TAG = "TOGGLE_FEEDBACK_TAG";
 const CHANGE_FEEDBACK_COMMENT = "CHANGE_FEEDBACK_COMMENT";
 const CHANGE_CONTACT = "CHANGE_CONTACT";
+const CHANGE_CONTACT_NAME = "CHANGE_CONTACT_NAME";
 const RESET_STATE = "RESET_STATE";
 
 // Action creator
-export const toggleFeedbackModal = () => ({
-  type: TOGGLE_FEEDBACK_MODAL,
-});
+export const toggleFeedbackModal = () => {
+  console.log("FeedbackModal is toggled");
+  return {
+    type: TOGGLE_FEEDBACK_MODAL,
+  }
+};
 
 export const setFeedbackRating = (rating) => ({
   type: SET_FEEDBACK_RATING,
@@ -19,6 +24,10 @@ export const setFeedbackRating = (rating) => ({
 
 export const nextFeedbackStep = () => ({
   type: FEEDBACK_NEXT_STEP,
+});
+
+export const prevFeedbackStep = () => ({
+  type: FEEDBACK_PREV_STEP,
 });
 
 export const toggleFeedbackTag = (tag) => ({
@@ -36,6 +45,11 @@ export const changeContact = (contact) => ({
   payload: contact,
 });
 
+export const changeContactName = (contactName) => ({
+  type: CHANGE_CONTACT_NAME,
+  payload: contactName,
+});
+
 export const resetState = () => ({
   type: RESET_STATE,
 });
@@ -48,6 +62,7 @@ const initialState = {
   selectedTags: {},
   comment: "",
   contact: "",
+  contactName: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -60,6 +75,8 @@ const reducer = (state = initialState, action) => {
       return {...state, rating: action.payload};
     case "FEEDBACK_NEXT_STEP":
       return {...state, step: state.step + 1};
+    case "FEEDBACK_PREV_STEP":
+      return {...state, step: state.step - 1};
     case "TOGGLE_FEEDBACK_TAG":
       return {...state,
         selectedTags: {
@@ -70,6 +87,8 @@ const reducer = (state = initialState, action) => {
       return {...state, comment: action.payload};
     case "CHANGE_CONTACT":
       return {...state, contact: action.payload};
+    case "CHANGE_CONTACT_NAME":
+      return {...state, contactName: action.payload};
     case "RESET_STATE":
       return initialState;
     default:
