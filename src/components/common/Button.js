@@ -13,24 +13,13 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       disabled: "#E2E2E2",
     };
   
-  const shadowStyle = shadow ? {
-        elevation: 2,
-        shadowColor: "#000000",
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        shadowOffset: {
-          height: 3,
-          width: 0
-        },
-  } : {};
-
   return <TouchableHighlight underlayColor={underlayColor[type]}
                              style={[
                                styles.buttonBase,
                                styles[type],
                                style,
                                {borderRadius: rounded ? 50 : 7},
-                               shadowStyle
+                               shadow && styles.shadowStyle
                              ]}
                              onPress={()=>{
                                if (!disabled) {
@@ -90,6 +79,16 @@ const styles = new StyleSheet.create({
   disabledText:{
     color: "#fff",
     fontWeight: "bold",
+  },
+  shadowStyle:{
+    elevation: 2,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 3,
+      width: 0
+    },
   }
 });
 

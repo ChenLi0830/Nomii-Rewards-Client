@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, Modal} from 'react-native';
+import {View, Text, StyleSheet, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, withHandlers, lifecycle, branch, renderComponent} from 'recompose';
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
-import ModalBox from 'react-native-modalbox';
+import {ModalBox} from './common';
 import FeedbackContent1 from './FeedbackContent1';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from '../graphql/user';
@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: responsiveWidth(76),
-    // height: responsiveHeight(60),
   },
 });
 
@@ -39,10 +38,11 @@ const FeedBackModal = (props) => {
               backdropPressToClose={false}
               swipeToClose={false}
               backdropOpacity={0.7}
+              backDropOnPress={Keyboard.dismiss}
               style={styles.wrapper}>
       <View style={styles.container}>
-        {feedBackContent}
-        {/*<FeedbackContent2 awaitFeedback={awaitFeedback}/>*/}
+        {/*{feedBackContent}*/}
+        <FeedbackContent2 awaitFeedback={awaitFeedback}/>
       </View>
     </ModalBox>
   )
@@ -71,9 +71,6 @@ export default compose(
         const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
         if (awaitFeedbacks.length === 0) return;
         
-        // console.log("this.props", this.props);
-        // if (props.data)
-        // console.log(props.)
         setTimeout(() => {
           this.props.toggleFeedbackModal()
         }, 1000);

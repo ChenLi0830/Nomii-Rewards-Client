@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, StyleSheet, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {responsiveWidth, responsiveFontSize} from 'react-native-responsive-dimensions';
 import {connect} from 'react-redux';
 import {compose, withHandlers} from 'recompose';
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
 });
 
 const TagButton = (props) => {
-  console.log("tagbutton props", props);
   return <TouchableWithoutFeedback onPress={props.onTagPress}>
     <View style={[styles.containerBase, props.selected && styles.containerSelected]}>
       <Text style={[styles.textBase, props.selected && styles.textSelected]}>
@@ -48,7 +47,7 @@ export default compose(
     ),
     withHandlers({
       onTagPress: props => ()=>{
-        console.log("onTagPress", props.id);
+        // Keyboard.dismiss();
         props.toggleFeedbackTag(props.id);
       }
     }),
