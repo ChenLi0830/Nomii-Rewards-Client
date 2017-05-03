@@ -73,6 +73,10 @@ export default compose(
       })
     }),
     WithInvisibleLoadingComponent,
+    branch(
+        props => !(props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
+        renderComponent(View),
+    ),
     graphql(userSubmitFeedbackMutation),
     withHandlers({
       onSubmitFeedback: props => () =>{

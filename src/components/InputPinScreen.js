@@ -5,7 +5,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {inputPinActions, appActions} from '../modules';
 import {Modal} from './common';
-import {userStampCardMutation} from '../graphql/user';
+import {userStampCardMutation, userAddAwaitFeedbackMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 //Container dependency
@@ -149,11 +149,17 @@ export default compose(
           submitPinFailed: inputPinActions.submitPinFailed,
         }
     ),
-    graphql(userStampCardMutation),
+    graphql(userStampCardMutation, {
+      name: "stampCard"
+    }),
+    graphql(userAddAwaitFeedbackMutation, {
+      name: "addAwaitFeedback"
+    }),
     withHandlers({
       onSubmitPin: props => (card, text) => {
+        console.log("inputScreen props", props);
         Toast.loading('Loading...', 0);
-        props.mutate({
+        props.stampCard({
           variables: {
             userId: props.userId,
             cardId: card.id,
@@ -182,6 +188,15 @@ export default compose(
                   Actions.reward({
                     progress: card.stampCount,
                     successScreen
+                  });
+  
+                  props.addAwaitFeedback({
+                    variables: {
+                      userId: props.userId,
+                      restaurantId: card.id,
+                      stampCountOfCard: card.stampCount,
+                      //employeeName: ,
+                    }
                   });
                 }
               }, 100);
