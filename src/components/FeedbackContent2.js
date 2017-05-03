@@ -6,7 +6,7 @@ import {
   responsiveHeight
 } from 'react-native-responsive-dimensions';
 import {Button, InputBox} from './common';
-import {compose, lifecycle} from 'recompose';
+import {compose, lifecycle, withHandlers} from 'recompose';
 import {connect} from 'react-redux';
 import {feedbackActions, appActions} from '../modules';
 import TagButton from './TagButton';
@@ -100,7 +100,7 @@ const FeedbackContent2 = (props) => {
           </View>
           
           <Button rounded={false} shadow={false} style={styles.button}
-                  onPress={props.nextFeedbackStep}>
+                  onPress={props.submitFeedback}>
             Submit
           </Button>
         </View>

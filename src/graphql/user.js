@@ -98,7 +98,7 @@ mutation userUpsertPushToken($userId: ID, $pushToken: String){
 }
 `;
 
-const userAddAwaitFeedback = gql`
+const userAddAwaitFeedbackMutation = gql`
 mutation addAwaitFeedback($userId:ID, $restaurantId:ID,$stampCountOfCard:Int, $employeeName:String){
   addAwaitFeedbackToUser(userId: $userId, restaurantId: $restaurantId, stampCountOfCard: $stampCountOfCard, employeeName: $employeeName){
     id,
@@ -122,7 +122,7 @@ mutation addAwaitFeedback($userId:ID, $restaurantId:ID,$stampCountOfCard:Int, $e
 }
 `;
 
-const userSubmitFeedback = gql`
+const userSubmitFeedbackMutation = gql`
 mutation userSubmitFeedback(
   $restaurantId: ID,
 	$userId: ID,
@@ -158,4 +158,4 @@ mutation userSubmitFeedback(
 }
 `;
 
-export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation, userAddAwaitFeedback, userSubmitFeedback};
+export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation, userAddAwaitFeedbackMutation, userSubmitFeedbackMutation};
