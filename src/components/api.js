@@ -8,7 +8,7 @@ const addDistanceToCards = (cards, userLocation) => {
         {longitude: card.restaurant.longitude, latitude: card.restaurant.latitude},
         {longitude: userLocation.longitude, latitude: userLocation.latitude},
     );
-    if (card.restaurant.name === "Accessible Everywhere") distance = 5;
+    if (card.restaurant.name === "Starbucks") distance = 5;
     return {...card, distance}
   });
 };
