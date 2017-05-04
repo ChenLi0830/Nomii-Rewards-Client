@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
 
 const FeedBackModal = (props) => {
   const awaitFeedback = props.data.user.awaitFeedbacks[0];
-  
+
   let feedBackContent;
   props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 2 && (feedBackContent = <FeedbackContent3 submitFeedback={props.onSubmitFeedback}/>);
-  
+
   return (
     <ModalBox isOpen={props.showModal}
               backdropPressToClose={false}
@@ -76,8 +76,8 @@ export default compose(
     }),
     WithInvisibleLoadingComponent,
     branch(
-        props => !(props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
-        renderComponent(View),
+        props => !(props.data && props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
+        renderComponent(() => (<View/>)),
     ),
     graphql(userSubmitFeedbackMutation),
     withHandlers({
