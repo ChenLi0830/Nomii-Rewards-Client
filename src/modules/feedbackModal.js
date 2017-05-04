@@ -67,8 +67,6 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "TOGGLE_WARN_MODAL":
-      return {...state, showModal: !state.showModal};
     case "TOGGLE_FEEDBACK_MODAL":
       return {...state, showFeedbackModal: !state.showFeedbackModal};
     case "SET_FEEDBACK_RATING":

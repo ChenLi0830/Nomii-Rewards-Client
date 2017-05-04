@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   
   textBase:{
     color: "#E41856",
-    fontSize: responsiveFontSize(1.5),
+    fontSize: Math.max(responsiveFontSize(1.5), 12),
   },
   textSelected: {
     color: "#fff",
