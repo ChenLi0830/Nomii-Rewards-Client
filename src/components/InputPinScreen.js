@@ -165,10 +165,9 @@ export default compose(
             cardId: card.id,
             PIN: text,
           },
-          refetchQueries: [{query: getAllRestaurantCardsQuery, variables: {userId: props.userId}}]
+          // refetchQueries: [{query: getAllRestaurantCardsQuery, variables: {userId: props.userId}}]
         })
             .then(result =>{
-              // console.log("result", result);
               Toast.hide();
               props.submitPinSuccess();
               Keyboard.dismiss();
