@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, AsyncStorage, StyleSheet, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, withHandlers, lifecycle, branch, renderComponent, onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
@@ -30,7 +30,11 @@ const styles = StyleSheet.create({
 });
 
 const FeedBackModal = (props) => {
-  const awaitFeedback = props.data.user.awaitFeedbacks[0];
+  console.log("props.data.user.awaitFeedbacks.length", props.data.user.awaitFeedbacks.length);
+  // console.log("props.feedbackIndex", props.feedbackIndex);
+  if (props.feedbackIndex === -1) return <View/>;
+  
+  const awaitFeedback = props.data.user.awaitFeedbacks[props.feedbackIndex];
 
   let feedBackContent;
   props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback} skipFeedback={props.onSkipFeedback}/>);
@@ -62,11 +66,13 @@ export default compose(
           contact: state.feedback.contact,
           contactName: state.feedback.contactName,
           userId: state.user.id,
+          feedbackIndex: state.feedback.feedbackIndex,
         }),
         {
           toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
           resetFeedbackState: feedbackActions.resetState,
+          updateFeedbackIndex: feedbackActions.updateFeedbackIndex,
         }
     ),
     graphql(getUserQuery, {
@@ -83,10 +89,10 @@ export default compose(
     withHandlers({
       onSubmitFeedback: props => () =>{
         // dismiss feedback modal
-        props.toggleFeedbackModal();
+        props.toggleFeedbackModal(false);
         
         // calc selected tags
-        const awaitFeedback = props.data.user.awaitFeedbacks[0];
+        const awaitFeedback = props.data.user.awaitFeedbacks[props.feedbackIndex];
         const {restaurantId, visitedAt, stampCountOfCard, employeeName, restaurant, feedbackTags} = awaitFeedback;
         const selectedTags = [];
         for (let tagId of Object.keys(props.selectedTags)){
@@ -115,22 +121,44 @@ export default compose(
             .catch(err => {
               console.log("err", err);
             });
+        
+        // update feedbackIndex
+        setTimeout(() => {
+          console.log("toggleFeedbackModal from componentWillReceiveProps");
+          props.updateFeedbackIndex(props.feedbackIndex-1);
+        }, 1000);
       },
-      onSkipFeedback: props => () => {
-        props.toggleFeedbackModal();
+      onSkipFeedback: props => async () => {
+        props.toggleFeedbackModal(false);
+        await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(false));
       }
     }),
-    // lifecycle({
-    //   componentDidMount() {
-    //     const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
-    //     console.log("awaitFeedbacks", awaitFeedbacks);
-    //     if (awaitFeedbacks.length === 0) return;
-    //
-    //     setTimeout(() => {
-    //       console.log("toggleFeedbackModal from life cycle");
-    //       this.props.toggleFeedbackModal()
-    //     }, 1000);
-    //   }
-    // }),
-    onlyUpdateForKeys(['showModal', 'step'])
+    onlyUpdateForKeys(['showModal', 'step', 'feedbackIndex']),
+    lifecycle({
+      componentWillMount(){
+        const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
+        if (awaitFeedbacks.length === 0) {
+          return;
+        } else {
+          console.log("updating updateFeedbackIndex", awaitFeedbacks.length-1);
+          if (this.props.feedbackIndex === -1){// This will only run once per app. awaitFeedbacks will not be updated
+            this.props.updateFeedbackIndex(awaitFeedbacks.length-1);
+          }
+        }
+      },
+      componentWillReceiveProps(nextProps) {
+        console.log("nextProps", nextProps);
+        let oldAwaitFeedbacks = this.props.data.user.awaitFeedbacks;
+        let newAwaitFeedbacks = nextProps.data.user.awaitFeedbacks;
+        // updateFeedbackIndex when awaitFeedbacks is changed
+        if (oldAwaitFeedbacks[oldAwaitFeedbacks.length-1].visitedAt !== newAwaitFeedbacks[newAwaitFeedbacks.length-1].visitedAt){
+          this.props.updateFeedbackIndex(newAwaitFeedbacks.length-1);
+        } else {
+          // if awaitFeedbacks is not changed, toggleFeedbackModal to be true when feedbackIndex is changed
+          if (this.props.feedbackIndex !== nextProps.feedbackIndex && nextProps.feedbackIndex !== -1){
+            this.props.toggleFeedbackModal(true);
+          }
+        }
+      },
+    }),
 )(FeedBackModal);

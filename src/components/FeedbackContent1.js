@@ -60,6 +60,7 @@ const ratingToReview = {
 
 const FeedbackContent1 = (props) => {
   // props.awaitFeedback
+  console.log("props.awaitFeedback", props.awaitFeedback);
   const {visitedAt, stampCountOfCard, employeeName, restaurant} = props.awaitFeedback;
   return (
       <View style={styles.wrapper}>
@@ -69,9 +70,14 @@ const FeedbackContent1 = (props) => {
             experience
           </Text>
   
+        <View>
           <Text style={styles.restaurantName}>
             {restaurant.name}
           </Text>
+          <Text style={{color: "gray", fontSize: 12}}>
+            visitedAt: {visitedAt}
+          </Text>
+        </View>
   
           <Image resizeMode={Image.resizeMode.contain}
                  style={styles.storeLogo}

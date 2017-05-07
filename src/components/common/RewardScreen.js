@@ -113,7 +113,7 @@ const containerComponent = compose(
         if (notificationPermissionAsked) {
           Actions.home();
           console.log("toggleFeedbackModal from congrats screen");
-          props.toggleFeedbackModal();
+          props.toggleFeedbackModal(true);
         } else {
           Actions.askNotification();
         }

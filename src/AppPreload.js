@@ -100,6 +100,9 @@ export default compose(
           Toast.fail("Something is wrong\nPlease try again", 2);
         }
       },
+      initAppVariables: props => async () => {
+        await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(true));
+      },
     }),
     lifecycle({
       async componentWillMount(){
@@ -107,6 +110,7 @@ export default compose(
           this.props.fetchUser(),
           this.props.cacheResourcesAsync(),
           this.props.initAmplitude(),
+          this.props.initAppVariables(),
         ]);
   
         this.setState({
