@@ -75,6 +75,7 @@ const FeedbackContent3 = (props) => {
                     //height={responsiveHeight(5)}
                     onChange={props.changeContact}
                     keyboardType="numeric"
+                    maxLength={10}
                     placeholder="Phone Number"/>
         </View>
       </View>

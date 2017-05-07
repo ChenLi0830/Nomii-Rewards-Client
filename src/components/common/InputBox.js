@@ -17,7 +17,7 @@ styles = StyleSheet.create({
   }
 });
 
-const InputBox = ({height = 46, width = 200, onChange, text, multiline = false, placeholder = "", keyboardType = "default"}) => {
+const InputBox = ({height = 46, width = 200, onChange, text, multiline = false, placeholder = "", keyboardType = "default", maxLength}) => {
   return <View style={{justifyContent: "center",}}>
     <TextInput
         style={[{height, width}, styles.input, multiline && styles.multilineStyle]}
@@ -29,6 +29,7 @@ const InputBox = ({height = 46, width = 200, onChange, text, multiline = false, 
         blurOnSubmit
         placeholder={placeholder}
         keyboardType={keyboardType}
+        maxLength={maxLength}
     />
   </View>
 };
