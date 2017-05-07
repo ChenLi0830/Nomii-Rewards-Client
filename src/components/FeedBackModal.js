@@ -33,7 +33,7 @@ const FeedBackModal = (props) => {
   const awaitFeedback = props.data.user.awaitFeedbacks[0];
 
   let feedBackContent;
-  props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
+  props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback} skipFeedback={props.onSkipFeedback}/>);
   props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 2 && (feedBackContent = <FeedbackContent3 submitFeedback={props.onSubmitFeedback}/>);
 
@@ -84,7 +84,6 @@ export default compose(
       onSubmitFeedback: props => () =>{
         // dismiss feedback modal
         props.toggleFeedbackModal();
-        props.resetFeedbackState();
         
         // calc selected tags
         const awaitFeedback = props.data.user.awaitFeedbacks[0];
@@ -117,6 +116,9 @@ export default compose(
               console.log("err", err);
             });
       },
+      onSkipFeedback: props => () => {
+        props.toggleFeedbackModal();
+      }
     }),
     // lifecycle({
     //   componentDidMount() {

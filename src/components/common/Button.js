@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableHighlight, StyleSheet} from 'react-native';
+import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const Button = ({onPress, children, style, type="primary", rounded=true, shadow=true, disabled=false}) => {
@@ -10,10 +10,11 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       ghost: "#FFF",
       primary: "#3b74b6",
       skip: "rgba(0,0,0,0)",
-      disabled: "#E2E2E2",
+      disabled: "#77ace9",
     };
   
-  return <TouchableHighlight underlayColor={underlayColor[type]}
+  return <View>
+    <TouchableHighlight underlayColor={underlayColor[type]}
                              style={[
                                styles.buttonBase,
                                styles[type],
@@ -30,6 +31,7 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       {children}
     </Text>
   </TouchableHighlight>
+  </View>
 };
 
 const styles = new StyleSheet.create({
@@ -54,7 +56,7 @@ const styles = new StyleSheet.create({
     overflow: null,
   },
   disabled:{
-    backgroundColor: "#E2E2E2",
+    backgroundColor: "#77ace9",
   },
   textBase: {
     textAlign: "center",
@@ -75,6 +77,7 @@ const styles = new StyleSheet.create({
   },
   skipText:{
     color: "#5c5c5c",
+    fontSize: 13,
   },
   disabledText:{
     color: "#fff",

@@ -29,6 +29,9 @@ let styles = StyleSheet.create({
   button: {
     width:responsiveWidth(80),
   },
+  btnView: {
+    width: responsiveWidth(80)
+  },
   storeLogo:{
     width: responsiveWidth(36),
     height: responsiveWidth(27),
@@ -61,11 +64,9 @@ const FeedbackContent1 = (props) => {
   return (
       <View style={styles.wrapper}>
           <Text style={styles.title}>
-            Rate your
+            Please rate your
             {'\n'}
             experience
-            {'\n'}
-            [at]
           </Text>
   
           <Text style={styles.restaurantName}>
@@ -91,6 +92,7 @@ const FeedbackContent1 = (props) => {
           />
         </View>
         
+        <View style={styles.btnView}>
         {
           props.rating === 5
             &&
@@ -106,6 +108,11 @@ const FeedbackContent1 = (props) => {
             Next
           </Button>
         }
+  
+          <Button shadow={false} type="skip" style={styles.button} onPress={props.skipFeedback}>
+            Not now
+          </Button>
+        </View>
       </View>
   );
 };
