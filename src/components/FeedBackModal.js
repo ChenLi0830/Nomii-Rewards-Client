@@ -12,6 +12,7 @@ import FeedbackContent1 from './FeedbackContent1';
 import FeedbackContent2 from './FeedbackContent2';
 import FeedbackContent3 from './FeedbackContent3';
 import {userSubmitFeedbackMutation} from '../graphql/user';
+import {userSkipFeedbackMutation} from '../graphql/user';
 import _ from 'lodash';
 import {Toast} from 'antd-mobile';
 
@@ -30,11 +31,7 @@ const styles = StyleSheet.create({
 });
 
 const FeedBackModal = (props) => {
-  console.log("props.data.user.awaitFeedbacks.length", props.data.user.awaitFeedbacks.length);
-  // console.log("props.feedbackIndex", props.feedbackIndex);
-  if (props.feedbackIndex === -1) return <View/>;
-  
-  const awaitFeedback = props.data.user.awaitFeedbacks[props.feedbackIndex];
+  const awaitFeedback = props.data.user.awaitFeedbacks.slice(-1)[0];
 
   let feedBackContent;
   props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback} skipFeedback={props.onSkipFeedback}/>);
@@ -66,13 +63,11 @@ export default compose(
           contact: state.feedback.contact,
           contactName: state.feedback.contactName,
           userId: state.user.id,
-          feedbackIndex: state.feedback.feedbackIndex,
         }),
         {
           toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
           resetFeedbackState: feedbackActions.resetState,
-          updateFeedbackIndex: feedbackActions.updateFeedbackIndex,
         }
     ),
     graphql(getUserQuery, {
@@ -81,18 +76,19 @@ export default compose(
       })
     }),
     WithInvisibleLoadingComponent,
-    branch(
-        props => !(props.data && props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
-        renderComponent(() => (<View/>)),
-    ),
-    graphql(userSubmitFeedbackMutation),
+    graphql(userSubmitFeedbackMutation, {
+      name: "submitFeedbackMutation"
+    }),
+    graphql(userSkipFeedbackMutation, {
+      name: "skipFeedbackMutation"
+    }),
     withHandlers({
       onSubmitFeedback: props => () =>{
         // dismiss feedback modal
         props.toggleFeedbackModal(false);
         
         // calc selected tags
-        const awaitFeedback = props.data.user.awaitFeedbacks[props.feedbackIndex];
+        const awaitFeedback = props.data.user.awaitFeedbacks.slice(-1)[0];
         const {restaurantId, visitedAt, stampCountOfCard, employeeName, restaurant, feedbackTags} = awaitFeedback;
         const selectedTags = [];
         for (let tagId of Object.keys(props.selectedTags)){
@@ -115,50 +111,64 @@ export default compose(
           userContact: props.contact,
           userContactName: props.contactName,
         };
-        props.mutate({
-          variables: {...feedback},
-        })
-            .catch(err => {
-              console.log("err", err);
-            });
         
-        // update feedbackIndex
-        setTimeout(() => {
-          console.log("toggleFeedbackModal from componentWillReceiveProps");
-          props.updateFeedbackIndex(props.feedbackIndex-1);
-        }, 1000);
+        // delay the submitFeedbackMutation so that optimisticResponse will not influence modal's animation
+        setTimeout(() =>
+            props.submitFeedbackMutation({
+              variables: {...feedback},
+              optimisticResponse: {
+                __typename: "Mutation",
+                submitUserFeedback: {
+                  ...[...props.data.user.awaitFeedbacks].pop(),
+                  __typename:"Feedback",
+                }
+              },
+              updateQueries: {
+                getUser: (prev, {mutationResult}) => {
+                  let newAwaitFeedback = [...props.data.user.awaitFeedbacks].slice(0, props.data.user.awaitFeedbacks.length - 1);
+                  return {
+                    user: {
+                      ...prev.user,
+                      awaitFeedbacks: newAwaitFeedback,
+                    },
+                  };
+                },
+              }
+            })
+                .catch(err => {
+                  console.log("err", err);
+                })
+        , 500);
       },
       onSkipFeedback: props => async () => {
         props.toggleFeedbackModal(false);
-        await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(false));
+        props.skipFeedbackMutation({
+          variables: {userId: props.userId},
+        });
       }
     }),
-    onlyUpdateForKeys(['showModal', 'step', 'feedbackIndex']),
+    onlyUpdateForKeys(['showModal', 'step', 'feedbackIndex', 'data']),
     lifecycle({
-      componentWillMount(){
-        const awaitFeedbacks = this.props.data.user.awaitFeedbacks;
-        if (awaitFeedbacks.length === 0) {
-          return;
-        } else {
-          console.log("updating updateFeedbackIndex", awaitFeedbacks.length-1);
-          if (this.props.feedbackIndex === -1){// This will only run once per app. awaitFeedbacks will not be updated
-            this.props.updateFeedbackIndex(awaitFeedbacks.length-1);
-          }
+      async componentWillMount(){
+        // show modal on initial app launch, use @NomiiStore:showFeedback to store if it is shown before
+        let showFeedback = await AsyncStorage.getItem("@NomiiStore:showFeedback");
+        if (JSON.parse(showFeedback) && this.props.data.user.awaitFeedbacks && this.props.data.user.awaitFeedbacks.length > 0){
+          this.props.toggleFeedbackModal(true);
         }
+        await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(false));
       },
       componentWillReceiveProps(nextProps) {
-        console.log("nextProps", nextProps);
         let oldAwaitFeedbacks = this.props.data.user.awaitFeedbacks;
         let newAwaitFeedbacks = nextProps.data.user.awaitFeedbacks;
-        // updateFeedbackIndex when awaitFeedbacks is changed
-        if (oldAwaitFeedbacks[oldAwaitFeedbacks.length-1].visitedAt !== newAwaitFeedbacks[newAwaitFeedbacks.length-1].visitedAt){
-          this.props.updateFeedbackIndex(newAwaitFeedbacks.length-1);
-        } else {
-          // if awaitFeedbacks is not changed, toggleFeedbackModal to be true when feedbackIndex is changed
-          if (this.props.feedbackIndex !== nextProps.feedbackIndex && nextProps.feedbackIndex !== -1){
-            this.props.toggleFeedbackModal(true);
-          }
+        // if awaitFeedbacks is shortened, it means the user submitted an feedback. Keep showing feedback modal in this case
+        if (oldAwaitFeedbacks.length > newAwaitFeedbacks.length && newAwaitFeedbacks.length > 0){
+          this.props.toggleFeedbackModal(true);
         }
       },
     }),
+    // stop rendering FeedBackModal component if there is no awaitFeedbakcs
+    branch(
+        props => !(props.data && props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
+        renderComponent(() => (<View/>)),
+    ),
 )(FeedBackModal);
