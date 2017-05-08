@@ -8,7 +8,6 @@ const CHANGE_FEEDBACK_COMMENT = "CHANGE_FEEDBACK_COMMENT";
 const CHANGE_CONTACT = "CHANGE_CONTACT";
 const CHANGE_CONTACT_NAME = "CHANGE_CONTACT_NAME";
 const RESET_STATE = "RESET_STATE";
-const UPDATE_FEEDBACK_INDEX = "UPDATE_FEEDBACK_INDEX";
 
 // Action creator
 export const toggleFeedbackModal = (isVisible) => {
@@ -56,11 +55,6 @@ export const resetState = () => ({
   type: RESET_STATE,
 });
 
-export const updateFeedbackIndex = (index) => ({
-  type: UPDATE_FEEDBACK_INDEX,
-  payload: index,
-});
-
 // Reducer
 const initialState = {
   showFeedbackModal: false,
@@ -70,7 +64,6 @@ const initialState = {
   comment: "",
   contact: "",
   contactName: "",
-  feedbackIndex: -1,
 };
 
 const reducer = (state = initialState, action) => {
@@ -80,7 +73,7 @@ const reducer = (state = initialState, action) => {
         return {...state, showFeedbackModal: false};
       }
       else {
-        return {...initialState, showFeedbackModal: true, feedbackIndex: state.feedbackIndex};
+        return {...initialState, showFeedbackModal: true};
       }
     case "SET_FEEDBACK_RATING":
       return {...state, rating: action.payload};
@@ -101,9 +94,7 @@ const reducer = (state = initialState, action) => {
     case "CHANGE_CONTACT_NAME":
       return {...state, contactName: action.payload};
     case "RESET_STATE":
-      return {...initialState, feedbackIndex: state.feedbackIndex};
-    case "UPDATE_FEEDBACK_INDEX":
-      return {...state, feedbackIndex: action.payload};
+      return {...initialState};
     default:
       return state;
   }
