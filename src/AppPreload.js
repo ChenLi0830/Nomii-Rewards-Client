@@ -101,6 +101,7 @@ export default compose(
         }
       },
       initAppVariables: props => async () => {
+        // Use @NomiiStore:showFeedback to track if modal is shown when app is launched
         await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(true));
       },
     }),

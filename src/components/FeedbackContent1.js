@@ -6,6 +6,7 @@ import {compose, withHandlers, withState} from 'recompose';
 import {Button} from './common';
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
+import {getTimeInSec} from './api';
 
 
 let styles = StyleSheet.create({
@@ -16,10 +17,17 @@ let styles = StyleSheet.create({
     paddingTop: responsiveHeight(7),
     paddingBottom: responsiveWidth(5),
   },
+  titleView:{
+    alignItems: "center",
+  },
   title:{
     alignSelf: "flex-start",
     fontWeight: "600",
     fontSize: responsiveFontSize(3.5),
+  },
+  subTitle: {
+    color: "#808080",
+    fontSize: Math.max(responsiveFontSize(1.6), 12),
   },
   restaurantName:{
     fontWeight: "600",
@@ -58,10 +66,24 @@ const ratingToReview = {
   5: "Excellent",
 };
 
+const calcDisplayTime = (visitedAt) => {
+  const timeStamp = getTimeInSec();
+  const timeDifInSec = timeStamp - visitedAt;
+  if (timeDifInSec < 60) return `just now`;
+  const timeDifInMin = Math.floor(timeDifInSec/60);
+  if (timeDifInMin < 60) return `${timeDifInMin} ${timeDifInMin>1 ? "mins" : "min"} ago`;
+  const timeDifInHour = Math.floor(timeDifInMin/60);
+  if (timeDifInHour < 24) return `${timeDifInHour} ${timeDifInHour>1 ? "hours" : "hour"} ago`;
+  const timeDifInDay = Math.floor(timeDifInHour/24);
+  return `${timeDifInDay} ${timeDifInDay>1 ? "days" : "day"} ago`;
+};
+
 const FeedbackContent1 = (props) => {
   // props.awaitFeedback
-  console.log("props.awaitFeedback", props.awaitFeedback);
-  const {visitedAt, stampCountOfCard, employeeName, restaurant} = props.awaitFeedback;
+  const {visitedAt, stampCountOfCard, employeeName, restaurant, skipCount} = props.awaitFeedback;
+  
+  const visitedDisplayTime = calcDisplayTime(visitedAt);
+  
   return (
       <View style={styles.wrapper}>
           <Text style={styles.title}>
@@ -70,12 +92,12 @@ const FeedbackContent1 = (props) => {
             experience
           </Text>
   
-        <View>
+        <View style={styles.titleView}>
           <Text style={styles.restaurantName}>
             {restaurant.name}
           </Text>
-          <Text style={{color: "gray", fontSize: 12}}>
-            visitedAt: {visitedAt}
+          <Text style={styles.subTitle}>
+            {visitedDisplayTime}
           </Text>
         </View>
   
