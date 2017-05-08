@@ -61,6 +61,7 @@ query getUser($id:ID){
       visitedAt,
       stampCountOfCard,
       employeeName,
+      skipCount,
       restaurant{
         name,
         imageURL
@@ -108,6 +109,7 @@ mutation addAwaitFeedback($userId:ID, $restaurantId:ID,$stampCountOfCard:Int, $e
       visitedAt,
       stampCountOfCard,
       employeeName,
+      skipCount,
       restaurant{
         name,
         imageURL,
@@ -165,4 +167,26 @@ mutation userSubmitFeedback(
 }
 `;
 
-export {UpsertUserMutation, getUserQuery, userStampCardMutation, userAddPushTokenMutation, userAddAwaitFeedbackMutation, userSubmitFeedbackMutation};
+const userSkipFeedbackMutation = gql`
+mutation userSkipFeedback($userId:ID){
+  skipAwaitFeedback(userId: $userId){
+    id,
+    awaitFeedbacks{
+      restaurantId,
+      visitedAt,
+      stampCountOfCard,
+      skipCount,
+    }
+  }
+}
+`;
+
+export {
+  UpsertUserMutation,
+  getUserQuery,
+  userStampCardMutation,
+  userAddPushTokenMutation,
+  userAddAwaitFeedbackMutation,
+  userSubmitFeedbackMutation,
+  userSkipFeedbackMutation,
+};

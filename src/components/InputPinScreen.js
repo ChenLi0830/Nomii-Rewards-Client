@@ -150,16 +150,16 @@ export default compose(
         }
     ),
     graphql(userStampCardMutation, {
-      name: "stampCard"
+      name: "stampCardMutation"
     }),
     graphql(userAddAwaitFeedbackMutation, {
-      name: "addAwaitFeedback"
+      name: "addAwaitFeedbackMutation"
     }),
     withHandlers({
       onSubmitPin: props => (card, text) => {
         console.log("inputScreen props", props);
         Toast.loading('Loading...', 0);
-        props.stampCard({
+        props.stampCardMutation({
           variables: {
             userId: props.userId,
             cardId: card.id,
@@ -189,7 +189,7 @@ export default compose(
                     successScreen
                   });
   
-                  props.addAwaitFeedback({
+                  props.addAwaitFeedbackMutation({
                     variables: {
                       userId: props.userId,
                       restaurantId: card.id,
