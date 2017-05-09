@@ -7,7 +7,9 @@ const TOGGLE_FEEDBACK_TAG = "TOGGLE_FEEDBACK_TAG";
 const CHANGE_FEEDBACK_COMMENT = "CHANGE_FEEDBACK_COMMENT";
 const CHANGE_CONTACT = "CHANGE_CONTACT";
 const CHANGE_CONTACT_NAME = "CHANGE_CONTACT_NAME";
+const SKIP_FEEDBACK = "SKIP_FEEDBACK";
 const RESET_STATE = "RESET_STATE";
+
 
 // Action creator
 export const toggleFeedbackModal = (isVisible) => {
@@ -51,6 +53,10 @@ export const changeContactName = (contactName) => ({
   payload: contactName,
 });
 
+export const skipFeedback = () => ({
+  type: SKIP_FEEDBACK,
+});
+
 export const resetState = () => ({
   type: RESET_STATE,
 });
@@ -64,6 +70,7 @@ const initialState = {
   comment: "",
   contact: "",
   contactName: "",
+  modalSkipped: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -93,6 +100,8 @@ const reducer = (state = initialState, action) => {
       return {...state, contact: action.payload};
     case "CHANGE_CONTACT_NAME":
       return {...state, contactName: action.payload};
+    case "SKIP_FEEDBACK":
+      return {...state, modalSkipped: true};
     case "RESET_STATE":
       return {...initialState};
     default:

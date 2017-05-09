@@ -63,11 +63,13 @@ export default compose(
           contact: state.feedback.contact,
           contactName: state.feedback.contactName,
           userId: state.user.id,
+          modalSkipped: state.feedback.modalSkipped,
         }),
         {
           toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
           nextFeedbackStep: feedbackActions.nextFeedbackStep,
           resetFeedbackState: feedbackActions.resetState,
+          skipFeedback: feedbackActions.skipFeedback,
         }
     ),
     graphql(getUserQuery, {
@@ -142,12 +144,13 @@ export default compose(
       },
       onSkipFeedback: props => async () => {
         props.toggleFeedbackModal(false);
-        props.skipFeedbackMutation({
+        props.skipFeedback();
+        setTimeout(()=>props.skipFeedbackMutation({
           variables: {userId: props.userId},
-        });
+        }), 500);
       }
     }),
-    onlyUpdateForKeys(['showModal', 'step', 'feedbackIndex', 'data']),
+    onlyUpdateForKeys(['showModal', 'step', 'data']),
     lifecycle({
       async componentWillMount(){
         // show modal on initial app launch, use @NomiiStore:showFeedback to store if it is shown before
@@ -160,8 +163,10 @@ export default compose(
       componentWillReceiveProps(nextProps) {
         let oldAwaitFeedbacks = this.props.data.user.awaitFeedbacks;
         let newAwaitFeedbacks = nextProps.data.user.awaitFeedbacks;
-        // if awaitFeedbacks is shortened, it means the user submitted an feedback. Keep showing feedback modal in this case
-        if (oldAwaitFeedbacks.length > newAwaitFeedbacks.length && newAwaitFeedbacks.length > 0){
+        console.log("oldAwaitFeedbacks", oldAwaitFeedbacks);
+        console.log("newAwaitFeedbacks", newAwaitFeedbacks);
+        // if awaitFeedbacks is shortened && modalSkipped===false, it means the user submitted an feedback. Keep showing feedback modal in this case
+        if (oldAwaitFeedbacks.length > newAwaitFeedbacks.length && newAwaitFeedbacks.length > 0 && this.props.modalSkipped===false){
           this.props.toggleFeedbackModal(true);
         }
       },
