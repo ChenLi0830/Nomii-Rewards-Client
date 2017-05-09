@@ -7,7 +7,7 @@ switch (config.slug){
     uri = "http://192.168.0.14:4000/graphql"; //The LAN IP address where GraphQL is hosted
     break;
   case "nomii-rewards-exponentjs-staging":
-    uri = "https://p9s1hjsm03.execute-api.us-west-2.amazonaws.com/staging/graphql";
+    uri = "https://aq9i785i63.execute-api.us-west-2.amazonaws.com/staging/graphql";
     break;
   case "nomii-rewards-exponentjs":
     uri = "https://bnbs6szfk8.execute-api.us-west-2.amazonaws.com/dev/graphql";
