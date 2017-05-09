@@ -137,7 +137,7 @@ const FeedbackContent1 = (props) => {
         }
   
           <Button shadow={false} type="skip" style={styles.button} onPress={props.skipFeedback}>
-            Not Now
+            {skipCount >= 2 ? "Skip" : "Not Now"}
           </Button>
         </View>
       </View>

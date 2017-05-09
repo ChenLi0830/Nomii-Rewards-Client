@@ -11,7 +11,7 @@ const RESET_STATE = "RESET_STATE";
 
 // Action creator
 export const toggleFeedbackModal = (isVisible) => {
-  console.log("FeedbackModal is toggled");
+  console.log(`FeedbackModal is toggled to be ${isVisible}`);
   return {
     type: TOGGLE_FEEDBACK_MODAL,
     payload: isVisible,
