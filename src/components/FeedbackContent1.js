@@ -8,7 +8,6 @@ import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
 import {getTimeInSec} from './api';
 
-
 let styles = StyleSheet.create({
   wrapper: {
     flex: 1,
@@ -138,7 +137,7 @@ const FeedbackContent1 = (props) => {
         }
   
           <Button shadow={false} type="skip" style={styles.button} onPress={props.skipFeedback}>
-            Not now
+            Not Now
           </Button>
         </View>
       </View>
