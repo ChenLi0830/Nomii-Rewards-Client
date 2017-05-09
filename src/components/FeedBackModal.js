@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, AsyncStorage, StyleSheet, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
-import {compose, withHandlers, lifecycle, branch, renderComponent, onlyUpdateForKeys} from 'recompose';
+import {compose, withHandlers, lifecycle, branch, renderComponent, renderNothing, onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
 import {ModalBox} from './common';
@@ -169,6 +169,6 @@ export default compose(
     // stop rendering FeedBackModal component if there is no awaitFeedbakcs
     branch(
         props => !(props.data && props.data.user && props.data.user.awaitFeedbacks && props.data.user.awaitFeedbacks.length > 0),
-        renderComponent(() => (<View/>)),
+        renderNothing,
     ),
 )(FeedBackModal);

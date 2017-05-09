@@ -5,8 +5,16 @@ import {connect} from 'react-redux';
 import {userActions} from './modules';
 import {Location, Permissions} from 'expo';
 import Router from './Router';
-import {lifecycle, compose, withHandlers, branch, renderNothing} from 'recompose';
+import {lifecycle, compose, withHandlers, branch, renderComponent} from 'recompose';
 import {getIfPermissionAsked} from './components/api';
+import {View} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+const Loading = () => (
+    <View style={{flex: 1}}>
+      <Spinner visible overlayColor="rgba(255, 255, 255, 0.1)" color="#aaa"/>
+    </View>
+);
 
 /**
  * Pass user and location props into Redux reducer
@@ -96,7 +104,6 @@ export default compose(
                 });
           }
           
-          // console.log("location.coords", location.coords);
           props.updateUserLocation(location.coords);
         }
         catch (error) {
@@ -119,6 +126,6 @@ export default compose(
     }),
     branch(
         props => !props.isReady,
-        renderNothing,
+        renderComponent(Loading),
     )
 )(RouterWrapper);

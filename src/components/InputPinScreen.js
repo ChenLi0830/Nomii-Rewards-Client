@@ -132,7 +132,6 @@ class InputPinScreen extends Component {
 }
 
 // Container
-
 export default compose(
     connect(
         (state) => ({
