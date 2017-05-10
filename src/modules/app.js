@@ -7,8 +7,9 @@ export const toggleModal = () => ({
   type: TOGGLE_WARN_MODAL,
 });
 
-export const toggleKeyboardVisibility = () => ({
+export const toggleKeyboardVisibility = (keyboardVisibility) => ({
   type: TOGGLE_KEYBOARD_VISIBILITY,
+  payload: keyboardVisibility,
 });
 
 export const resetState = () => ({
@@ -26,7 +27,7 @@ const reducer = (state = initialState, action) => {
     case "TOGGLE_WARN_MODAL":
       return {...state, showModal: !state.showModal};
     case "TOGGLE_KEYBOARD_VISIBILITY":
-      return {...state, keyboardIsShown: !state.keyboardIsShown};
+      return {...state, keyboardIsShown: action.payload};
     case "RESET_STATE":
       return initialState;
     default:
