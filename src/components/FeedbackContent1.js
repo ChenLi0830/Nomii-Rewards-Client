@@ -20,7 +20,7 @@ let styles = StyleSheet.create({
     alignItems: "center",
   },
   title:{
-    alignSelf: "flex-start",
+    alignSelf: "center",
     fontWeight: "600",
     fontSize: responsiveFontSize(3.5),
   },
@@ -86,9 +86,10 @@ const FeedbackContent1 = (props) => {
   return (
       <View style={styles.wrapper}>
           <Text style={styles.title}>
-            Please rate your
-            {'\n'}
-            experience
+            How was your meal?
+            {/*Please rate your*/}
+            {/*{'\n'}*/}
+            {/*experience*/}
           </Text>
   
         <View style={styles.titleView}>
