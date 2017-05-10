@@ -6,7 +6,7 @@ import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery, getRestaurantStatsQuery2} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
-import {compose, lifecycle, withHandlers} from 'recompose';
+import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import _ from 'lodash';
@@ -113,20 +113,14 @@ const renderHasPINs = (props) => {
   
   const PINList = PINs.map(PIN => {
     // PIN usage count within certain period
-    let PINCountOverDays = _.find(statistics30.PINsCount, {employeeName: PIN.employeeName});
+    const statistics = props.selectedTab === '1' ? statistics90 : statistics30;
+    let PINCountOverDays = _.find(statistics.PINsCount, {employeeName: PIN.employeeName});
     // If the count is available, use this number instead of PIN's total usage number
   
     return <EmployeePINItem key={PIN.code} restaurantId={id}
                             code = {PIN.code} employeeName = {PIN.employeeName}
                             usageCount={PINCountOverDays ? PINCountOverDays.count: 0}/>;
   });
-  
-  function callback(key) {
-    console.log('onChange', key);
-  }
-  function handleTabClick(key) {
-    console.log('onTabClick', key);
-  }
   
   return <View style={styles.wrapper}>
     <ScrollView style={styles.scrollView}>
@@ -138,7 +132,7 @@ const renderHasPINs = (props) => {
         {/*</View>*/}
       {/*</View>*/}
       <View style={{/*{width: responsiveWidth(80), alignSelf: "center", borderBottomWidth: 1, borderBottomColor: "gray"}*/}}>
-      <Tabs defaultActiveKey="1" onChange={callback} onTabClick={handleTabClick}>
+      <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} activeUnderlineColor="#4A90E2" activeTextColor="#4A90E2">
         <TabPane tab="ALL" key="1">
           <View style={styles.statsView}>
             <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
@@ -313,6 +307,10 @@ export default compose(
       },
       name: "restaurant30"
     }),
+    branch(
+        props => props.restaurant30.loading,
+        renderComponent(Loading),
+    ),
     graphql(getRestaurantStatsQuery2, {
       options: (props) => {
         return {
@@ -325,12 +323,19 @@ export default compose(
       },
       name: "restaurant90"
     }),
-    // WithLoadingComponent,
+    branch(
+        props => props.restaurant90.loading,
+        renderComponent(Loading),
+    ),
+    withState('selectedTab', 'updateTab', '1'),
     withHandlers({
       onAddPIN: props => () => {
         Amplitude.logEvent('Add PIN btn is pressed');
         Actions.assignPin({restaurant: props.restaurant30.restaurant});
-      }
+      },
+      onTabClick: props => (key) => {
+        props.updateTab(key);
+      },
     }),
     lifecycle({
       componentDidMount() {
