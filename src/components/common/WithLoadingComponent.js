@@ -1,17 +1,9 @@
 import React from 'react';
 import {branch, renderComponent} from 'recompose';
-import {View} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
-
-
-const Loading = () => (
-    <View style={{flex: 1}}>
-      <Spinner visible overlayColor="rgba(255, 255, 255, 0.1)" color="#aaa"/>
-    </View>
-);
+import {Loading} from './Loading';
 
 const WithLoadingComponent = branch(
-    props => props.data.loading,
+    props => props.queryLoading || (props.data && props.data.loading),
     renderComponent(Loading),
 );
 

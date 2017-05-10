@@ -3,13 +3,17 @@ import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Button, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
-import {getRestaurantStatsQuery} from '../graphql/restaurant';
+import {getRestaurantStatsQuery, getRestaurantStatsQuery2} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
 import {compose, lifecycle, withHandlers} from 'recompose';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import _ from 'lodash';
+import { Tabs, WhiteSpace } from 'antd-mobile';
+const TabPane = Tabs.TabPane;
+import {Loading} from './common';
+
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -102,11 +106,14 @@ const styles = StyleSheet.create({
 });
 
 const renderHasPINs = (props) => {
-  const {PINs, statistics, id} = props.data.restaurant;
+  const {PINs, id} = props.restaurant30.restaurant;
+  const statistics30 = props.restaurant30.restaurant.statistics;
+  const statistics90 = props.restaurant90.restaurant.statistics;
+  console.log("statistics30", statistics30, "statistics90", statistics90);
   
   const PINList = PINs.map(PIN => {
     // PIN usage count within certain period
-    let PINCountOverDays = _.find(statistics.PINsCount, {employeeName: PIN.employeeName});
+    let PINCountOverDays = _.find(statistics30.PINsCount, {employeeName: PIN.employeeName});
     // If the count is available, use this number instead of PIN's total usage number
   
     return <EmployeePINItem key={PIN.code} restaurantId={id}
@@ -114,49 +121,97 @@ const renderHasPINs = (props) => {
                             usageCount={PINCountOverDays ? PINCountOverDays.count: 0}/>;
   });
   
+  function callback(key) {
+    console.log('onChange', key);
+  }
+  function handleTabClick(key) {
+    console.log('onTabClick', key);
+  }
+  
   return <View style={styles.wrapper}>
     <ScrollView style={styles.scrollView}>
       
-      <View style={styles.tabListView}>
-        <View style={styles.tabView}>
-          <Text style={styles.tabText}>LAST 30 DAYS</Text>
-          <View style={styles.tabSelected}/>
-        </View>
+      {/*<View style={styles.tabListView}>*/}
+        {/*<View style={styles.tabView}>*/}
+          {/*<Text style={styles.tabText}>LAST 30 DAYS</Text>*/}
+          {/*<View style={styles.tabSelected}/>*/}
+        {/*</View>*/}
+      {/*</View>*/}
+      <View style={{/*{width: responsiveWidth(80), alignSelf: "center", borderBottomWidth: 1, borderBottomColor: "gray"}*/}}>
+      <Tabs defaultActiveKey="1" onChange={callback} onTabClick={handleTabClick}>
+        <TabPane tab="ALL" key="1">
+          <View style={styles.statsView}>
+            <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
+              {`Coupons redeemed: ${statistics90.couponsCount}`}
+            </Text>
+      
+            <Text style={styles.statsTitle}>
+              New Customers
+            </Text>
+      
+            <Text style={styles.statsNumber}>
+              {statistics90.newUserCount}
+            </Text>
+          </View>
+    
+          <View style={styles.statsView}>
+            <Text style={styles.statsTitle}>
+              Return Customers
+            </Text>
+      
+            <Text style={styles.statsNumber}>
+              {statistics90.returnUserCount}
+            </Text>
+          </View>
+    
+          <View style={styles.statsView}>
+            <Text style={styles.statsTitle}>
+              Return Visits
+            </Text>
+      
+            <Text style={styles.statsNumber}>
+              {statistics90.returnVisitCount}
+            </Text>
+          </View>
+        </TabPane>
+        <TabPane tab="LAST 30 DAYS" key="2">
+          <View style={styles.statsView}>
+            <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
+              {`Coupons redeemed: ${statistics30.couponsCount}`}
+            </Text>
+    
+            <Text style={styles.statsTitle}>
+              New Customers
+            </Text>
+    
+            <Text style={styles.statsNumber}>
+              {statistics30.newUserCount}
+            </Text>
+          </View>
+  
+          <View style={styles.statsView}>
+            <Text style={styles.statsTitle}>
+              Return Customers
+            </Text>
+    
+            <Text style={styles.statsNumber}>
+              {statistics30.returnUserCount}
+            </Text>
+          </View>
+  
+          <View style={styles.statsView}>
+            <Text style={styles.statsTitle}>
+              Return Visits
+            </Text>
+    
+            <Text style={styles.statsNumber}>
+              {statistics30.returnVisitCount}
+            </Text>
+          </View>
+        </TabPane>
+      </Tabs>
       </View>
   
-      <View style={styles.statsView}>
-        <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
-          {`Coupons redeemed: ${statistics.couponsCount}`}
-        </Text>
-        
-        <Text style={styles.statsTitle}>
-          New Customers
-        </Text>
-        
-        <Text style={styles.statsNumber}>
-          {statistics.newUserCount}
-        </Text>
-      </View>
-      
-      <View style={styles.statsView}>
-        <Text style={styles.statsTitle}>
-          Return Customers
-        </Text>
-        
-        <Text style={styles.statsNumber}>
-          {statistics.returnUserCount}
-        </Text>
-      </View>
-      
-      <View style={styles.statsView}>
-        <Text style={styles.statsTitle}>
-          Return Visits
-        </Text>
-        
-        <Text style={styles.statsNumber}>
-          {statistics.returnVisitCount}
-        </Text>
-      </View>
       
       <View style={styles.assignPINView}>
         <Text style={styles.assignPINTitle}>
@@ -220,17 +275,23 @@ const renderNoPINs = (props) => {
 };
 
 const ShowStats = (props) => {
-  if (!props.data.restaurant) {
-    throw new Error("user doesn't own restaurant! props.data.restaurant", props.data.restaurant);
+  console.log("ShowStats props", props);
+  console.log("props.restaurant30.loading", props.restaurant30.loading, "props.restaurant90.loading", props.restaurant90.loading);
+  if (props.restaurant30.loading || props.restaurant90.loading) {
+    return <Loading/>
+  }
+  
+  if (!props.restaurant30.restaurant) {
+    throw new Error("user doesn't own restaurant! props.restaurant", props.restaurant30.restaurant);
     return <View></View>
   }
   
-  console.log("props.data.restaurant", props.data.restaurant);
+  console.log("props.restaurant", props.restaurant30.restaurant);
   
   // return renderHasPINs(props);
   // return renderNoPINs(props);
   
-  if (props.data.restaurant.PINs.length > 0) {
+  if (props.restaurant30.restaurant.PINs.length > 0) {
     return renderHasPINs(props);
   } else {
     return renderNoPINs(props);
@@ -249,13 +310,26 @@ export default compose(
             endTo: getTimeInSec()
           }
         }
-      }
+      },
+      name: "restaurant30"
     }),
-    WithLoadingComponent,
+    graphql(getRestaurantStatsQuery2, {
+      options: (props) => {
+        return {
+          variables: {
+            restaurantId: props.ownedRestaurant,
+            daysToCover: 1000,
+            endTo: getTimeInSec()
+          }
+        }
+      },
+      name: "restaurant90"
+    }),
+    // WithLoadingComponent,
     withHandlers({
       onAddPIN: props => () => {
         Amplitude.logEvent('Add PIN btn is pressed');
-        Actions.assignPin({restaurant: props.data.restaurant});
+        Actions.assignPin({restaurant: props.restaurant30.restaurant});
       }
     }),
     lifecycle({
