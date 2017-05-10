@@ -154,9 +154,9 @@ export default compose(
         const keyboardShow = Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow";
         const keyboardHide = Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide";
         this.keyboardDidShowListener =
-            Keyboard.addListener(keyboardShow, this.props.toggleKeyboardVisibility);
+            Keyboard.addListener(keyboardShow, ()=>this.props.toggleKeyboardVisibility(true));
         this.keyboardDidHideListener =
-            Keyboard.addListener(keyboardHide, this.props.toggleKeyboardVisibility);
+            Keyboard.addListener(keyboardHide, ()=>this.props.toggleKeyboardVisibility(false));
       },
       componentWillUnmount () {
         this.keyboardDidShowListener.remove();
