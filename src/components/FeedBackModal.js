@@ -15,6 +15,7 @@ import {userSubmitFeedbackMutation} from '../graphql/user';
 import {userSkipFeedbackMutation} from '../graphql/user';
 import _ from 'lodash';
 import {Toast} from 'antd-mobile';
+import {Amplitude} from 'expo';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -99,8 +100,9 @@ export default compose(
             selectedTags.push({id: tag.id, content: tag.content});
           }
         }
-
+        
         // submit feedback
+        Amplitude.logEvent("Feedback is submitted");
         const feedback = {
           restaurantId,
           userId: props.userId,
@@ -145,6 +147,7 @@ export default compose(
       onSkipFeedback: props => async () => {
         props.toggleFeedbackModal(false);
         props.skipFeedback();
+        Amplitude.logEvent("Feedback is skipped");
         setTimeout(()=>props.skipFeedbackMutation({
           variables: {userId: props.userId},
         }), 500);

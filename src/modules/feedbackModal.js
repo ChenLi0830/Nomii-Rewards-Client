@@ -1,3 +1,4 @@
+import {Amplitude} from 'expo';
 // Action types
 const TOGGLE_FEEDBACK_MODAL = "TOGGLE_FEEDBACK_MODAL";
 const SET_FEEDBACK_RATING = "SET_FEEDBACK_RATING";
@@ -14,6 +15,9 @@ const RESET_STATE = "RESET_STATE";
 // Action creator
 export const toggleFeedbackModal = (isVisible) => {
   console.log(`FeedbackModal is toggled to be ${isVisible}`);
+  if (isVisible) {
+    Amplitude.logEvent("Feedback is shown");
+  }
   return {
     type: TOGGLE_FEEDBACK_MODAL,
     payload: isVisible,
