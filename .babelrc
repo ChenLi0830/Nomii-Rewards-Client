@@ -1,7 +1,5 @@
 {
-    "presets": [
-        "babel-preset-exponent"
-    ],
+    "presets": ["babel-preset-expo"],
     "plugins": [
         [
             "import",
@@ -12,9 +10,7 @@
     ],
     "env": {
         "development": {
-            "plugins": [
-                "transform-react-jsx-source"
-            ]
+            "plugins": ["transform-react-jsx-source"]
         }
     }
 }
