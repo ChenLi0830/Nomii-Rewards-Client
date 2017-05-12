@@ -11,6 +11,7 @@ import {WithInvisibleLoadingComponent} from '../components/common';
 import FeedbackContent1 from './FeedbackContent1';
 import FeedbackContent2 from './FeedbackContent2';
 import FeedbackContent3 from './FeedbackContent3';
+import VisitFrequencyFeedback from './VisitFrequencyFeedback';
 import {userSubmitFeedbackMutation} from '../graphql/user';
 import {userSkipFeedbackMutation} from '../graphql/user';
 import _ from 'lodash';
@@ -38,6 +39,9 @@ const FeedBackModal = (props) => {
   props.step === 0 && (feedBackContent = <FeedbackContent1 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback} skipFeedback={props.onSkipFeedback}/>);
   props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 2 && (feedBackContent = <FeedbackContent3 submitFeedback={props.onSubmitFeedback}/>);
+  if (awaitFeedback.isNewUser){
+    feedBackContent = <VisitFrequencyFeedback awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>
+  }
 
   return (
     <ModalBox isOpen={props.showModal}

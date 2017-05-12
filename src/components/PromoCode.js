@@ -130,6 +130,7 @@ export default compose(
           refetchQueries: [{query: getUserQuery, variables: {id: props.userId}}]
         })
             .then(result => {
+              console.log("result", result);
               // console.log("redeem coupon result", result);
               Toast.hide();
               Keyboard.dismiss();
