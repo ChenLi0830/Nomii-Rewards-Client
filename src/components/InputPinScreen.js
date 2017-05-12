@@ -5,7 +5,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import {inputPinActions, appActions} from '../modules';
 import {Modal} from './common';
-import {userStampCardMutation, userAddAwaitFeedbackMutation} from '../graphql/user';
+import {userStampCardMutation} from '../graphql/user';
 import {graphql} from 'react-apollo';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 //Container dependency
@@ -151,9 +151,6 @@ export default compose(
     graphql(userStampCardMutation, {
       name: "stampCardMutation"
     }),
-    graphql(userAddAwaitFeedbackMutation, {
-      name: "addAwaitFeedbackMutation"
-    }),
     withHandlers({
       onSubmitPin: props => (card, text) => {
         console.log("inputScreen props", props);
@@ -170,8 +167,8 @@ export default compose(
               Toast.hide();
               props.submitPinSuccess();
               Keyboard.dismiss();
+              // Wait for keyboard to be dismissed before sending information
               setTimeout(()=>{
-                // console.warn("cardIsExpired(card)", cardIsExpired(card));
                 if (cardIsExpired(card)) {
                   Actions.reward({progress: 0});
                   Amplitude.logEventWithProperties("Input PIN Success",
@@ -186,15 +183,6 @@ export default compose(
                   Actions.reward({
                     progress: card.stampCount,
                     successScreen
-                  });
-  
-                  props.addAwaitFeedbackMutation({
-                    variables: {
-                      userId: props.userId,
-                      restaurantId: card.id,
-                      stampCountOfCard: card.stampCount,
-                      //employeeName: ,
-                    }
                   });
                 }
               }, 100);

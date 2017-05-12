@@ -29,7 +29,23 @@ mutation redeemPromo($userId:ID, $code:String){
       coupon{
         codeSuccessScreen,
       }
-    }
+    },
+    awaitFeedbacks{
+      restaurantId,
+      visitedAt,
+      stampCountOfCard,
+      employeeName,
+      skipCount,
+      restaurant{
+        name,
+        imageURL
+      }
+      feedbackTags{
+        id,
+        content,
+      },
+      isNewUser,
+    }    
   }
 }
 `;

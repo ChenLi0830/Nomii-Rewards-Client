@@ -5,6 +5,8 @@ import {Actions} from 'react-native-router-flux';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, withHandlers} from 'recompose';
 import {getIfPermissionAsked} from './api';
+import {connect} from 'react-redux';
+import {feedbackActions} from '../modules';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -82,11 +84,19 @@ const PromoSuccess = (props) => {
 };
 
 export default compose(
+    connect(
+        null,
+        {toggleFeedbackModal: feedbackActions.toggleFeedbackModal}
+    ),
     withHandlers({
       btnClick: props => async () => {
         const locationPermissionAsked = await getIfPermissionAsked("location");
         if (locationPermissionAsked) {
           Actions.home();
+          // coupon is for a specific restaurant
+          if (props.restaurantName){
+            props.toggleFeedbackModal(true);
+          }
         } else {
           Actions.askLocation();
         }
