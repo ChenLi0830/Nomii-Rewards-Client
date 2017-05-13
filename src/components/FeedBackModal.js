@@ -40,7 +40,7 @@ const FeedBackModal = (props) => {
   props.step === 1 && (feedBackContent = <FeedbackContent2 awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>);
   props.step === 2 && (feedBackContent = <FeedbackContent3 submitFeedback={props.onSubmitFeedback}/>);
   if (awaitFeedback.isNewUser){
-    feedBackContent = <VisitFrequencyFeedback awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback}/>
+    feedBackContent = <VisitFrequencyFeedback awaitFeedback={awaitFeedback} submitFeedback={props.onSubmitFeedback} skipFeedback={props.onSkipFeedback}/>
   }
 
   return (

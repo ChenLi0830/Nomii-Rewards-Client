@@ -169,6 +169,9 @@ const VisitFrequencyFeedback = (props) => {
       <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.onSubmitFeedback}>
         Submit
       </Button>
+      <Button shadow={false} type="skip" style={styles.button} onPress={props.skipFeedback}>
+        {skipCount >= 2 ? "Skip" : "Not Now"}
+      </Button>
     </View>
   </View>
 };
