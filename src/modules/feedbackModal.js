@@ -131,7 +131,7 @@ const reducer = (state = initialState, action) => {
     case "CHANGE_IS_FIRST_TIME":
       return {...state, isFirstTime: action.payload};
     case "CHANGE_TIME_PERIOD":
-      return {...state, timePeriod: action.payload};
+      return {...state, timePeriod: action.payload, visitTimes: 1};
     case "CHANGE_VISIT_TIMES":
       return {...state, visitTimes: action.payload};
     default:

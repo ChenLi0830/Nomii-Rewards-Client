@@ -69,6 +69,36 @@ let styles = StyleSheet.create({
   },
 });
 
+const visitTimeItems = {
+  Week: [
+    <Picker.Item label="1X" key="1X" value={1} />,
+    <Picker.Item label="2X" key="2X" value={2} />,
+    <Picker.Item label="3X" key="3X" value={3} />,
+    <Picker.Item label="4X" key="4X" value={4} />,
+    <Picker.Item label="5X" key="5X" value={5} />,
+    <Picker.Item label="6X" key="6X" value={6} />,
+    <Picker.Item label="7X" key="7X" value={7} />,
+  ],
+  Month: [
+    <Picker.Item label="1X" key="1X" value={1} />,
+    <Picker.Item label="2X" key="2X" value={2} />,
+    <Picker.Item label="3X" key="3X" value={3} />,
+  ],
+  Year: [
+    <Picker.Item label="1X" key="1X" value={1} />,
+    <Picker.Item label="2X" key="2X" value={2} />,
+    <Picker.Item label="3X" key="3X" value={3} />,
+    <Picker.Item label="4X" key="4X" value={4} />,
+    <Picker.Item label="5X" key="5X" value={5} />,
+    <Picker.Item label="6X" key="6X" value={6} />,
+    <Picker.Item label="7X" key="7X" value={7} />,
+    <Picker.Item label="8X" key="8X" value={8} />,
+    <Picker.Item label="9X" key="9X" value={9} />,
+    <Picker.Item label="10X" key="10X" value={10} />,
+    <Picker.Item label="11X" key="11X" value={11} />,
+  ],
+};
+
 const VisitFrequencyFeedback = (props) => {
   const {visitedAt, stampCountOfCard, employeeName, restaurant, skipCount} = props.awaitFeedback;
   
@@ -123,15 +153,7 @@ const VisitFrequencyFeedback = (props) => {
           style={styles.pickerLeft}
           selectedValue={props.times}
           onValueChange={props.onChangeVisitTimes}>
-        <Picker.Item label="1X" value={1} />
-        <Picker.Item label="2X" value={2} />
-        <Picker.Item label="3X" value={3} />
-        <Picker.Item label="4X" value={4} />
-        <Picker.Item label="5X" value={5} />
-        <Picker.Item label="6X" value={6} />
-        <Picker.Item label="7X" value={7} />
-        <Picker.Item label="8X" value={8} />
-        <Picker.Item label="9X" value={9} />
+        {visitTimeItems[props.period]}
       </Picker>
       <Picker
           style={styles.pickerRight}
