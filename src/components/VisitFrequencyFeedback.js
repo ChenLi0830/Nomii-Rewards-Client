@@ -169,7 +169,7 @@ const VisitFrequencyFeedback = (props) => {
       <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.onSubmitFeedback}>
         Submit
       </Button>
-      <Button shadow={false} type="skip" style={styles.button} onPress={props.skipFeedback}>
+      <Button shadow={false} type="skip" style={styles.button} onPress={props.onSkipFeedback}>
         {skipCount >= 2 ? "Skip" : "Not Now"}
       </Button>
     </View>
@@ -209,7 +209,15 @@ export default compose(
         setTimeout(()=>{
           highLight = new Animated.Value(1);
           visibility = new Animated.Value(1);
-        }, 1000);
+        }, 500);
+      },
+      onSkipFeedback: props => () => {
+        props.skipFeedback();
+        // reset animation values
+        setTimeout(()=>{
+          highLight = new Animated.Value(1);
+          visibility = new Animated.Value(1);
+        }, 500);
       }
     }),
     onlyUpdateForKeys(['isFirstTime', 'times', 'period']),
