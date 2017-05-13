@@ -127,7 +127,10 @@ mutation userSubmitFeedback(
 	$tags: [FeedbackTagInput],
 	$comment: String,
 	$userContact: String,
-  $userContactName: String,
+	$userContactName: String,
+  $isFirstTime: Boolean,
+  $visitTimes: Int,
+  $timePeriod: String,
 ){
   submitUserFeedback(
   restaurantId: $restaurantId
@@ -139,7 +142,10 @@ mutation userSubmitFeedback(
 	tags: $tags,
 	comment: $comment,
 	userContact: $userContact,
-  userContactName: $userContactName,
+	userContactName: $userContactName,
+  isFirstTime: $isFirstTime,
+  visitTimes: $visitTimes,
+  timePeriod: $timePeriod,
   ){
     restaurantId,
     userId,
@@ -154,7 +160,10 @@ mutation userSubmitFeedback(
     comment,
     rating,
     userContact,
-    userContactName
+    userContactName,
+    isFirstTime,
+    visitTimes,
+    timePeriod,
   }
 }
 `;

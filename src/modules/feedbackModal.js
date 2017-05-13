@@ -9,8 +9,10 @@ const CHANGE_FEEDBACK_COMMENT = "CHANGE_FEEDBACK_COMMENT";
 const CHANGE_CONTACT = "CHANGE_CONTACT";
 const CHANGE_CONTACT_NAME = "CHANGE_CONTACT_NAME";
 const SKIP_FEEDBACK = "SKIP_FEEDBACK";
+const CHANGE_IS_FIRST_TIME = "CHANGE_IS_FIRST_TIME";
+const CHANGE_VISIT_TIMES = "CHANGE_VISIT_TIMES";
+const CHANGE_TIME_PERIOD = "CHANGE_TIME_PERIOD";
 const RESET_STATE = "RESET_STATE";
-
 
 // Action creator
 export const toggleFeedbackModal = (isVisible) => {
@@ -61,6 +63,21 @@ export const skipFeedback = () => ({
   type: SKIP_FEEDBACK,
 });
 
+export const changeIsFirstTime = (isFirstTime) => ({
+  type: CHANGE_IS_FIRST_TIME,
+  payload: isFirstTime,
+});
+
+export const changeTimePeriod = (timePeroid) => ({
+  type: CHANGE_TIME_PERIOD,
+  payload: timePeroid,
+});
+
+export const changeVisitTimes = (visitTimes) => ({
+  type: CHANGE_VISIT_TIMES,
+  payload: visitTimes,
+});
+
 export const resetState = () => ({
   type: RESET_STATE,
 });
@@ -75,6 +92,9 @@ const initialState = {
   contact: "",
   contactName: "",
   modalSkipped: false,
+  isFirstTime: false,
+  visitTimes: 2,
+  timePeriod: "Month",
 };
 
 const reducer = (state = initialState, action) => {
@@ -108,6 +128,12 @@ const reducer = (state = initialState, action) => {
       return {...state, modalSkipped: true};
     case "RESET_STATE":
       return {...initialState};
+    case "CHANGE_IS_FIRST_TIME":
+      return {...state, isFirstTime: action.payload};
+    case "CHANGE_TIME_PERIOD":
+      return {...state, timePeriod: action.payload};
+    case "CHANGE_VISIT_TIMES":
+      return {...state, visitTimes: action.payload};
     default:
       return state;
   }

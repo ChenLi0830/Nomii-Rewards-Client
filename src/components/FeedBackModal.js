@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, AsyncStorage, StyleSheet, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, AsyncStorage, StyleSheet, Animated, Modal, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {compose, withHandlers, lifecycle, branch, renderComponent, renderNothing, onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
@@ -69,6 +69,9 @@ export default compose(
           contactName: state.feedback.contactName,
           userId: state.user.id,
           modalSkipped: state.feedback.modalSkipped,
+          isFirstTime: state.feedback.isFirstTime,
+          visitTimes: state.feedback.visitTimes,
+          timePeriod: state.feedback.timePeriod,
         }),
         {
           toggleFeedbackModal: feedbackActions.toggleFeedbackModal,
@@ -118,6 +121,9 @@ export default compose(
           comment: props.comment,
           userContact: props.contact,
           userContactName: props.contactName,
+          isFirstTime: props.isFirstTime,
+          visitTimes: props.visitTimes,
+          timePeriod: props.timePeriod,
         };
         
         // delay the submitFeedbackMutation so that optimisticResponse will not influence modal's animation
@@ -162,18 +168,22 @@ export default compose(
       async componentWillMount(){
         // show modal on initial app launch, use @NomiiStore:showFeedback to store if it is shown before
         let showFeedback = await AsyncStorage.getItem("@NomiiStore:showFeedback");
-        if (JSON.parse(showFeedback) && this.props.data.user.awaitFeedbacks && this.props.data.user.awaitFeedbacks.length > 0){
+        if (JSON.parse(showFeedback) && this.props.data.user && this.props.data.user.awaitFeedbacks && this.props.data.user.awaitFeedbacks.length > 0){
           this.props.toggleFeedbackModal(true);
         }
         await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(false));
       },
       componentWillReceiveProps(nextProps) {
+        // skip toggling feedback modal if awaitFeedbacks don't exist
+        if (!(this.props.data.user && this.props.data.user.awaitFeedbacks && nextProps.data.user && nextProps.data.user.awaitFeedbacks)){
+          return;
+        }
         let oldAwaitFeedbacks = this.props.data.user.awaitFeedbacks;
         let newAwaitFeedbacks = nextProps.data.user.awaitFeedbacks;
         console.log("oldAwaitFeedbacks", oldAwaitFeedbacks);
         console.log("newAwaitFeedbacks", newAwaitFeedbacks);
         // if awaitFeedbacks is shortened && modalSkipped===false, it means the user submitted an feedback. Keep showing feedback modal in this case
-        if (oldAwaitFeedbacks.length > newAwaitFeedbacks.length && newAwaitFeedbacks.length > 0 && this.props.modalSkipped===false){
+        if (oldAwaitFeedbacks && newAwaitFeedbacks && oldAwaitFeedbacks.length > newAwaitFeedbacks.length && newAwaitFeedbacks.length > 0 && this.props.modalSkipped===false){
           this.props.toggleFeedbackModal(true);
         }
       },
