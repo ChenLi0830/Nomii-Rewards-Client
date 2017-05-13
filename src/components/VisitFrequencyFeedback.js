@@ -1,14 +1,16 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Picker, Platform, Keyboard} from 'react-native';
+import {View, Text, Image, StyleSheet, Picker, Switch, Platform, Easing, Keyboard, Animated} from 'react-native';
 import {InputBox} from './common';
 import {responsiveFontSize, responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Button, BackButton} from './common';
-import {compose, lifecycle, withState, withHandlers} from 'recompose';
+import {compose, lifecycle, withState, withHandlers, onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {feedbackActions, appActions} from '../modules';
-//import { PickerView } from 'antd-mobile';
 
+const pickerHeight = Platform.OS === "android" ? 100 : 220;
+let highLight = new Animated.Value(1);
+let visibility = new Animated.Value(1);
 
 let styles = StyleSheet.create({
   wrapper: {
@@ -21,17 +23,38 @@ let styles = StyleSheet.create({
   titleView:{
     alignItems: "center",
   },
-  picker: {
-    width: 100,
+  pickerLeft: {
+    width: Platform.OS === "android" ? responsiveWidth(30) : responsiveWidth(40),
+  },
+  pickerRight: {
+    width: Platform.OS === "android" ? responsiveWidth(50) : responsiveWidth(50)
   },
   title:{
     alignSelf: "center",
     fontWeight: "600",
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.3),
   },
-  subTitle: {
-    color: "#808080",
-    fontSize: Math.max(responsiveFontSize(1.6), 12),
+  contentView: {
+    width: responsiveWidth(80),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ededef",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  contentText:{
+    fontSize: Math.max(responsiveFontSize(2), 15)
+  },
+  contentTextHighlight:{
+    fontSize: Math.max(responsiveFontSize(2), 15),
+    color: "#4A90E2"
+  },
+  pickerView:{
+    flexDirection: "row",
+    width: responsiveWidth(90),
+    justifyContent: Platform.OS === "android" ? "flex-end" : "center",
   },
   restaurantName:{
     fontWeight: "600",
@@ -44,55 +67,27 @@ let styles = StyleSheet.create({
   btnView: {
     width: responsiveWidth(80)
   },
-  storeLogo:{
-    width: responsiveWidth(36),
-    height: responsiveWidth(27),
-    marginTop: -responsiveHeight(3),
-    borderRadius: 5,
-  },
-  ratingView:{
-    marginBottom:-30,
-    width: responsiveWidth(60)
-  },
-  ratingSummary:{
-    paddingBottom: 10,
-    alignSelf: "center",
-    fontSize: responsiveFontSize(2.2),
-  }
 });
-
-const seasons = [
-  [
-    {
-      label: '2013',
-      value: '2013',
-    },
-    {
-      label: '2014',
-      value: '2014',
-    },
-  ],
-  [
-    {
-      label: '春',
-      value: '春',
-    },
-    {
-      label: '夏',
-      value: '夏',
-    },
-  ],
-];
 
 const VisitFrequencyFeedback = (props) => {
   const {visitedAt, stampCountOfCard, employeeName, restaurant, skipCount} = props.awaitFeedback;
   
+  const animatedStyles = {
+    spaceHolder: {
+      height: visibility.interpolate({
+        inputRange: [0,1],
+        outputRange: [0, pickerHeight],
+      }),
+      opacity: visibility,
+    },
+    visitText: {
+      opacity: highLight,
+    }
+  };
+  
   return <View style={styles.wrapper}>
     <Text style={styles.title}>
       How often do you eat at
-      {/*Please rate your*/}
-      {/*{'\n'}*/}
-      {/*experience*/}
     </Text>
   
     <View style={styles.titleView}>
@@ -101,72 +96,100 @@ const VisitFrequencyFeedback = (props) => {
       </Text>
     </View>
   
-    <Image resizeMode={Image.resizeMode.contain}
-           style={styles.storeLogo}
-           source={{uri: restaurant.imageURL}}/>
-  
-    <View style={styles.ratingView}>
-      <Text>First Time</Text>
+    <View>
+      <View style={styles.contentView}>
+        <Text style={styles.contentText}>First Time</Text>
+        <Switch
+            onValueChange={props.onChangeFirstTime}
+            value={props.isFirstTime} />
+      </View>
+    
+      <View style={styles.contentView}>
+        <Text style={styles.contentText}>Visit: </Text>
+        <Animated.Text style={[styles.contentTextHighlight, animatedStyles.visitText]}>
+          {
+            props.isFirstTime ?
+                "This is my first time here"
+                :
+                props.times + ` time${props.times>1 ? "s" : ""} Per ` + props.period
+          }
+        </Animated.Text>
+      </View>
     </View>
+  
+    <Animated.View style={[styles.pickerView, animatedStyles.spaceHolder]}>
+      <Picker
+          itemStyle={{textAlign: "right"}}
+          style={styles.pickerLeft}
+          selectedValue={props.times}
+          onValueChange={props.onChangeVisitTimes}>
+        <Picker.Item label="1X" value={1} />
+        <Picker.Item label="2X" value={2} />
+        <Picker.Item label="3X" value={3} />
+        <Picker.Item label="4X" value={4} />
+        <Picker.Item label="5X" value={5} />
+        <Picker.Item label="6X" value={6} />
+        <Picker.Item label="7X" value={7} />
+        <Picker.Item label="8X" value={8} />
+        <Picker.Item label="9X" value={9} />
+      </Picker>
+      <Picker
+          style={styles.pickerRight}
+          selectedValue={props.period}
+          onValueChange={props.onChangePeriod}>
+        <Picker.Item label="Per Week" value="Week" />
+        <Picker.Item label="Per Month" value="Month" />
+        <Picker.Item label="Per Year" value="Year" />
+      </Picker>
+    </Animated.View>
   
     <View style={styles.btnView}>
       <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.submitFeedback}>
         Submit
       </Button>
     </View>
-  
-    <View>
-      <Picker
-          style={styles.picker}
-          selectedValue={props.value}
-          onValueChange={props.onChange}>
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
-      </Picker>
-    </View>
-    
-    {/*<PickerView*/}
-        {/*onChange={props.onChange}*/}
-        {/*value={props.value}*/}
-        {/*data={seasons}*/}
-        {/*cascade={false}*/}
-    {/*/>*/}
   </View>
 };
 
 export default compose(
-    withState('value', 'updateValue', null),
+    connect(
+        (state) => ({
+          isFirstTime: state.feedback.isFirstTime,
+          times: state.feedback.visitTimes,
+          period: state.feedback.timePeriod,
+        }),
+        {
+          changeIsFirstTime: feedbackActions.changeIsFirstTime,
+          onChangePeriod: feedbackActions.changeTimePeriod,
+          onChangeVisitTimes: feedbackActions.changeVisitTimes,
+        }
+    ),
     withHandlers({
-      onChange : props => (value) => {
-        console.log(value);
-        props.updateValue(value);
+      onChangeFirstTime : props => (isFirstTime) => {
+        // console.log(value);
+        props.changeIsFirstTime(isFirstTime);
+  
+        Animated.timing(
+            visibility,
+            {
+              toValue: isFirstTime ? 0 : 1,
+              duration: 300,
+              easing: Easing.out(Easing.quad),
+            }
+        ).start();
       }
     }),
-    // connect(
-    //     (state) => ({
-    //       contact: state.feedback.contact,
-    //       contactName: state.feedback.contactName,
-    //       keyboardIsShown: state.app.keyboardIsShown,
-    //     }),
-    //     {
-    //       changeContact: feedbackActions.changeContact,
-    //       changeContactName: feedbackActions.changeContactName,
-    //       toggleKeyboardVisibility: appActions.toggleKeyboardVisibility,
-    //       prevFeedbackStep: feedbackActions.prevFeedbackStep,
-    //     }
-    // ),
-    // lifecycle({
-    //   componentWillMount () {
-    //     const keyboardShow = Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow";
-    //     const keyboardHide = Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide";
-    //     this.keyboardDidShowListener =
-    //         Keyboard.addListener(keyboardShow, ()=>this.props.toggleKeyboardVisibility(true));
-    //     this.keyboardDidHideListener =
-    //         Keyboard.addListener(keyboardHide, ()=>this.props.toggleKeyboardVisibility(false));
-    //   },
-    //   componentWillUnmount () {
-    //     this.keyboardDidShowListener.remove();
-    //     this.keyboardDidHideListener.remove();
-    //   }
-    // }),
+    onlyUpdateForKeys(['isFirstTime', 'times', 'period']),
+    lifecycle({
+      componentWillReceiveProps(nextProps){
+        highLight = new Animated.Value(0);
+        Animated.spring(
+            highLight,
+            {
+              toValue: 1,
+              friction: 5,
+            }
+        ).start();
+      },
+    })
 )(VisitFrequencyFeedback);
