@@ -144,7 +144,7 @@ const VisitFrequencyFeedback = (props) => {
     </Animated.View>
   
     <View style={styles.btnView}>
-      <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.submitFeedback}>
+      <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.onSubmitFeedback}>
         Submit
       </Button>
     </View>
@@ -177,6 +177,14 @@ export default compose(
               easing: Easing.out(Easing.quad),
             }
         ).start();
+      },
+      onSubmitFeedback: props => () => {
+        props.submitFeedback();
+        // reset animation values
+        setTimeout(()=>{
+          highLight = new Animated.Value(1);
+          visibility = new Animated.Value(1);
+        }, 1000);
       }
     }),
     onlyUpdateForKeys(['isFirstTime', 'times', 'period']),
