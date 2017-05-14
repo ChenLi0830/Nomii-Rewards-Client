@@ -94,6 +94,7 @@ export default compose(
     }),
     withHandlers({
       onSubmitFeedback: props => () =>{
+        Keyboard.dismiss();
         // dismiss feedback modal
         props.toggleFeedbackModal(false);
         
