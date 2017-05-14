@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Picker, Switch, Platform, Easing, Keyboard, Animated} from 'react-native';
+import {View, Text, Image, StyleSheet, Picker, Switch, Platform, Easing, Keyboard, Animated, Dimensions} from 'react-native';
 import {InputBox} from './common';
 import {responsiveFontSize, responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -12,13 +12,15 @@ const pickerHeight = Platform.OS === "android" ? 100 : 220;
 let highLight = new Animated.Value(1);
 let visibility = new Animated.Value(1);
 
+const {width, height} = Dimensions.get('window');
+
 let styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: responsiveHeight(7),
-    paddingBottom: responsiveWidth(5),
+    paddingTop: height > 600 ? responsiveHeight(7) : responsiveHeight(3),
+    paddingBottom: height > 600 ? responsiveHeight(3) : responsiveHeight(0),
   },
   titleView:{
     alignItems: "center",
