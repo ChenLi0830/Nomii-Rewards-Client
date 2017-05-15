@@ -10,7 +10,7 @@ import {feedbackActions, appActions} from '../modules';
 
 const pickerHeight = Platform.OS === "android" ? 100 : 220;
 let highLight = new Animated.Value(1);
-let visibility = new Animated.Value(1);
+let visibility = new Animated.Value(0);
 
 const {width, height} = Dimensions.get('window');
 
@@ -210,7 +210,7 @@ export default compose(
         // reset animation values
         setTimeout(()=>{
           highLight = new Animated.Value(1);
-          visibility = new Animated.Value(1);
+          visibility = new Animated.Value(0);
         }, 500);
       },
       onSkipFeedback: props => () => {
@@ -218,7 +218,7 @@ export default compose(
         // reset animation values
         setTimeout(()=>{
           highLight = new Animated.Value(1);
-          visibility = new Animated.Value(1);
+          visibility = new Animated.Value(0);
         }, 500);
       }
     }),
