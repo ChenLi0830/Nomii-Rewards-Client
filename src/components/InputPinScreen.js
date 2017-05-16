@@ -155,13 +155,13 @@ export default compose(
       onSubmitPin: props => (card, text) => {
         console.log("inputScreen props", props);
         Toast.loading('Loading...', 0);
+        Amplitude.logEventWithProperties("Attempt to Input PIN", {restaurantName: card.restaurant.name, stampCount: 0});
         props.stampCardMutation({
           variables: {
             userId: props.userId,
             cardId: card.id,
             PIN: text,
           },
-          // refetchQueries: [{query: getAllRestaurantCardsQuery, variables: {userId: props.userId}}]
         })
             .then(result =>{
               Toast.hide();
@@ -173,11 +173,19 @@ export default compose(
                   Actions.reward({progress: 0});
                   Amplitude.logEventWithProperties("Input PIN Success",
                       {restaurantName: card.restaurant.name, stampCount: 0});
+                  if (card.stampCount === 0){
+                    Amplitude.logEventWithProperties("Card is added to wallet", {restaurantName: card.restaurant.name});
+                  }
                 }
                 else {
                   Amplitude.logEventWithProperties("Input PIN Success",
                       {restaurantName: card.restaurant.name, stampCount: card.stampCount});
-                  
+                  if (card.stampCount === 0){
+                    Amplitude.logEventWithProperties("Card is added to wallet", {restaurantName: card.restaurant.name});
+                  }
+                  if (card.stampCount === 2){
+                    Amplitude.logEventWithProperties("Card is finished", {restaurantName: card.restaurant.name});
+                  }
                   let successScreen = null;
                   if (card.PINSuccessScreens) successScreen = card.PINSuccessScreens[card.stampCount];
                   Actions.reward({
