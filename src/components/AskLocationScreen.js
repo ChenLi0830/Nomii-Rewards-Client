@@ -62,6 +62,9 @@ const AskLocationScreen = (props) => {
       <Button onPress = {props.askLocationPermission}>
         ENABLE LOCATION
       </Button>
+      <Button onPress={props.onSkipPressed} type = "skip">
+        Not Now
+      </Button>
     </View>
   </View>
 };
@@ -76,7 +79,8 @@ export default compose(
       askLocationPermission: (props) => async ()=>{
         try {
           await setIfPermissionAsked("location");
-          
+  
+          // redirect screen
           const { status } = await Permissions.askAsync(Permissions.LOCATION);
           // console.log("status",status);
           if (status === 'granted') {
@@ -116,16 +120,11 @@ export default compose(
               // console.log("location", location);
               props.updateUserLocation(location.coords);
             }
-        
+            
+            // redirect screen
             setTimeout(async () => {
               Toast.hide();
-              let notificationPermissionAsked = await getIfPermissionAsked("notification");
-              // console.log("location screen notificationPermissionAsked", notificationPermissionAsked);
-              if (notificationPermissionAsked) {
-                Actions.home();
-              } else {
-                Actions.askNotification();
-              }
+              Actions.home();
             }, 300);
           }
           else { // location is not granted
@@ -139,7 +138,11 @@ export default compose(
           console.log("error", error);
           Toast.fail("Something is wrong\nPlease try again", 2);
         }
-      }
+      },
+      onSkipPressed: props => async () => {
+        Amplitude.logEvent("User skipped location request");
+        Actions.home();
+      },
     }),
     lifecycle({
       componentDidMount(){

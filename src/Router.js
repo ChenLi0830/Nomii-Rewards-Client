@@ -18,7 +18,9 @@ import FeedBackModal from './components/FeedBackModal';
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
-import {compose, withHandlers, branch, renderComponent, pure, onlyUpdateForKeys} from 'recompose';
+import {compose, withHandlers, withState, branch, renderComponent, pure, onlyUpdateForKeys, lifecycle} from 'recompose';
+import {getIfPermissionAsked} from './components/api';
+import {Loading} from './components/common';
 
 const styles = StyleSheet.create({
   homeNavBar: {
@@ -44,14 +46,16 @@ const styles = StyleSheet.create({
   }
 });
 
+let notificationPermissionAsked;
+
 const RouterComponent = (props) => {
   console.log("RouterComponent props", props);
   let {user} = props;
   // Todo: update GraphQL and make use this condition: user.lastLoginAt!==user.registeredAt
   const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
-  const locationNotGranted = !user.location;
+  // const locationNotGranted = !user.location;
   
-  let initialScreen = props.determineInitialScreen(isNewUser, locationNotGranted);
+  let initialScreen = props.determineInitialScreen(isNewUser, notificationPermissionAsked);
   
   const scenes = Actions.create(
       <Scene key="main">
@@ -86,7 +90,7 @@ const RouterComponent = (props) => {
                direction="vertical" hideNavBar/>
         <Scene key="promoSuccess" component={PromoSuccess} direction="vertical" hideNavBar/>
       
-        <Scene key="askNotification" component={AskNotificationScreen} hideNavBar/>
+        <Scene key="askNotification" component={AskNotificationScreen} hideNavBar initial={initialScreen === "askNotification"}/>
       
         <Scene key="statistics" direction="vertical" type="reset" passProps>
           <Scene key="stat" component={ShowStats} title="Report"
@@ -121,14 +125,26 @@ export default compose(
         props => !props.user || !props.user.id,
         renderComponent(Login),
     ),
+    withState('isReady', 'updateReady', false),
     withHandlers({
-      determineInitialScreen: props => (isNewUser, locationNotGranted) => {
+      determineInitialScreen: props => (isNewUser, notificationPermissionAsked) => {
+        console.log("isNewUser", isNewUser, "notificationPermissionAsked", notificationPermissionAsked);
         if (isNewUser) return "swiper";
         else {
-          if (locationNotGranted) return "location";
+          if (!notificationPermissionAsked) return "askNotification";
           else return "home";
         }
       },
     }),
+    lifecycle({
+      async componentWillMount(){
+        notificationPermissionAsked = await getIfPermissionAsked("notification");
+        this.props.updateReady(true);
+      },
+    }),
+    branch(
+        props => !props.isReady,
+        renderComponent(Loading),
+    ),
     onlyUpdateForKeys([]),
 )(RouterComponent);

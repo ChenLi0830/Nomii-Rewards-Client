@@ -13,7 +13,7 @@ import {graphql} from 'react-apollo';
 import {Actions} from 'react-native-router-flux';
 import {Toast} from 'antd-mobile';
 import {compose, withHandlers, lifecycle} from 'recompose';
-import {setIfPermissionAsked} from './api';
+import {setIfPermissionAsked, getIfPermissionAsked} from './api';
 
 const styles = new StyleSheet.create({
   wrapperView: {
@@ -71,7 +71,7 @@ const AskNotificationScreen = (props) => {
         ENABLE NOTIFICATION
       </Button>
       <Button onPress={props.onSkipPressed} type = "skip">
-        Not now
+        Not Now
       </Button>
     </View>
   </View>
@@ -111,6 +111,13 @@ export default compose(
             });
             
             AsyncStorage.setItem("@NomiiStore:pushToken", token);
+  
+            const locationPermissionAsked = await getIfPermissionAsked("location");
+            if (locationPermissionAsked) {
+              Actions.home();
+            } else {
+              Actions.askLocation();
+            }
             
             Toast.hide();
           }
@@ -122,9 +129,15 @@ export default compose(
         // redirect screen
         Actions.home();
       },
-      onSkipPressed: props => () => {
+      onSkipPressed: props => async () => {
         Amplitude.logEvent("User skipped notification request");
-        Actions.home();
+        
+        const locationPermissionAsked = await getIfPermissionAsked("location");
+        if (locationPermissionAsked) {
+          Actions.home();
+        } else {
+          Actions.askLocation();
+        }
       },
     }),
     lifecycle({
