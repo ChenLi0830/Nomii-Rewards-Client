@@ -7,14 +7,7 @@ import {Location, Permissions} from 'expo';
 import Router from './Router';
 import {lifecycle, compose, withHandlers, branch, renderComponent} from 'recompose';
 import {getIfPermissionAsked} from './components/api';
-import {View} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
-
-const Loading = () => (
-    <View style={{flex: 1}}>
-      <Spinner visible overlayColor="rgba(255, 255, 255, 0.1)" color="#aaa"/>
-    </View>
-);
+import {Loading} from './components/common';
 
 /**
  * Pass user and location props into Redux reducer
