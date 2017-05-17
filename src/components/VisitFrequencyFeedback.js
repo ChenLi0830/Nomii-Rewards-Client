@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Picker, Switch, Platform, Easing, Keyboard, Animated, Dimensions} from 'react-native';
+import {View, Text, Image, StyleSheet, Picker, Switch, TouchableWithoutFeedback, Platform, Easing, Keyboard, Animated, Dimensions} from 'react-native';
 import {InputBox} from './common';
 import {responsiveFontSize, responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -135,18 +135,23 @@ const VisitFrequencyFeedback = (props) => {
             onValueChange={props.onChangeFirstTime}
             value={props.isFirstTime} />
       </View>
-    
-      <View style={styles.contentView}>
-        <Text style={styles.contentText}>Visit: </Text>
-        <Animated.Text style={[styles.contentTextHighlight, animatedStyles.visitText]}>
-          {
-            props.isFirstTime ?
-                "This is my first time here"
-                :
-                props.times + ` time${props.times>1 ? "s" : ""} Per ` + props.period
-          }
-        </Animated.Text>
-      </View>
+  
+      <TouchableWithoutFeedback onPress={props.onPressVisitItem}>
+        <View style={styles.contentView}>
+            <Text style={styles.contentText}>Visit: </Text>
+            <Animated.Text style={[styles.contentTextHighlight, animatedStyles.visitText]}>
+              {
+                props.isFirstTime ?
+                    "This is my first time here"
+                    :
+                    (props.times === undefined && props.period === undefined) ?
+                        "Not Set"
+                        :
+                        props.times + ` time${props.times>1 ? "s" : ""} Per ` + props.period
+              }
+            </Animated.Text>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   
     <Animated.View style={[styles.pickerView, animatedStyles.spaceHolder]}>
@@ -168,7 +173,7 @@ const VisitFrequencyFeedback = (props) => {
     </Animated.View>
   
     <View style={styles.btnView}>
-      <Button disabled = {props.rating === 0} rounded={false} shadow={false} style={styles.button} onPress={props.onSubmitFeedback}>
+      <Button disabled = {!props.isFirstTime && !(props.times && props.period)} rounded={false} shadow={false} style={styles.button} onPress={props.onSubmitFeedback}>
         Submit
       </Button>
       <Button shadow={false} type="skip" style={styles.button} onPress={props.onSkipFeedback}>
@@ -196,14 +201,16 @@ export default compose(
         // console.log(value);
         props.changeIsFirstTime(isFirstTime);
   
-        Animated.timing(
-            visibility,
-            {
-              toValue: isFirstTime ? 0 : 1,
-              duration: 300,
-              easing: Easing.out(Easing.quad),
-            }
-        ).start();
+        if (!(props.times === undefined && props.period === undefined)){
+          Animated.timing(
+              visibility,
+              {
+                toValue: isFirstTime ? 0 : 1,
+                duration: 300,
+                easing: Easing.out(Easing.quad),
+              }
+          ).start();
+        }
       },
       onSubmitFeedback: props => () => {
         props.submitFeedback();
@@ -220,6 +227,20 @@ export default compose(
           highLight = new Animated.Value(1);
           visibility = new Animated.Value(0);
         }, 500);
+      },
+      onPressVisitItem: props => () => {
+        if (!props.isFirstTime && props.times === undefined && props.period === undefined) {
+          props.onChangePeriod("Year");
+          props.onChangeVisitTimes(3);
+          Animated.timing(
+              visibility,
+              {
+                toValue: 1,
+                duration: 300,
+                easing: Easing.out(Easing.quad),
+              }
+          ).start();
+        }
       }
     }),
     onlyUpdateForKeys(['isFirstTime', 'times', 'period']),

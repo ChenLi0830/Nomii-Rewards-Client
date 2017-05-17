@@ -92,9 +92,9 @@ const initialState = {
   contact: "",
   contactName: "",
   modalSkipped: false,
-  isFirstTime: true,
-  visitTimes: 3,
-  timePeriod: "Year",
+  isFirstTime: false,
+  visitTimes: undefined,
+  timePeriod: undefined,
 };
 
 const reducer = (state = initialState, action) => {
