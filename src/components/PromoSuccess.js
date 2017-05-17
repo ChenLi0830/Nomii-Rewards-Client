@@ -90,15 +90,15 @@ export default compose(
     ),
     withHandlers({
       btnClick: props => async () => {
-        const locationPermissionAsked = await getIfPermissionAsked("location");
-        if (locationPermissionAsked) {
+        const notificationPermissionAsked = await getIfPermissionAsked("notification");
+        if (notificationPermissionAsked) {
           Actions.home();
           // coupon is for a specific restaurant
           if (props.restaurantName){
             props.toggleFeedbackModal(true);
           }
         } else {
-          Actions.askLocation();
+          Actions.askNotification();
         }
       }
     }),
