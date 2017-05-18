@@ -282,7 +282,7 @@ export default compose(
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCoverList: [5000, 3],
+            daysToCoverList: [5000, 30],
             endTo: getTimeInSec()
           }
         }
