@@ -125,9 +125,9 @@ export default compose(
           // alert(error.message);
           Amplitude.logEvent("User denied notification request");
           console.warn("error", error);
+          // redirect screen
+          Actions.home();
         }
-        // redirect screen
-        Actions.home();
       },
       onSkipPressed: props => async () => {
         Amplitude.logEvent("User skipped notification request");

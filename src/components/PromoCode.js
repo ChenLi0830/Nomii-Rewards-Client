@@ -12,6 +12,7 @@ import {getUserQuery} from '../graphql/user';
 import {compose, withHandlers, lifecycle} from 'recompose';
 import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
+import {getIfPermissionAsked} from './api';
 
 const styles = StyleSheet.create({
   view: {
@@ -156,9 +157,13 @@ export default compose(
       },
       userSkipPromo: props => () => {
         Keyboard.dismiss();
-        setTimeout(() => {
-          if (props.location) Actions.home();
-          else Actions.askLocation();
+        setTimeout(async() => {
+          const notificationPermissionAsked = await getIfPermissionAsked("notification");
+          if (notificationPermissionAsked) {
+            Actions.home();
+          } else {
+            Actions.askNotification();
+          }
           props.userChangedScreen();
           Amplitude.logEvent("Skip promo code");
         },300)}
