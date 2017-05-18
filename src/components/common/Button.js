@@ -20,7 +20,7 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
                                styles[type],
                                style,
                                {borderRadius: rounded ? 50 : 7},
-                               shadow && styles.shadowStyle
+                               type!=="skip" && shadow && styles.shadowStyle
                              ]}
                              onPress={()=>{
                                if (!disabled) {
