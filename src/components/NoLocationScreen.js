@@ -5,7 +5,7 @@ import {
   responsiveFontSize,
   responsiveHeight
 } from 'react-native-responsive-dimensions';
-import {branch, withState, lifecycle, compose, renderComponent, withHandlers, onlyUpdateForKeys} from 'recompose';
+import {branch, withState, lifecycle, compose, renderComponent, pure, withHandlers, onlyUpdateForKeys} from 'recompose';
 import {getIfPermissionAsked, setIfPermissionAsked} from './api';
 import {Loading, Button} from './common';
 import {Amplitude, Location, Permissions} from 'expo';
@@ -196,7 +196,6 @@ const NoLocationScreen = (props) => {
       </Button>
     }
   </View>
-  
 };
 
 export default compose(
@@ -232,10 +231,17 @@ export default compose(
           }
         }, 2000);
       },
-      async componentWillUpdate(){
+      async componentWillUpdate(nextProps){
+        console.log("this.props", this.props);
+        console.log("nextProps", nextProps);
         let locationPermissionAsked = await getIfPermissionAsked("location");
+  
         console.log("componentWillUpdate locationPermissionAsked", locationPermissionAsked);
-        this.props.updatePermissionAsked(locationPermissionAsked);
+        
+        if (locationPermissionAsked !== this.props.locationPermissionAsked){
+          console.log("locationPermissionAsked changed, calling updatePermissionAsked");
+          this.props.updatePermissionAsked(locationPermissionAsked);
+        }
       }
     }),
     branch(
@@ -245,8 +251,6 @@ export default compose(
     withHandlers({
       askLocationPermission: (props) => async() => {
         try {
-          await setIfPermissionAsked("location");
-          
           // redirect screen
           const {status} = await Permissions.askAsync(Permissions.LOCATION);
           // console.log("status",status);
@@ -293,15 +297,18 @@ export default compose(
             
             // redirect screen
             setTimeout(async() => {
+              await setIfPermissionAsked("location");
               Toast.hide();
               Actions.home();
             }, 300);
           }
           else { // location is not granted
+            await setIfPermissionAsked("location");
             Amplitude.logEvent("User denied location request");
             console.log(new Error('Location permission not granted'));
             props.updateUserLocation(null);
           }
+          
           return status;
         }
         catch (error) {
@@ -310,4 +317,5 @@ export default compose(
         }
       },
     }),
+    pure,
 )(NoLocationScreen);
