@@ -51,7 +51,7 @@ query getAllRestaurantCards($userId: ID){
 `;
 
 const getRestaurantStatsQuery = gql`
-query getRestaurantStats($restaurantId: ID, $daysToCover: Float, $endTo: Int){
+query getRestaurantStats($restaurantId: ID, $daysToCoverList: [Float], $endTo: Int){
     restaurant(id: $restaurantId){
     id,
     name,
@@ -60,33 +60,7 @@ query getRestaurantStats($restaurantId: ID, $daysToCover: Float, $endTo: Int){
       employeeName,
       usageCount
     }
-    statistics(daysToCover: $daysToCover, endTo: $endTo){
-      id,
-      newUserCount,
-      returnUserCount,
-      newVisitCount,
-      returnVisitCount,
-      PINsCount{
-        employeeName,
-        count
-      },
-      couponsCount
-    }
-  }
-}
-`;
-
-const getRestaurantStatsQuery2 = gql`
-query getRestaurantStats2($restaurantId: ID, $daysToCover: Float, $endTo: Int){
-    restaurant(id: $restaurantId){
-    id,
-    name,
-    PINs{
-      code,
-      employeeName,
-      usageCount
-    }
-    statistics(daysToCover: $daysToCover, endTo: $endTo){
+    statistics(daysToCoverList: $daysToCoverList, endTo: $endTo){
       newUserCount,
       returnUserCount,
       newVisitCount,
@@ -111,4 +85,4 @@ mutation createFeedbackTag($content: String){
 }
 `;
 
-export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, getRestaurantStatsQuery2, restaurantCreateFeedbackTag};
+export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, restaurantCreateFeedbackTag};

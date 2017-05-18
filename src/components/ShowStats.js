@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Button, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
-import {getRestaurantStatsQuery, getRestaurantStatsQuery2} from '../graphql/restaurant';
+import {getRestaurantStatsQuery, getRestaurantStatsQuery2, getRestaurantPINsQuery} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
 import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
@@ -12,7 +12,6 @@ import {Amplitude} from 'expo';
 import _ from 'lodash';
 import { Tabs, WhiteSpace } from 'antd-mobile';
 const TabPane = Tabs.TabPane;
-import {Loading} from './common';
 
 
 const styles = StyleSheet.create({
@@ -106,14 +105,13 @@ const styles = StyleSheet.create({
 });
 
 const renderHasPINs = (props) => {
-  const {PINs, id} = props.restaurant30.restaurant;
-  const statistics30 = props.restaurant30.restaurant.statistics;
-  const statistics90 = props.restaurant90.restaurant.statistics;
-  console.log("statistics30", statistics30, "statistics90", statistics90);
+  const {PINs, id, statistics: statisticList} = props.data.restaurant;
+
+  console.log("statisticList", statisticList);
   
   const PINList = PINs.map(PIN => {
     // PIN usage count within certain period
-    const statistics = props.selectedTab === '1' ? statistics90 : statistics30;
+    const statistics = statisticList[parseInt(props.selectedTab)];
     let PINCountOverDays = _.find(statistics.PINsCount, {employeeName: PIN.employeeName});
     // If the count is available, use this number instead of PIN's total usage number
   
@@ -124,19 +122,12 @@ const renderHasPINs = (props) => {
   
   return <View style={styles.wrapper}>
     <ScrollView style={styles.scrollView}>
-      
-      {/*<View style={styles.tabListView}>*/}
-        {/*<View style={styles.tabView}>*/}
-          {/*<Text style={styles.tabText}>LAST 30 DAYS</Text>*/}
-          {/*<View style={styles.tabSelected}/>*/}
-        {/*</View>*/}
-      {/*</View>*/}
       <View style={{/*{width: responsiveWidth(80), alignSelf: "center", borderBottomWidth: 1, borderBottomColor: "gray"}*/}}>
       <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} activeUnderlineColor="#4A90E2" activeTextColor="#4A90E2">
-        <TabPane tab="ALL" key="1">
+        <TabPane tab="ALL" key="0">
           <View style={styles.statsView}>
             <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
-              {`Coupons redeemed: ${statistics90.couponsCount}`}
+              {`Coupons redeemed: ${statisticList[0].couponsCount}`}
             </Text>
       
             <Text style={styles.statsTitle}>
@@ -144,7 +135,7 @@ const renderHasPINs = (props) => {
             </Text>
       
             <Text style={styles.statsNumber}>
-              {statistics90.newUserCount}
+              {statisticList[0].newUserCount}
             </Text>
           </View>
     
@@ -154,7 +145,7 @@ const renderHasPINs = (props) => {
             </Text>
       
             <Text style={styles.statsNumber}>
-              {statistics90.returnUserCount}
+              {statisticList[0].returnUserCount}
             </Text>
           </View>
     
@@ -164,14 +155,14 @@ const renderHasPINs = (props) => {
             </Text>
       
             <Text style={styles.statsNumber}>
-              {statistics90.returnVisitCount}
+              {statisticList[0].returnVisitCount}
             </Text>
           </View>
         </TabPane>
-        <TabPane tab="LAST 30 DAYS" key="2">
+        <TabPane tab="LAST 30 DAYS" key="1">
           <View style={styles.statsView}>
             <Text style={{fontSize: 14, color: "#bbbbbb", textAlign: 'center', top: -18}}>
-              {`Coupons redeemed: ${statistics30.couponsCount}`}
+              {`Coupons redeemed: ${statisticList[1].couponsCount}`}
             </Text>
     
             <Text style={styles.statsTitle}>
@@ -179,7 +170,7 @@ const renderHasPINs = (props) => {
             </Text>
     
             <Text style={styles.statsNumber}>
-              {statistics30.newUserCount}
+              {statisticList[1].newUserCount}
             </Text>
           </View>
   
@@ -189,7 +180,7 @@ const renderHasPINs = (props) => {
             </Text>
     
             <Text style={styles.statsNumber}>
-              {statistics30.returnUserCount}
+              {statisticList[1].returnUserCount}
             </Text>
           </View>
   
@@ -199,7 +190,7 @@ const renderHasPINs = (props) => {
             </Text>
     
             <Text style={styles.statsNumber}>
-              {statistics30.returnVisitCount}
+              {statisticList[1].returnVisitCount}
             </Text>
           </View>
         </TabPane>
@@ -270,22 +261,13 @@ const renderNoPINs = (props) => {
 
 const ShowStats = (props) => {
   console.log("ShowStats props", props);
-  console.log("props.restaurant30.loading", props.restaurant30.loading, "props.restaurant90.loading", props.restaurant90.loading);
-  if (props.restaurant30.loading || props.restaurant90.loading) {
-    return <Loading/>
-  }
   
-  if (!props.restaurant30.restaurant) {
-    throw new Error("user doesn't own restaurant! props.restaurant", props.restaurant30.restaurant);
+  if (!props.data.restaurant) {
+    throw new Error("user doesn't own restaurant! props.restaurant", props.data.restaurant);
     return <View></View>
   }
   
-  console.log("props.restaurant", props.restaurant30.restaurant);
-  
-  // return renderHasPINs(props);
-  // return renderNoPINs(props);
-  
-  if (props.restaurant30.restaurant.PINs.length > 0) {
+  if (props.data.restaurant.PINs.length > 0) {
     return renderHasPINs(props);
   } else {
     return renderNoPINs(props);
@@ -300,38 +282,18 @@ export default compose(
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCover: 30,
+            daysToCoverList: [5000, 3],
             endTo: getTimeInSec()
           }
         }
       },
-      name: "restaurant30"
     }),
-    branch(
-        props => props.restaurant30.loading,
-        renderComponent(Loading),
-    ),
-    graphql(getRestaurantStatsQuery2, {
-      options: (props) => {
-        return {
-          variables: {
-            restaurantId: props.ownedRestaurant,
-            daysToCover: 1000,
-            endTo: getTimeInSec()
-          }
-        }
-      },
-      name: "restaurant90"
-    }),
-    branch(
-        props => props.restaurant90.loading,
-        renderComponent(Loading),
-    ),
-    withState('selectedTab', 'updateTab', '1'),
+    WithLoadingComponent,
+    withState('selectedTab', 'updateTab', '0'),
     withHandlers({
       onAddPIN: props => () => {
         Amplitude.logEvent('Add PIN btn is pressed');
-        Actions.assignPin({restaurant: props.restaurant30.restaurant});
+        Actions.assignPin({restaurant: props.data.restaurant});
       },
       onTabClick: props => (key) => {
         props.updateTab(key);
@@ -340,6 +302,10 @@ export default compose(
     lifecycle({
       componentDidMount() {
         Amplitude.logEvent('Restaurant stats screen shows');
-      }
+      },
+      componentWillUpdate(nextProps){
+        console.log("this.props", this.props);
+        console.log("nextProps", nextProps);
+      },
     }),
 )(ShowStats);
