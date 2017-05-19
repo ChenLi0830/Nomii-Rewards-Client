@@ -218,7 +218,7 @@ export default compose(
         setTimeout(()=>{
           highLight = new Animated.Value(1);
           visibility = new Animated.Value(0);
-        }, 500);
+        }, 200);
       },
       onSkipFeedback: props => () => {
         props.skipFeedback();
@@ -226,7 +226,7 @@ export default compose(
         setTimeout(()=>{
           highLight = new Animated.Value(1);
           visibility = new Animated.Value(0);
-        }, 500);
+        }, 200);
       },
       onPressVisitItem: props => () => {
         if (!props.isFirstTime && props.times === undefined && props.period === undefined) {
