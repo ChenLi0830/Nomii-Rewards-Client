@@ -1,8 +1,6 @@
 {
-  "name": "nomii-rewards-exponentjs",
-  "version": "0.0.0",
+  "name": "nomii-rewards",
   "description": "Nomii Rewards App",
-  "author": "Chen Li, Andrew Lee",
   "private": true,
   "main": "main.js",
   "dependencies": {
