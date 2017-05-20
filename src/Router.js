@@ -14,6 +14,7 @@ import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
 import SuperUserScreen from './components/SuperUserScreen';
 import FeedBackModal from './components/FeedBackModal';
+import SuperUserRestoVisitStats from './components/SuperUserRestoVisitStats';
 
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
@@ -104,6 +105,7 @@ const RouterComponent = (props) => {
         </Scene>
       
         <Scene key="nomiiAdminScreen" component = {SuperUserScreen} navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
+        <Scene key="nomiiAdminVisitStats" component = {SuperUserRestoVisitStats} navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
       
       </Scene>
   );

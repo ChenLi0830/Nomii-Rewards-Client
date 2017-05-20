@@ -85,4 +85,14 @@ mutation createFeedbackTag($content: String){
 }
 `;
 
-export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, restaurantCreateFeedbackTag};
+const getRestaurantVisitStatsQuery = gql`
+query getRestaurantVisitStatistics($restaurantId: ID, $daysToCover: Float, $endTo: Int){
+  RestaurantVisitStatistics(restaurantId:$restaurantId, daysToCover: $daysToCover, endTo: $endTo){
+    restaurantId,
+    actualVisit,
+    withoutNomiiVisit,
+  }
+}
+`;
+
+export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, restaurantCreateFeedbackTag, getRestaurantVisitStatsQuery};

@@ -1,6 +1,6 @@
 import React from 'react';
 import {compose, withHandlers, withState} from 'recompose';
-import {View, PanResponder, ScrollView, StyleSheet, Animated} from 'react-native';
+import {View, PanResponder, ScrollView, StyleSheet, Animated, TouchableHighlight, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {List, Toast} from 'antd-mobile';
 import {Button} from './common';
@@ -74,6 +74,14 @@ const SuperUserScreen = (props) => {
     let {restaurant} = card;
     return <List.Item key={restaurant.id} onClick={() => props.onChooseRestaurant(restaurant.id)}>
       {restaurant.name}
+      
+      <View style={{alignItems: "flex-end"}}>
+        <TouchableHighlight onPress={() => props.showRestaurantVisitStats(restaurant)}>
+          <Text style={{color: "#3b74b6"}}>
+            Visit Stats
+          </Text>
+        </TouchableHighlight>
+      </View>
     </List.Item>
   });
 
@@ -83,8 +91,7 @@ const SuperUserScreen = (props) => {
     </Button>
   
     {/* Side Menu */}
-    {
-      <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
+    <Animated.View style={[styles.sideMenu, animStyles.sideMenu]}>
       <ScrollView>
           <List renderHeader={() => 'Restaurant List'}
                 style={styles.list}>
@@ -92,7 +99,6 @@ const SuperUserScreen = (props) => {
           </List>
       </ScrollView>
     </Animated.View>
-    }
   </View>;
 };
 
@@ -146,6 +152,12 @@ export default compose(
               Actions.statistics({ownedRestaurant: restaurantId});
             }
         );
+      },
+    }),
+    withHandlers({
+      showRestaurantVisitStats: props => (restaurant) => {
+        props.onToggleSlider();
+        Actions.nomiiAdminVisitStats({restaurant})
       }
     }),
 )(SuperUserScreen);
