@@ -1,6 +1,6 @@
 import React from 'react';
 import {compose, withHandlers, withState} from 'recompose';
-import {View, PanResponder, ScrollView, StyleSheet, Animated, TouchableHighlight, Text} from 'react-native';
+import {View, PanResponder, ScrollView, StyleSheet, Animated, TouchableOpacity, Text} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {List, Toast} from 'antd-mobile';
 import {Button} from './common';
@@ -75,12 +75,12 @@ const SuperUserScreen = (props) => {
     return <List.Item key={restaurant.id} onClick={() => props.onChooseRestaurant(restaurant.id)}>
       {restaurant.name}
       
-      <View style={{alignItems: "flex-end"}}>
-        <TouchableHighlight onPress={() => props.showRestaurantVisitStats(restaurant)}>
+      <View style={{alignItems: "flex-start"}}>
+        <TouchableOpacity onPress={() => props.showRestaurantVisitStats(restaurant)}>
           <Text style={{color: "#3b74b6"}}>
             Visit Stats
           </Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     </List.Item>
   });
