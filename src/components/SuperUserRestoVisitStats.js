@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  text: {
+    textAlign: "center",
+  }
 });
 
 const SuperUserRestoVisitStats = (props) => {
@@ -22,11 +25,11 @@ const SuperUserRestoVisitStats = (props) => {
       Visit Stats
     </Text>
     
-    <Text>
-      Estimate visits based on consumers' previous pattern: {parseFloat(RestaurantVisitStatistics.withoutNomiiVisit).toFixed(2)}
+    <Text style={styles.text}>
+      Estimated visits based on consumers' feedbacks: {parseFloat(RestaurantVisitStatistics.withoutNomiiVisit).toFixed(2)}
     </Text>
   
-    <Text>
+    <Text style={styles.text}>
       Visits with Nomii: {parseInt(RestaurantVisitStatistics.actualVisit)}
     </Text>
   </View>

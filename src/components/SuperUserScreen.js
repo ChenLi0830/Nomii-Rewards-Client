@@ -75,10 +75,10 @@ const SuperUserScreen = (props) => {
     return <List.Item key={restaurant.id} onClick={() => props.onChooseRestaurant(restaurant.id)}>
       {restaurant.name}
       
-      <View style={{alignItems: "flex-start"}}>
+      <View style={{alignItems: "flex-end"}}>
         <TouchableOpacity onPress={() => props.showRestaurantVisitStats(restaurant)}>
           <Text style={{color: "#3b74b6"}}>
-            Visit Stats
+            View Visit Stats
           </Text>
         </TouchableOpacity>
       </View>
