@@ -3,8 +3,8 @@
   "description": "Nomii Rewards App - Staging",
   "slug": "nomii-rewards-exponentjs-staging",
   "privacy": "public",
-  "sdkVersion": "17.0.0",
-  "version": "1.4.0",
+  "sdkVersion": "15.0.0",
+  "version": "1.3.5",
   "orientation": "portrait",
   "primaryColor": "#e8314a",
   "icon": "./public/images/nomii-rewards-app-icon_512.png",
@@ -29,7 +29,7 @@
   "facebookScheme": "fb1933027890253863",
   "android": {
     "package": "com.nomii.rewards.staging",
-    "versionCode": 8
+    "versionCode": 7
   },
   "androidShowExponentNotificationInShellApp": false
 }
