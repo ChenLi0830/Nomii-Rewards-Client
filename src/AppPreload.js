@@ -97,7 +97,7 @@ export default compose(
         catch (err) {
           console.log("err", err);
           Amplitude.logEvent("Something went wrong (most likely network issue)");
-          Toast.fail("Something is wrong\nPlease try again", 2);
+          Toast.offline("Bad Internet\nconnection", 2);
         }
       },
       initAppVariables: props => async () => {

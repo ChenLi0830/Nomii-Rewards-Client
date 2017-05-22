@@ -10,6 +10,7 @@ import {compose, lifecycle, withHandlers, branch, renderComponent, withState} fr
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
 import _ from 'lodash';
+import {Loading} from './common';
 import { Tabs, WhiteSpace } from 'antd-mobile';
 const TabPane = Tabs.TabPane;
 
@@ -263,8 +264,10 @@ const ShowStats = (props) => {
   console.log("ShowStats props", props);
   
   if (!props.data.restaurant) {
-    throw new Error("user doesn't own restaurant! props.restaurant", props.data.restaurant);
-    return <View></View>
+    console.log("user doesn't own restaurant! props.restaurant", props.data.restaurant);
+    return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+      <Text>User doesn't own this restaurant</Text>
+    </View>
   }
   
   if (props.data.restaurant.PINs.length > 0) {
@@ -272,7 +275,6 @@ const ShowStats = (props) => {
   } else {
     return renderNoPINs(props);
   }
-  
 };
 
 // Container
@@ -288,7 +290,10 @@ export default compose(
         }
       },
     }),
-    WithLoadingComponent,
+    // branch(
+    //     props => props.queryLoading || (props.data && props.data.loading),
+    //     renderComponent(Loading),
+    // ),
     withState('selectedTab', 'updateTab', '0'),
     withHandlers({
       onAddPIN: props => () => {

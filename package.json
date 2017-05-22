@@ -5,13 +5,13 @@
   "main": "main.js",
   "dependencies": {
     "antd-mobile": "1.0.1",
-    "apollo-client": "1.0.2",
+    "apollo-client": "^1.2.2",
     "expo": "15.1.2",
     "geolib": "2.0.22",
-    "graphql-tag": "2.0.0",
+    "graphql-tag": "^2.1.0",
     "lodash": "4.17.4",
     "react": "15.4.1",
-    "react-apollo": "1.0.1",
+    "react-apollo": "^1.2.0",
     "react-native": "https://github.com/exponent/react-native/archive/sdk-15.0.0.tar.gz",
     "react-native-animatable": "1.1.0",
     "react-native-dash": "0.0.3",
@@ -25,7 +25,8 @@
     "react-redux": "5.0.3",
     "recompose": "0.23.0",
     "redux": "3.6.0",
-    "redux-logger": "2.8.1",
+    "redux-logger": "^2.8.1",
+    "redux-persist": "^4.8.0",
     "redux-thunk": "2.2.0"
   },
   "devDependencies": {

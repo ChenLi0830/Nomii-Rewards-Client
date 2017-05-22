@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, AsyncStorage} from 'react-native';
 import {ApolloProvider} from 'react-apollo';
 import {client} from './modules/apollo';
 import store from './modules';
 import RouterWrapper from './RouterWrapper';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
+import {persistStore} from 'redux-persist';
+import {Loading} from './components/common';
 
 // Set global fonts for Text component
 const customTextProps = {
@@ -35,7 +37,25 @@ class App extends Component {
     super(props);
   }
   
+  state = { rehydrated: false };
+  
+  componentWillMount(){
+    persistStore(
+        store,
+        {
+          storage: AsyncStorage,
+          whitelist: ['apollo.data']
+        },
+        () => {
+          console.log("this.setState({ rehydrated: true })");
+          this.setState({ rehydrated: true })
+        }
+    );
+  }
+  
   render() {
+    if (!this.state.rehydrated) return <Loading/>;
+  
     // Amplitude.logEvent('App opened');
     return <ApolloProvider store={store} client={client}>
       <RouterWrapper fbUser={this.props.fbUser}/>

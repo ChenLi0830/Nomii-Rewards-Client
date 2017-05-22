@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
 });
 
 const SuperUserScreen = (props) => {
+  console.log("SuperUserScreen props", props);
   //Handle pan gestures
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,

@@ -1,5 +1,7 @@
 import config from '../../exp.json';
 import ApolloClient, {createNetworkInterface} from 'apollo-client';
+import { getStoredState, createPersistor } from 'redux-persist'
+import {AsyncStorage} from 'react-native';
 
 let uri;
 switch (config.slug){
@@ -24,9 +26,20 @@ const networkInterface = createNetworkInterface({
   }
 });
 
+
+// getStoredState({ storage: AsyncStorage }, (err, rehydratedState) => {
+//   const client = new ApolloClient({
+//     networkInterface: networkInterface,
+//     dataIdFromObject: o => o.id,
+//     initialState: { apollo: { data: rehydratedState.apollo.data }},
+//   });
+// });
+
+
 const client = new ApolloClient({
   networkInterface: networkInterface,
   dataIdFromObject: o => o.id,
+  // initialState: { apollo: { data: rehydratedState.apollo.data }},
 });
 
 export {client};
