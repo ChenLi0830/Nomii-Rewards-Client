@@ -35,11 +35,24 @@ const networkInterface = createNetworkInterface({
 //   });
 // });
 
+// const getClient = async () => {
+//   const rehydratedState = await getStoredState({ storage: AsyncStorage });
+//
+//   return new ApolloClient({
+//     networkInterface: networkInterface,
+//     dataIdFromObject: o => o.id,
+//     initialState: { apollo: { data: rehydratedState.apollo.data }},
+//   })
+// };
 
-const client = new ApolloClient({
-  networkInterface: networkInterface,
-  dataIdFromObject: o => o.id,
-  // initialState: { apollo: { data: rehydratedState.apollo.data }},
+const getClient = (callback) => getStoredState({ storage: AsyncStorage }, (error, rehydratedState) => {
+  const client = new ApolloClient({
+    networkInterface: networkInterface,
+    dataIdFromObject: o => o.id,
+    initialState: { apollo: { data: rehydratedState.apollo.data }},
+  });
+  
+  callback(client);
 });
 
-export {client};
+

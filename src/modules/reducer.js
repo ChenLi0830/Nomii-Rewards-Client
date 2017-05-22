@@ -5,7 +5,9 @@ import appReducer from './app';
 import userReducer from './user';
 import createPinReducer from './createPin';
 import feedbackReducer from './feedbackModal';
-import {client} from './apollo';
+import {getClient} from './apollo';
+
+const client = getClient();
 
 export default combineReducers({
   apollo: client.reducer(),
