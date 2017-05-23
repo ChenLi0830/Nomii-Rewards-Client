@@ -213,7 +213,8 @@ export default compose(
         getUserQuery,
         {
           options: (props) => ({
-            variables: {id: props.userId}
+            variables: {id: props.userId},
+            fetchPolicy: 'cache-and-network',
           })
         }
     ),
