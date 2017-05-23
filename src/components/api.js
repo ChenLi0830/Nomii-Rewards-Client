@@ -88,6 +88,21 @@ const setIfPermissionAsked = async (permission) => {
   }
 };
 
+/**
+ * A helper function to get promise run time
+ * @param{Promise} promise - the promise you want to get the run time of
+ * @param{string} name - name of the promise to be shown in console.log
+ * */
+const getPromiseTime = async (promise, name) => {
+  const start = Date.now();
+  try {
+    return await promise;
+  } finally {
+    const end = Date.now();
+    console.log(`${name} took ${end-start}ms`);
+  }
+};
+
 export {
   sortCardsByDistance,
   sortCardsByUrgency,
@@ -98,4 +113,5 @@ export {
   getIfPermissionAsked,
   setIfPermissionAsked,
   getExpireInDays,
+  getPromiseTime,
 };
