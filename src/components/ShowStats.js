@@ -290,10 +290,7 @@ export default compose(
         }
       },
     }),
-    // branch(
-    //     props => props.queryLoading || (props.data && props.data.loading),
-    //     renderComponent(Loading),
-    // ),
+    WithLoadingComponent,
     withState('selectedTab', 'updateTab', '0'),
     withHandlers({
       onAddPIN: props => () => {

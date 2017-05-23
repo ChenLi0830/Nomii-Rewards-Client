@@ -44,7 +44,7 @@ class App extends Component {
         store,
         {
           storage: AsyncStorage,
-          whitelist: ['apollo.data']
+          whitelist: ['apollo', 'user',]
         },
         () => {
           console.log("this.setState({ rehydrated: true })");
