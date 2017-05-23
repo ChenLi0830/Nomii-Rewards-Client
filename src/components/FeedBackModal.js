@@ -134,7 +134,20 @@ export default compose(
               optimisticResponse: {
                 __typename: "Mutation",
                 submitUserFeedback: {
-                  ...[...props.data.user.awaitFeedbacks].pop(),
+                  restaurantId: null,
+                  userId: null,
+                  restaurantName: null,
+                  userName: null,
+                  userVisitedRestaurantAt: null,
+                  stampCountOfCard: null,
+                  tags: null,
+                  comment: null,
+                  rating: null,
+                  userContact: null,
+                  userContactName: null,
+                  isFirstTime: null,
+                  visitTimes: null,
+                  timePeriod: null,
                   __typename:"Feedback",
                 }
               },
