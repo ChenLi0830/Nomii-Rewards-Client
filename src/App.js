@@ -7,6 +7,7 @@ import RouterWrapper from './RouterWrapper';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import {persistStore} from 'redux-persist';
 import {Loading} from './components/common';
+import {getPromiseTime} from './components/api';
 
 // Set global fonts for Text component
 const customTextProps = {
@@ -39,18 +40,26 @@ class App extends Component {
   
   state = { rehydrated: false };
   
-  componentWillMount(){
-    persistStore(
-        store,
-        {
-          storage: AsyncStorage,
-          whitelist: ['apollo', 'user',]
-        },
-        () => {
-          console.log("this.setState({ rehydrated: true })");
-          this.setState({ rehydrated: true })
-        }
-    );
+  async rehydrateReduxStore(){
+    try{
+      await persistStore(
+          store,
+          {
+            storage: AsyncStorage,
+            whitelist: ['apollo', 'user',]
+          },
+          () => { // callback
+            console.log("this.setState({ rehydrated: true })");
+            this.setState({ rehydrated: true })
+          }
+      )
+    } catch(error) {
+      console.log("rehydrateStore error", error);
+    }
+  }
+  
+  async componentWillMount(){
+    await getPromiseTime(this.rehydrateReduxStore(), "rehydrateReduxStore");
   }
   
   render() {

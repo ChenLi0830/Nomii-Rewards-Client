@@ -8,6 +8,7 @@ import Router from './Router';
 import {lifecycle, compose, withHandlers, branch, renderComponent} from 'recompose';
 import {getIfPermissionAsked} from './components/api';
 import {Loading} from './components/common';
+import {getPromiseTime} from './components/api';
 
 /**
  * Pass user and location props into Redux reducer
@@ -18,7 +19,12 @@ const RouterWrapper = () => {
 
 export default compose(
     connect(
-        null,
+        (state) => {
+          console.log("RouterWrapper state", state);
+          return {
+            user: state.user,
+          }
+        },
         {
           updateUser: userActions.updateUser,
           updateUserLocation: userActions.updateUserLocation,
@@ -109,8 +115,8 @@ export default compose(
       async componentWillMount(){
         //Upsert user
         const promises = [
-          this.props.getLocation(),
-          this.props.upsertUser(),
+          getPromiseTime(this.props.getLocation(), "getLocation"),
+          getPromiseTime(this.props.upsertUser(), "upsertUser"),
           // this.setAmplitudeUserId()
         ];
         await Promise.all(promises);

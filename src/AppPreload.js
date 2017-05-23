@@ -6,6 +6,7 @@ import {Toast} from 'antd-mobile';
 import config from '../exp.json';
 import { Font } from 'expo';
 import {branch, compose, lifecycle, withHandlers, pure, renderComponent} from 'recompose';
+import {getPromiseTime} from './components/api';
 
 /**
  * Purpose of this component: initialize APP - fetchUser, PreloadAssets and initAmplitude
@@ -76,9 +77,7 @@ export default compose(
           // await AsyncStorage.removeItem("@NomiiStore:token");
           const value = await AsyncStorage.getItem("@NomiiStore:token");
           if (value !== null) {// Found token
-            // console.log(value);
             const {token, expires} = JSON.parse(value);
-            // console.log(token, expires);
         
             const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
             const result = await response.json();
@@ -108,10 +107,10 @@ export default compose(
     lifecycle({
       async componentWillMount(){
         const result = await Promise.all([
-          this.props.fetchUser(),
-          this.props.cacheResourcesAsync(),
-          this.props.initAmplitude(),
-          this.props.initAppVariables(),
+          getPromiseTime(this.props.fetchUser(), "fetchUser"),
+          getPromiseTime(this.props.cacheResourcesAsync(), "cacheResourcesAsync"),
+          getPromiseTime(this.props.initAmplitude(), "initAmplitude"),
+          getPromiseTime(this.props.initAppVariables(), "initAppVariables"),
         ]);
   
         this.setState({
