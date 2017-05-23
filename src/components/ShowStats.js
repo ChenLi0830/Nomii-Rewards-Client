@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Button, WithLoadingComponent} from './common';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
-import {getRestaurantStatsQuery, getRestaurantStatsQuery2, getRestaurantPINsQuery} from '../graphql/restaurant';
+import {getRestaurantStatsQuery} from '../graphql/restaurant';
 import EmployeePINItem from './EmployeePINItem';
 import {getTimeInSec} from './api';
 import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
@@ -286,7 +286,8 @@ export default compose(
             restaurantId: props.ownedRestaurant,
             daysToCoverList: [5000, 30],
             endTo: getTimeInSec()
-          }
+          },
+          fetchPolicy: 'cache-and-network',
         }
       },
     }),

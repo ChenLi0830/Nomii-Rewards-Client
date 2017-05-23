@@ -44,7 +44,8 @@ export default compose(
               restaurantId: props.restaurant.id,
               daysToCover: 30,
               endTo: getTimeInSec(),
-            }
+            },
+            fetchPolicy: 'cache-and-network',
           }),
         }
     ),

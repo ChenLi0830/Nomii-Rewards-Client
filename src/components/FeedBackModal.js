@@ -82,7 +82,8 @@ export default compose(
     ),
     graphql(getUserQuery, {
       options: (props) => ({
-        variables: {id: props.userId}
+        variables: {id: props.userId},
+        fetchPolicy: 'cache-and-network',
       })
     }),
     WithInvisibleLoadingComponent,

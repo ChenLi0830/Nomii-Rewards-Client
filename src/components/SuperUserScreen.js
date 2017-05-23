@@ -116,7 +116,8 @@ export default compose(
         getAllRestaurantCardsQuery,
         {
           options: (props) => ({
-            variables: {userId: props.userId}
+            variables: {userId: props.userId},
+            fetchPolicy: 'cache-and-network',
           }),
         }
     ),
