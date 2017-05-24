@@ -1,6 +1,6 @@
 import React from 'react';
 import {UpsertUserMutation} from './graphql/user';
-import {graphql} from 'react-apollo';
+import {graphql, withApollo} from 'react-apollo';
 import {connect} from 'react-redux';
 import {userActions} from './modules';
 import {Location, Permissions} from 'expo';
@@ -9,18 +9,19 @@ import {lifecycle, compose, withHandlers, branch, renderComponent} from 'recompo
 import {getIfPermissionAsked} from './components/api';
 import {Loading} from './components/common';
 import {getPromiseTime} from './components/api';
+import {getUserQuery} from './graphql/user';
 
 /**
  * Pass user and location props into Redux reducer
  * */
-const RouterWrapper = () => {
+const RouterWrapper = (props) => {
   return <Router/>
 };
 
 export default compose(
     connect(
         (state) => {
-          console.log("RouterWrapper state", state);
+          // console.log("RouterWrapper state", state);
           return {
             user: state.user,
           }
@@ -31,6 +32,7 @@ export default compose(
         }
     ),
     graphql(UpsertUserMutation),
+    withApollo, // add client to props
     withHandlers({
       upsertUser: props => async() => {
         try {
@@ -109,11 +111,20 @@ export default compose(
           console.log("App doesn't have location permission");
           console.log("error", error);
         }
-      }
+      },
+      prefetchUserQuery: props => async() => {
+        await props.client.query({
+          query: getUserQuery,
+          variables: {id: props.fbUser.id},
+        });
+      },
     }),
     lifecycle({
       async componentWillMount(){
-        //Upsert user
+        // Async prefetch user data if fbUser exist
+        this.props.fbUser && this.props.fbUser.id && this.props.prefetchUserQuery();
+        
+        // Upsert user
         const promises = [
           getPromiseTime(this.props.getLocation(), "getLocation"),
           getPromiseTime(this.props.upsertUser(), "upsertUser"),
