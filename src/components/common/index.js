@@ -9,3 +9,4 @@ export * from './InputBox';
 export * from './ModalBox';
 export * from './BackButton';
 export * from './Loading';
+export * from './AppLoading';

@@ -6,7 +6,7 @@ import store from './modules';
 import RouterWrapper from './RouterWrapper';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import {persistStore} from 'redux-persist';
-import {Loading} from './components/common';
+import {AppLoading} from './components/common';
 import {getPromiseTime} from './components/api';
 
 // Set global fonts for Text component
@@ -64,7 +64,7 @@ class App extends Component {
   }
   
   render() {
-    if (!this.state.rehydrated) return <Loading/>;
+    if (!this.state.rehydrated) return <AppLoading/>;
   
     // Amplitude.logEvent('App opened');
     return <ApolloProvider store={store} client={client}>

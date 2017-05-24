@@ -23,7 +23,7 @@ import {getIfPermissionAsked, getTimeInSec} from './components/api';
 import {Loading} from './components/common';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
-import {WithLoadingComponent} from './components/common';
+import {AppLoading, WithLoadingComponent} from './components/common';
 
 const styles = StyleSheet.create({
   homeNavBar: {
@@ -139,7 +139,10 @@ export default compose(
           })
         }
     ),
-    WithLoadingComponent,
+    branch(
+        props => props.data.loading,
+        renderComponent(AppLoading),
+    ),
     withHandlers({
       determineInitialScreen: props => (isNewUser, notificationPermissionAsked) => {
         console.log("isNewUser", isNewUser, "notificationPermissionAsked", notificationPermissionAsked);

@@ -4,11 +4,11 @@ import {UpsertUserMutation} from './graphql/user';
 import {graphql, withApollo} from 'react-apollo';
 import {connect} from 'react-redux';
 import {userActions} from './modules';
-import {Location, Permissions, Amplitude, AppLoading} from 'expo';
+import {Location, Permissions, Amplitude} from 'expo';
 import Router from './Router';
 import {lifecycle, compose, withHandlers, branch, renderComponent} from 'recompose';
 import {getIfPermissionAsked} from './components/api';
-import {Loading} from './components/common';
+import {AppLoading} from './components/common';
 import {getPromiseTime, getTimeInSec} from './components/api';
 import {getUserQuery} from './graphql/user';
 import {Toast} from 'antd-mobile'
