@@ -287,7 +287,7 @@ export default compose(
             daysToCoverList: [5000, 30],
             endTo: getTimeInSec()
           },
-          fetchPolicy: 'cache-and-network',
+          // fetchPolicy: 'cache-and-network',
         }
       },
     }),

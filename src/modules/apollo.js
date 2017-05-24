@@ -26,20 +26,18 @@ const networkInterface = createNetworkInterface({
   }
 });
 
-
-// getStoredState({ storage: AsyncStorage }, (err, rehydratedState) => {
-//   const client = new ApolloClient({
-//     networkInterface: networkInterface,
-//     dataIdFromObject: o => o.id,
-//     initialState: { apollo: { data: rehydratedState.apollo.data }},
-//   });
-// });
-
-
 const client = new ApolloClient({
   networkInterface: networkInterface,
-  dataIdFromObject: o => o.id,
-  // initialState: { apollo: { data: rehydratedState.apollo.data }},
+  dataIdFromObject: o => {
+    // console.log("object", o);
+    if (o.id){
+      return `${o.__typename}-${o.id}`;
+    } else if (o.restaurantId) {
+      return `${o.__typename}-${o.restaurantId}`;
+    } else {
+      return undefined;
+    }
+  },
 });
 
 export {client};

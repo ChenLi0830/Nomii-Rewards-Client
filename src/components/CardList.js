@@ -67,7 +67,7 @@ export default compose(
         {
           options: (ownProps) => ({
             variables: {userId: ownProps.userId},
-            fetchPolicy: 'cache-and-network',
+            // fetchPolicy: 'cache-and-network',
           }),
         }
     ),

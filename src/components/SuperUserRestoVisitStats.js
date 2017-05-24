@@ -45,7 +45,7 @@ export default compose(
               daysToCover: 30,
               endTo: getTimeInSec(),
             },
-            fetchPolicy: 'cache-and-network',
+            // fetchPolicy: 'cache-and-network',
           }),
         }
     ),
