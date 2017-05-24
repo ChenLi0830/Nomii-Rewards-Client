@@ -19,7 +19,7 @@ import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
 import {compose, withHandlers, withState, branch, renderComponent, pure, onlyUpdateForKeys, lifecycle} from 'recompose';
-import {getIfPermissionAsked} from './components/api';
+import {getIfPermissionAsked, getTimeInSec} from './components/api';
 import {Loading} from './components/common';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
@@ -56,8 +56,7 @@ const RouterComponent = (props) => {
   const {notificationPermissionAsked} = props.user;
   let {user} = props.data;
   console.log("RouterComponent user", user);
-  // Todo: update GraphQL and make use this condition: user.lastLoginAt!==user.registeredAt
-  const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
+  const isNewUser = user.lastLoginAt===user.registeredAt && getTimeInSec() - user.lastLoginAt < 60;// second part is for when user login the second time but that change is not updated to Dynamodb yet
   // const locationNotGranted = !user.location;
   
   let initialScreen = props.determineInitialScreen(isNewUser, notificationPermissionAsked);
