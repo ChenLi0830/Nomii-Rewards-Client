@@ -72,33 +72,6 @@ export default compose(
         });
         return true;
       },
-      fetchUser: props => async ()=>{
-        try {
-          // await AsyncStorage.removeItem("@NomiiStore:token");
-          const value = await AsyncStorage.getItem("@NomiiStore:token");
-          if (value !== null) {// Found token
-            const {token, expires} = JSON.parse(value);
-        
-            const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-            const result = await response.json();
-        
-            if (result.error) {
-              Amplitude.logEventWithProperties("login user with stored token - fail", {error: result.error});
-              return null;
-            }
-            else {
-              await Amplitude.setUserId(result.id);
-              Amplitude.logEvent("login user with stored token - success");
-              return {...result, token: token};// result is user with token
-            }
-          }
-        }
-        catch (err) {
-          console.log("err", err);
-          Amplitude.logEvent("Something went wrong (most likely network issue)");
-          Toast.offline("Bad Internet\nconnection", 2);
-        }
-      },
       initAppVariables: props => async () => {
         // Use @NomiiStore:showFeedback to track if modal is shown when app is launched
         await AsyncStorage.setItem("@NomiiStore:showFeedback", JSON.stringify(true));
@@ -107,7 +80,6 @@ export default compose(
     lifecycle({
       async componentWillMount(){
         const result = await Promise.all([
-          getPromiseTime(this.props.fetchUser(), "fetchUser"),
           getPromiseTime(this.props.cacheResourcesAsync(), "cacheResourcesAsync"),
           getPromiseTime(this.props.initAmplitude(), "initAmplitude"),
           getPromiseTime(this.props.initAppVariables(), "initAppVariables"),

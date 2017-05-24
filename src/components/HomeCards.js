@@ -214,7 +214,7 @@ export default compose(
         {
           options: (props) => ({
             variables: {id: props.userId},
-            fetchPolicy: 'cache-and-network',
+            // fetchPolicy: 'cache-and-network',
           })
         }
     ),

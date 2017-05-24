@@ -5,6 +5,7 @@ import dismissKeyboard from 'dismissKeyboard';
 // Action types
 const UPDATE_USER_ID = "UPDATE_USER_ID";
 const UPDATE_USER = "UPDATE_USER";
+const INIT_USER = "INIT_USER";
 const UPDATE_USER_LOCATION = "UPDATE_USER_LOCATION";
 const UPDATE_USER_PUSH_TOKEN = "UPDATE_USER_PUSH_TOKEN";
 
@@ -14,9 +15,13 @@ export const updateUserId = (userId) => ({
   payload: userId,
 });
 
-export const updateUser = (user) => ({
+export const updateUser = (newFields) => ({
   type: UPDATE_USER,
-  payload: user,
+  payload: newFields,
+});
+
+export const initUser = () => ({
+  type: INIT_USER,
 });
 
 export const updateUserLocation = (location) => ({
@@ -34,8 +39,8 @@ export const updateUserPushToken = (pushToken) => ({
 const initialState = {
   id: null,
   location: null,
-  // id: "1088303924608072",
-  // id: 101,
+  locationPermissionAsked: false,
+  notificationPermissionAsked: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -49,6 +54,8 @@ const reducer = (state = initialState, action) => {
       return {...state, ...action.payload};
     case "UPDATE_USER_PUSH_TOKEN":
       return {...state, pushToken: action.payload};
+    case "INIT_USER":
+      return initialState;
     default:
       return state;
   }

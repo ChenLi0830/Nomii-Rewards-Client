@@ -15,13 +15,15 @@ import AskNotificationScreen from './components/AskNotificationScreen';
 import SuperUserScreen from './components/SuperUserScreen';
 import FeedBackModal from './components/FeedBackModal';
 import SuperUserRestoVisitStats from './components/SuperUserRestoVisitStats';
-
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
 import {compose, withHandlers, withState, branch, renderComponent, pure, onlyUpdateForKeys, lifecycle} from 'recompose';
 import {getIfPermissionAsked} from './components/api';
 import {Loading} from './components/common';
+import {graphql} from 'react-apollo';
+import {getUserQuery} from './graphql/user';
+import {WithLoadingComponent} from './components/common';
 
 const styles = StyleSheet.create({
   homeNavBar: {
@@ -51,7 +53,9 @@ let notificationPermissionAsked;
 
 const RouterComponent = (props) => {
   console.log("RouterComponent props", props);
-  let {user} = props;
+  const {notificationPermissionAsked} = props.user;
+  let {user} = props.data;
+  
   // Todo: update GraphQL and make use this condition: user.lastLoginAt!==user.registeredAt
   const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
   // const locationNotGranted = !user.location;
@@ -124,10 +128,27 @@ export default compose(
         })
     ),
     branch(
-        props => !props.user || !props.user.id,
+        props => {
+          console.log("Router branch props", props);
+          return (!props.user || !props.user.id)
+        },
         renderComponent(Login),
     ),
-    withState('isReady', 'updateReady', false),
+    // 用graphql获得user，然后用这个user判断是否是newUser，是否有restaurant等等
+    graphql(
+        getUserQuery,
+        {
+          options: (props) => {
+            console.log("Router getUserQuery props", props);
+            return {
+              // fetch only if props.user.id exist
+              variables: {id: (props.user && props.user.id) ? props.user.id : ""},
+            }
+          }
+        }
+    ),
+    WithLoadingComponent,
+    // withState('isReady', 'updateReady', false),
     withHandlers({
       determineInitialScreen: props => (isNewUser, notificationPermissionAsked) => {
         console.log("isNewUser", isNewUser, "notificationPermissionAsked", notificationPermissionAsked);
@@ -138,15 +159,15 @@ export default compose(
         }
       },
     }),
-    lifecycle({
-      async componentWillMount(){
-        notificationPermissionAsked = await getIfPermissionAsked("notification");
-        this.props.updateReady(true);
-      },
-    }),
-    branch(
-        props => !props.isReady,
-        renderComponent(Loading),
-    ),
+    // lifecycle({
+    //   async componentWillMount(){
+    //     notificationPermissionAsked = await getIfPermissionAsked("notification");
+    //     this.props.updateReady(true);
+    //   },
+    // }),
+    // branch(
+    //     props => !props.isReady,
+    //     renderComponent(Loading),
+    // ),
     onlyUpdateForKeys([]),
 )(RouterComponent);
