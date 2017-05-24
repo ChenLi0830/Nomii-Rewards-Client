@@ -22,12 +22,9 @@ const RouterWrapper = (props) => {
 
 export default compose(
     connect(
-        (state) => {
-          console.log("RouterWrapper state", state);
-          return {
-            user: state.user,
-          }
-        },
+        (state) => ({
+          user: state.user,
+        }),
         {
           updateUser: userActions.updateUser,
           updateUserLocation: userActions.updateUserLocation,
@@ -42,7 +39,7 @@ export default compose(
        * */
       fetchUser: props => async ()=>{
         try {
-          // await AsyncStorage.removeItem("@NomiiStore:token");
+          await AsyncStorage.removeItem("@NomiiStore:token");
           const value = await AsyncStorage.getItem("@NomiiStore:token");
           
           // no token return user = null

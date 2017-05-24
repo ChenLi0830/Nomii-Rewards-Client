@@ -140,7 +140,9 @@ export default compose(
           }
         }
         catch (error) {
+          Alert.alert('Log in error');
           console.error(error);
+          Toast.hide();
           // Error retrieving data
         }
       },
@@ -153,23 +155,25 @@ export default compose(
           // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
           const notificationPermissionAsked = await getIfPermissionAsked("notification");
           const locationPermissionAsked = await getIfPermissionAsked("location");
-          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           // async upsertUser
-          props.mutate({
+          await props.mutate({
             variables: {
               id: user.id,
               fbName: user.name,
               token: user.token,
             }
           });
+  
+          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           Amplitude.setUserId(user.id);
-
-          Toast.hide();
         } catch (error) {
+          Alert.alert('Log in error');
           console.log("LoginAndUpsertUser error", error);
         }
+        
+        Toast.hide();
       },
     }),
     lifecycle({

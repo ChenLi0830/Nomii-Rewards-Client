@@ -8,6 +8,7 @@ mutation upsertUser($id:ID, $fbName: String, $token: String){
     registeredAt,
     lastLoginAt,
     isNomiiAdmin,
+    ownedRestaurants,
     cards {
       id,
       stampCount,
@@ -22,7 +23,22 @@ mutation upsertUser($id:ID, $fbName: String, $token: String){
         stampValidDays,
       }
     },
-    ownedRestaurants
+    awaitFeedbacks{
+      restaurantId,
+      visitedAt,
+      stampCountOfCard,
+      employeeName,
+      skipCount,
+      restaurant{
+        name,
+        imageURL
+      }
+      feedbackTags{
+        id,
+        content,
+      },
+      isNewUser,
+    }
   }
 }
 `;
@@ -32,30 +48,24 @@ query getUser($id:ID){
   user(id:$id){
     id,
     fbName,
+    registeredAt,
+    lastLoginAt,
     isNomiiAdmin,
-    cards{
-			id
+    ownedRestaurants,
+    cards {
+      id,
       stampCount,
       lastStampAt,
-      discounts,
-      PINSuccessScreens,
-      codeSuccessScreen,
       restaurant{
-        id
-        name, 
+        id,
+        name,
         imageURL,
         longitude,
-        latitude,
+        latitude
         description,
         stampValidDays,
       }
     },
-    redeemedCoupons{
-      redeemedAt,
-      couponCode
-    }
-    visitedRestaurants,
-    ownedRestaurants,
     awaitFeedbacks{
       restaurantId,
       visitedAt,

@@ -55,7 +55,7 @@ const RouterComponent = (props) => {
   console.log("RouterComponent props", props);
   const {notificationPermissionAsked} = props.user;
   let {user} = props.data;
-  
+  console.log("RouterComponent user", user);
   // Todo: update GraphQL and make use this condition: user.lastLoginAt!==user.registeredAt
   const isNewUser = Math.abs(user.lastLoginAt-user.registeredAt) < 2;
   // const locationNotGranted = !user.location;
@@ -128,27 +128,19 @@ export default compose(
         })
     ),
     branch(
-        props => {
-          console.log("Router branch props", props);
-          return (!props.user || !props.user.id)
-        },
+        props => (!props.user || !props.user.id),
         renderComponent(Login),
     ),
-    // 用graphql获得user，然后用这个user判断是否是newUser，是否有restaurant等等
     graphql(
         getUserQuery,
         {
-          options: (props) => {
-            console.log("Router getUserQuery props", props);
-            return {
-              // fetch only if props.user.id exist
-              variables: {id: (props.user && props.user.id) ? props.user.id : ""},
-            }
-          }
+          // fetch only if props.user.id exist
+          options: (props) => ({
+            variables: {id: (props.user && props.user.id) ? props.user.id : ""},
+          })
         }
     ),
     WithLoadingComponent,
-    // withState('isReady', 'updateReady', false),
     withHandlers({
       determineInitialScreen: props => (isNewUser, notificationPermissionAsked) => {
         console.log("isNewUser", isNewUser, "notificationPermissionAsked", notificationPermissionAsked);
@@ -159,15 +151,5 @@ export default compose(
         }
       },
     }),
-    // lifecycle({
-    //   async componentWillMount(){
-    //     notificationPermissionAsked = await getIfPermissionAsked("notification");
-    //     this.props.updateReady(true);
-    //   },
-    // }),
-    // branch(
-    //     props => !props.isReady,
-    //     renderComponent(Loading),
-    // ),
     onlyUpdateForKeys([]),
 )(RouterComponent);
