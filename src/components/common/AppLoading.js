@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const loadingStrings = [
+  "",
   "Loading...",
   "still loading...",
   "seriously?",
