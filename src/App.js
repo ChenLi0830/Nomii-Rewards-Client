@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {StatusBar, AsyncStorage} from 'react-native';
 import {ApolloProvider} from 'react-apollo';
 import {client} from './modules/apollo';
@@ -6,8 +6,9 @@ import store from './modules';
 import RouterWrapper from './RouterWrapper';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import {persistStore} from 'redux-persist';
-import {AppLoading} from './components/common';
+import {AppLoading} from 'expo';
 import {getPromiseTime} from './components/api';
+import {compose, withHandlers, withState, lifecycle, renderComponent, branch} from 'recompose';
 
 // Set global fonts for Text component
 const customTextProps = {
@@ -33,44 +34,38 @@ setCustomText(customTextProps);
 setCustomTextInput(customTextInputProps);
 StatusBar.setBarStyle('dark-content', true);
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  state = { rehydrated: false };
-  
-  async rehydrateReduxStore(){
-    try{
-      await persistStore(
-          store,
-          {
-            storage: AsyncStorage,
-            whitelist: ['user',],
-            debounce: 2000,
-          },
-          () => { // callback
-            console.log("this.setState({ rehydrated: true })");
-            this.setState({ rehydrated: true })
-          }
-      )
-    } catch(error) {
-      console.log("rehydrateStore error", error);
-    }
-  }
-  
-  async componentWillMount(){
-    await getPromiseTime(this.rehydrateReduxStore(), "rehydrateReduxStore");
-  }
-  
-  render() {
-    if (!this.state.rehydrated) return <AppLoading/>;
-  
-    // Amplitude.logEvent('App opened');
-    return <ApolloProvider store={store} client={client}>
-      <RouterWrapper fbUser={this.props.fbUser}/>
-    </ApolloProvider>;
-  }
-}
+const App = (props) => {
+  return <ApolloProvider store={store} client={client}>
+    <RouterWrapper fbUser={props.fbUser}/>
+  </ApolloProvider>;
+};
 
-export default App;
+export default compose(
+    withState('rehydrated', 'updateRehydrated', false),
+    withHandlers({
+      rehydrateReduxStore: props => async() => {
+        try {
+          await persistStore(
+              store,
+              {
+                storage: AsyncStorage,
+                whitelist: ['user',],
+                debounce: 2000,
+              }
+          )
+        } catch (error) {
+          console.log("rehydrateStore error", error);
+        }
+      }
+    }),
+    lifecycle({
+      async componentWillMount(){
+        await getPromiseTime(this.props.rehydrateReduxStore(), "rehydrateReduxStore");
+        this.props.updateRehydrated(true);
+      },
+    }),
+    branch(
+        props => !props.rehydrated,
+        renderComponent(AppLoading),
+    ),
+)(App);
