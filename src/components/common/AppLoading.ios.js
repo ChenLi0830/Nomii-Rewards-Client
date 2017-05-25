@@ -75,7 +75,7 @@ const Container = compose(
           // easing: Easing.out(Easing.quad),
         }).start();
   
-        props.updateIndex(props.strIndex < 5 ? props.strIndex+1 : props.strIndex);
+        props.updateIndex(props.strIndex < 6 ? props.strIndex+1 : props.strIndex);
       }
     }),
 )(AppLoading);

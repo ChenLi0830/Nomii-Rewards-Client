@@ -8,7 +8,6 @@ import { Font } from 'expo';
 import {branch, compose, lifecycle, withHandlers, pure, renderComponent} from 'recompose';
 import {getPromiseTime} from './components/api';
 import {AppLoading} from './components/common';
-
 /**
  * Purpose of this component: initialize APP - fetchUser, PreloadAssets and initAmplitude
  * */

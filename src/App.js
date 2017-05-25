@@ -6,7 +6,7 @@ import store from './modules';
 import RouterWrapper from './RouterWrapper';
 import {setCustomText, setCustomTextInput} from 'react-native-global-props';
 import {persistStore} from 'redux-persist';
-import {AppLoading} from 'expo';
+import {AppLoading} from './components/common';
 import {getPromiseTime} from './components/api';
 import {compose, withHandlers, withState, lifecycle, renderComponent, branch} from 'recompose';
 
