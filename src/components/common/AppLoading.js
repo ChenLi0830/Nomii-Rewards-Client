@@ -45,7 +45,7 @@ const AppLoading = (props) => {
   };
   
   return <View style={styles.wrapper}>
-    <View style={[StyleSheet.absoluteFill, {justifyContent: "center", marginTop: responsiveHeight(15)}]}>
+    <View style={[StyleSheet.absoluteFill, {justifyContent: "center", marginTop: responsiveHeight(25)}]}>
       <Text style={[styles.text]}>{loadingStrings[props.strIndex]}</Text>
     </View>
     

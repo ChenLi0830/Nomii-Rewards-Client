@@ -1,5 +1,5 @@
 import React from 'react';
-import {Amplitude, Asset, AppLoading} from 'expo';
+import {Amplitude, Asset} from 'expo';
 import {AsyncStorage, Text} from 'react-native';
 import App from './App';
 import {Toast} from 'antd-mobile';
@@ -7,6 +7,7 @@ import config from '../exp.json';
 import { Font } from 'expo';
 import {branch, compose, lifecycle, withHandlers, pure, renderComponent} from 'recompose';
 import {getPromiseTime} from './components/api';
+import {AppLoading} from './components/common';
 
 /**
  * Purpose of this component: initialize APP - fetchUser, PreloadAssets and initAmplitude
