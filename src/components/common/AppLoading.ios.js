@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, PixelRatio, Animated, Text, TouchableWithoutFeedback} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import {Animated, PixelRatio, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import {compose, withHandlers, withState} from 'recompose';
@@ -12,7 +11,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image:{
+  image: {
     width: 192 / PixelRatio.get(),
     marginBottom: responsiveHeight(5),
   },
@@ -45,17 +44,19 @@ const AppLoading = (props) => {
   };
   
   return <View style={styles.wrapper}>
-    <View style={[StyleSheet.absoluteFill, {justifyContent: "center", marginTop: responsiveHeight(25)}]}>
+    <View style={[StyleSheet.absoluteFill,
+      {justifyContent: "center", marginTop: responsiveHeight(25)}]}>
       <Text style={[styles.text]}>{loadingStrings[props.strIndex]}</Text>
     </View>
     
     <TouchableWithoutFeedback onPress={props.onLogoPress}>
       <Animated.View style={animatedStyle.escapingLogo}>
         <Animatable.Image style={styles.image}
-               animation="pulse" easing="ease-in" iterationCount="infinite" duration={600}
-               delay={300}
-               resizeMode="contain"
-               source={require('../../../public/images/round-corner-app-icon_192.png')}/>
+                          animation="pulse" easing="ease-in" iterationCount="infinite"
+                          duration={600}
+                          delay={300}
+                          resizeMode="contain"
+                          source={require('../../../public/images/round-corner-app-icon_192.png')}/>
       </Animated.View>
     </TouchableWithoutFeedback>
   </View>
@@ -74,8 +75,8 @@ const Container = compose(
           duration: 300,
           // easing: Easing.out(Easing.quad),
         }).start();
-  
-        props.updateIndex(props.strIndex < 6 ? props.strIndex+1 : props.strIndex);
+        
+        props.updateIndex(props.strIndex < 6 ? props.strIndex + 1 : props.strIndex);
       }
     }),
 )(AppLoading);
