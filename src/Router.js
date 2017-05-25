@@ -24,6 +24,8 @@ import {Loading} from './components/common';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
 import {AppLoading, WithLoadingComponent} from './components/common';
+import {MainDashboard, DashboardNavBarTitle} from './components/dashboard';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   homeNavBar: {
@@ -31,6 +33,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#EDEDED",
     marginTop: (Platform.OS === 'ios') ? 10 : 20,
+  },
+  dashboardNavBar: {
+    backgroundColor: null,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EDEDED",
+    marginTop: 20,
+    height: 100,
+    marginHorizontal: responsiveWidth(2),
   },
   cardListNavBar:{
     backgroundColor: null,
@@ -110,6 +120,10 @@ const RouterComponent = (props) => {
         <Scene key="nomiiAdminScreen" component = {SuperUserScreen} navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
         <Scene key="nomiiAdminVisitStats" component = {SuperUserRestoVisitStats} navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
       
+        <Scene key="businessDashboard" initial navigationBarStyle={styles.dashboardNavBar}>
+          <Scene key="mainDash" component={MainDashboard} renderTitle={() => <DashboardNavBarTitle/>}
+                 ownedRestaurant = {props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+        </Scene>
       </Scene>
   );
   
@@ -150,5 +164,6 @@ export default compose(
         }
       },
     }),
+    // withState('restaurantTitle'),
     onlyUpdateForKeys([]),
 )(RouterComponent);
