@@ -7,19 +7,20 @@ import {LinearGradient, Amplitude} from 'expo';
 import {appActions} from '../modules';
 import {connect} from 'react-redux';
 import {getUserQuery} from '../graphql/user';
-import {graphql} from 'react-apollo';
+import {graphql, withApollo} from 'react-apollo';
 import {compose, branch, withHandlers, renderComponent, pure, lifecycle} from 'recompose';
+import {getAllRestaurantCardsQuery} from '../graphql/restaurant';
 import {
   sortCardsByDistance,
   sortCardsByUrgency,
   cardIsExpired,
   getCardUrgency,
   addDistanceToCards,
-  getExpireInDays
+  getExpireInDays,
 } from './api';
-import NoLocationScreen from './NoLocationScreen'; // android and ios versions
 import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import _ from 'lodash';
+import NoLocationScreen from './NoLocationScreen'; // android and ios versions
 
 const styles = StyleSheet.create({
   scrollList: {
@@ -218,16 +219,26 @@ export default compose(
         }
     ),
     WithLoadingComponent,
+    withApollo,
     withHandlers({
       NavToCardList: props => () => {
         Amplitude.logEvent("Pressed 'Add Cards' Btn");
         Actions.cardList();
       },
+      prefetchQueries: props => () => {
+        props.client.query({
+          query: getAllRestaurantCardsQuery,
+          variables: {userId: props.userId},
+        });
+      },
     }),
     lifecycle({
+      componentWillMount(){
+        this.props.prefetchQueries();
+      },
       componentDidMount() {
         Amplitude.logEvent('Home screen shows');
-      }
+      },
     }),
     pure
 )(HomeCards);

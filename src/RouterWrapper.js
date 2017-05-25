@@ -165,8 +165,8 @@ export default compose(
           console.log("error", error);
         }
       },
-      prefetchUserQuery: props => async() => {
-        await props.client.query({
+      prefetchUserQuery: props => () => {
+        props.client.query({
           query: getUserQuery,
           variables: {id: props.fbUser.id},
         });
