@@ -139,10 +139,7 @@ export default compose(
           })
         }
     ),
-    branch(
-        props => props.data.loading,
-        renderComponent(AppLoading),
-    ),
+    WithLoadingComponent,
     withHandlers({
       determineInitialScreen: props => (isNewUser, notificationPermissionAsked) => {
         console.log("isNewUser", isNewUser, "notificationPermissionAsked", notificationPermissionAsked);

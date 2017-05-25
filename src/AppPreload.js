@@ -13,9 +13,8 @@ import {AppLoading} from './components/common';
  * Purpose of this component: initialize APP - fetchUser, PreloadAssets and initAmplitude
  * */
 const AppPreloading = (props) => {
-  // console.log("props", props);
   return (
-      <App fbUser={props.fbUser} />
+      <App/>
   );
 };
 
@@ -87,7 +86,6 @@ export default compose(
         ]);
   
         this.setState({
-          fbUser: result[0],
           isReady: true,
         });
       }

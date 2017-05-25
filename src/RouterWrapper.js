@@ -112,7 +112,7 @@ export default compose(
           // Todo handle network connection error
         }
       },
-      getLocation: props => async() => {
+      getLocation: props => async () => {
         try {
           const locationPermissionAskedBefore = await getIfPermissionAsked("location");
           console.log("locationPermissionAskedBefore", locationPermissionAskedBefore);
@@ -165,24 +165,26 @@ export default compose(
           console.log("error", error);
         }
       },
-      prefetchUserQuery: props => () => {
-        props.client.query({
+      prefetchQueries: props => async () => {
+        console.log("props.user.id", props.user.id);
+        await props.client.query({
           query: getUserQuery,
-          variables: {id: props.fbUser.id},
+          variables: {id: props.user.id},
         });
-      },
+      }
     }),
     lifecycle({
       async componentWillMount(){
-        // Async prefetch user data if fbUser exist
-        this.props.fbUser && this.props.fbUser.id && this.props.prefetchUserQuery();
-        
         // Upsert user
         const promises = [
           getPromiseTime(this.props.getLocation(), "getLocation"),
           getPromiseTime(this.props.upsertUser(), "fetchUser + upsertUser"),
         ];
         await Promise.all(promises);
+  
+        // Async prefetch user data if fbUser exist
+        await getPromiseTime(this.props.user && this.props.user.id && this.props.prefetchQueries(), "prefetchUserQuery");
+        
         this.setState({isReady: true});
       }
     }),

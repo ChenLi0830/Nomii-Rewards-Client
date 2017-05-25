@@ -36,7 +36,7 @@ StatusBar.setBarStyle('dark-content', true);
 
 const App = (props) => {
   return <ApolloProvider store={store} client={client}>
-    <RouterWrapper fbUser={props.fbUser}/>
+    <RouterWrapper/>
   </ApolloProvider>;
 };
 
