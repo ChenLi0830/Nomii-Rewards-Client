@@ -101,6 +101,7 @@ const androidText = <View style={styles.configView}>
   
   </View>
 </View>;
+
 const iosText = <View style={styles.configView}>
   <Text style={styles.configText}>
     To turn on Location Services for your iOS device:
@@ -145,7 +146,6 @@ const iosText = <View style={styles.configView}>
           .</Text>
       </View>
     </View>
-  
   </View>
 
 </View>;
@@ -199,38 +199,6 @@ export default compose(
           userWatchLocationStart: userActions.userWatchLocationStart,
         }
     ),
-    lifecycle({
-      async componentWillMount(){
-        console.log("componentWillMount locationPermissionAsked",
-            this.props.locationPermissionAsked);
-        
-        // Constantly check for location permission, redirect to 'home' screen when location is
-        // obtained
-        let location;
-        const getLocationInterval = setInterval(async () => {
-          try {
-            location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-            if (!!location) {
-              console.log("location is obtained", location);
-              this.props.updateUser({locationPermissionAsked: true});
-              this.props.updateUserLocation(location.coords);
-              
-              clearInterval(getLocationInterval);
-              
-              setTimeout(() => Actions.home(), 300);// wait 300 millisecond for location to be
-                                                    // updated.
-            }
-          }
-          catch (err) {
-            console.log("no location permission yet");
-          }
-        }, 2000);
-      },
-    }),
-    branch(
-        props => props.locationPermissionAsked === undefined,
-        renderComponent(Loading),
-    ),
     withHandlers({
       askLocationPermission: (props) => async () => {
         try {
@@ -241,7 +209,7 @@ export default compose(
           if (status === 'granted') {
             Toast.loading('', 0);
             Amplitude.logEvent("User allowed location request");
-  
+            
             await props.userWatchLocationStart();
             
             // redirect screen
