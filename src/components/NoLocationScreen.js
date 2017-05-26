@@ -171,18 +171,14 @@ const NoLocationScreen = (props) => {
     </Text>
     
     {
-      props.locationPermissionAsked
+      props.locationPermissionAsked && Platform.OS === "ios"
       &&
-      (
-          Platform.OS === "android" ?
-              androidText
-              :
-              iosText
-      )
+      iosText
     }
     
     {
-      !props.locationPermissionAsked
+      // permissions in android can be asked for more than once
+      (!props.locationPermissionAsked || Platform.OS === "android")
       &&
       <Button onPress={props.askLocationPermission}>
         ENABLE LOCATION
