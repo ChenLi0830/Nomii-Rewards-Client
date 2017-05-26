@@ -75,6 +75,7 @@ export default compose(
         {
           updateUserLocation: userActions.updateUserLocation,
           updateUser: userActions.updateUser,
+          userWatchLocationStart: userActions.userWatchLocationStart,
         }
     ),
     withHandlers({
@@ -84,7 +85,6 @@ export default compose(
           
           // redirect screen
           const {status} = await Permissions.askAsync(Permissions.LOCATION);
-          // console.log("status",status);
           if (status === 'granted') {
             Toast.loading('', 0);
             Amplitude.logEvent("User allowed location request");
