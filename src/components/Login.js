@@ -121,7 +121,7 @@ export default compose(
           if (type === 'success') {
             // Get the user's name using Facebook's Graph API
             // const user = await props.upsertUser(token, expires, props);
-            Toast.loading('Loading...', 0);
+            
             await AsyncStorage.setItem("@NomiiStore:token", JSON.stringify({token, expires}));
 
             // login through fb
@@ -152,12 +152,8 @@ export default compose(
     withHandlers({
       LoginAndUpsertUser: props => async () => {
         try {
+          Toast.loading('Loading...', 0);
           const user = await props.facebookLogin();
-
-          // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
-          const notificationPermissionAsked = !!(await getIfPermissionAsked("notification")) || !!props.user.notificationPermissionAsked;
-          const locationPermissionAsked = !!(await getIfPermissionAsked("location")) || !!props.user.locationPermissionAsked;
-          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           // async upsertUser
           await props.mutate({
@@ -167,14 +163,22 @@ export default compose(
               token: user.token,
             }
           });
-
+          
           Amplitude.setUserId(user.id);
-        } catch (error) {
+
+          // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
+          const notificationPermissionAsked = !!(await getIfPermissionAsked("notification")) || !!props.user.notificationPermissionAsked;
+          const locationPermissionAsked = !!(await getIfPermissionAsked("location")) || !!props.user.locationPermissionAsked;
+          // state needs to be updated at the end, so that Router will only be updated after login is finished
+          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
+        }
+        catch (error) {
           Alert.alert('Log in error');
           console.log("LoginAndUpsertUser error", error);
         }
-        
-        Toast.hide();
+        finally {
+          Toast.hide();
+        }
       },
     }),
     lifecycle({
