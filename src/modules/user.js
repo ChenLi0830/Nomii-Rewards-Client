@@ -39,7 +39,7 @@ export const updateUserPushToken = (pushToken) => ({
 /**
  * start to watch user location
  */
-export const userWatchLocationStart = async () => {
+export const userWatchLocationStart = () => {
   return async (dispatch) => {
     // Keep track of User's location
     const options = {

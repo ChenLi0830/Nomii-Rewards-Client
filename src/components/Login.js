@@ -138,7 +138,6 @@ export default compose(
             }
           } else {
             Amplitude.logEvent('FB login cancelled');
-            Alert.alert('Log in cancelled');
           }
         }
         catch (error) {
