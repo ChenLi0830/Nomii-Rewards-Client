@@ -24,34 +24,43 @@ const styles = StyleSheet.create({
   dateView: {
     alignItems: 'center',
     backgroundColor: "#f9f9f9",
-    marginTop: responsiveHeight(6),
+    paddingVertical: responsiveHeight(6),
   },
   dateText:{
     fontSize: responsiveFontSize(2.8),
-    fontWeight: "bold"
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginLeft: responsiveWidth(10),
   },
   statsContainerView:{
+    marginTop: responsiveHeight(2),
     alignItems: 'center',
   },
   statsRow:{
-    width: responsiveWidth(90),
+    width: responsiveWidth(80),
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: responsiveWidth(4),
   },
   statsBox:{
-    width: responsiveWidth(40),
+    width: responsiveWidth(38),
     backgroundColor: "#fff",
-    borderRadius: 2,
+    borderRadius: responsiveFontSize(1.5),
     borderWidth: 1,
     borderColor: "#e4e4e4",
+    alignItems: "center",
+    justifyContent: "space-around",
+    height: responsiveHeight(15),
   },
   statsTitle: {
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsiveFontSize(2.2),
     color: "#727a85",
+    textAlign: "center",
   },
   statsNumber: {
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsiveFontSize(3),
     color: "#3c434c",
+    // fontWeight: "600",
   },
   
   
@@ -169,7 +178,7 @@ const MainDashboard = (props) => {
   
   const tabContents = statisticList.map((statistic,i) => {
     
-    const statsTitles = ["New Customers", "Return Customers", "Total Customers", "Stamps"];
+    const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
     const statsNumbers = [20, 9, 1280, 31];
     let boxes = [];
     for (let i=0; i<2; i++){
