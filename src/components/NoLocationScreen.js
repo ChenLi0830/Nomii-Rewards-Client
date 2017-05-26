@@ -200,6 +200,7 @@ export default compose(
         {
           updateUserLocation: userActions.updateUserLocation,
           updateUser: userActions.updateUser,
+          userWatchLocationStart: userActions.userWatchLocationStart,
         }
     ),
     lifecycle({
@@ -241,45 +242,11 @@ export default compose(
           
           // redirect screen
           const {status} = await Permissions.askAsync(Permissions.LOCATION);
-          // console.log("status",status);
           if (status === 'granted') {
             Toast.loading('', 0);
-            
             Amplitude.logEvent("User allowed location request");
-            
-            // Keep track of User's location
-            const options = {
-              enableHighAccuracy: true,
-              timeInterval: 5000,
-              distanceInterval: 5
-            };
-            
-            await Location.watchPositionAsync(options, (updateResult) => {
-              // console.log("updateResult", updateResult);
-              props.updateUserLocation(updateResult.coords);
-            });
-            
-            // iOS will update location right away while android will wait, the current location is
-            // obtained here for android
-            if (Platform.OS === 'android') {
-              //Get instant location
-              let location = {};
-              
-              await Promise.race([
-                Location.getCurrentPositionAsync({enableHighAccuracy: true}),
-                new Promise((resolve, reject) => setTimeout(
-                    () => reject(new Error("Get Location Timeout")), 5000))
-              ])
-                  .then(result => {
-                    location = result;
-                  })
-                  .catch(error => {
-                    Toast.offline("There is something wrong with\nyour system location settings",3);
-                  });
-              
-              // console.log("location", location);
-              props.updateUserLocation(location.coords);
-            }
+  
+            await props.userWatchLocationStart();
             
             // redirect screen
             setTimeout(async () => {
@@ -290,7 +257,9 @@ export default compose(
           else { // location is not granted
             Amplitude.logEvent("User denied location request");
             console.log(new Error('Location permission not granted'));
-            props.updateUserLocation(null);
+            
+            // // update state so that the screen with config guide will show
+            // props.updateUserLocation(null);
           }
           return status;
         }

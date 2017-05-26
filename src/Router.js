@@ -1,14 +1,14 @@
 import React from 'react';
-import {StyleSheet, Platform, Alert, View} from 'react-native';
-import {Router, Scene, Actions} from 'react-native-router-flux';
+import {Platform, StyleSheet, View} from 'react-native';
+import {Actions, Router, Scene} from 'react-native-router-flux';
 import Login from './components/Login';
 import Swiper from './components/Swiper';
 import HomeCards from './components/HomeCards';
 import CardList from './components/CardList';
 import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
-import {RewardScreen} from './components/common';
-import AssignPIN from './components/AssignPIN'
+import {RewardScreen, WithLoadingComponent} from './components/common';
+import AssignPIN from './components/AssignPIN';
 import ShowStats from './components/ShowStats';
 import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
@@ -18,12 +18,10 @@ import SuperUserRestoVisitStats from './components/SuperUserRestoVisitStats';
 import {connect} from 'react-redux';
 import NavBarLogo from './components/NavBarLogo';
 import InputPinScreen from './components/InputPinScreen';
-import {compose, withHandlers, withState, branch, renderComponent, pure, onlyUpdateForKeys, lifecycle} from 'recompose';
-import {getIfPermissionAsked, getTimeInSec} from './components/api';
-import {Loading} from './components/common';
+import {branch, compose, onlyUpdateForKeys, renderComponent, withHandlers} from 'recompose';
+import {getTimeInSec} from './components/api';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
-import {AppLoading, WithLoadingComponent} from './components/common';
 
 const styles = StyleSheet.create({
   homeNavBar: {

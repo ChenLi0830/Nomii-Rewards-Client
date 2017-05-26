@@ -101,7 +101,9 @@ const Login = (props) => {
 // Container
 export default compose(
     connect(
-        null,
+        (state) => ({
+          user: state.user,
+        }),
         {
           updateUser: userActions.updateUser,
         }
@@ -153,8 +155,8 @@ export default compose(
           const user = await props.facebookLogin();
 
           // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
-          const notificationPermissionAsked = await getIfPermissionAsked("notification");
-          const locationPermissionAsked = await getIfPermissionAsked("location");
+          const notificationPermissionAsked = !!(await getIfPermissionAsked("notification")) || !!props.user.notificationPermissionAsked;
+          const locationPermissionAsked = !!(await getIfPermissionAsked("location")) || !!props.user.locationPermissionAsked;
           props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           // async upsertUser

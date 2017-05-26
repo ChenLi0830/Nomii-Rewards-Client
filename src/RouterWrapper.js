@@ -28,6 +28,7 @@ export default compose(
         {
           updateUser: userActions.updateUser,
           updateUserLocation: userActions.updateUserLocation,
+          userWatchLocationStart: userActions.userWatchLocationStart,
           initUser: userActions.initUser,
         }
     ),
@@ -87,8 +88,8 @@ export default compose(
           // upsert user
           if (user !== null) {
             // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
-            const notificationPermissionAsked = await getIfPermissionAsked("notification");
-            const locationPermissionAsked = await getIfPermissionAsked("location");
+            const notificationPermissionAsked = !!(await getIfPermissionAsked("notification")) || !!props.user.notificationPermissionAsked;
+            const locationPermissionAsked = !!(await getIfPermissionAsked("location")) || !!props.user.locationPermissionAsked;
             props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
   
             // async upsertUser
@@ -114,55 +115,16 @@ export default compose(
       },
       getLocation: props => async () => {
         try {
-          const locationPermissionAskedBefore = await getIfPermissionAsked("location");
-          console.log("locationPermissionAskedBefore", locationPermissionAskedBefore);
-          // if (locationPermissionAskedBefore)
           const locationPermission = await Permissions.getAsync(Permissions.LOCATION);
-          console.log("locationPermission  ", locationPermission);
-          
-          const notificationPermissionAsked = await getIfPermissionAsked("notification");
-          console.log("notificationPermissionAsked", notificationPermissionAsked);
-          const notifResponse = await Permissions.getAsync(Permissions.REMOTE_NOTIFICATIONS);
-          console.log("notification permission response ", notifResponse);
-          
-          let location = {};
           
           if (locationPermission.status === "granted"){
-            // Keep track of User's location
-            const options = {
-              enableHighAccuracy: true,
-              timeInterval: 5000,
-              distanceInterval: 5
-            };
-  
-            Location.watchPositionAsync(options, (updateResult) => {
-              console.log("updateResult.coords", updateResult.coords);
-              props.updateUserLocation(updateResult.coords);
-            })
-                .catch(error => {
-                  console.log("error", error);
-                  console.log("location not permitted");
-                });
-  
-            await Promise.race([
-              Location.getCurrentPositionAsync({enableHighAccuracy: true}),
-              // 2s Timeout for Android phones system version < 6
-              new Promise((resolve, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
-            ])
-                .then(result => {
-                  console.log("location", location);
-                  location = result
-                })
-                .catch(error => {
-                  console.log("get location timed out", error);
-                });
+            await props.userWatchLocationStart();
+          } else {
+            console.log("App doesn't have location permission");
           }
-          
-          props.updateUserLocation(location.coords);
         }
         catch (error) {
-          console.log("App doesn't have location permission");
-          console.log("error", error);
+          console.log("Error running Permissions.getAsync(Permissions.LOCATION)", error);
         }
       },
       prefetchQueries: props => async () => {
