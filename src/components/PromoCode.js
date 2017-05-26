@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TextInput, Image, Keyboard} from 'react-native';
+import {Image, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 import {Button} from './common';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
@@ -9,10 +9,9 @@ import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import {getUserQuery} from '../graphql/user';
-import {compose, withHandlers, lifecycle} from 'recompose';
+import {compose, lifecycle, withHandlers} from 'recompose';
 import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
-import {getIfPermissionAsked} from './api';
 
 const styles = StyleSheet.create({
   view: {
@@ -110,6 +109,7 @@ export default compose(
           message: state.promoCode.message,
           userId: state.user.id,
           location: state.user.location,
+          notificationPermissionAsked: state.user.notificationPermissionAsked,
         }),
         {
           submitPromoFailed: promoActions.submitPromoFailed,
@@ -135,14 +135,14 @@ export default compose(
               // console.log("redeem coupon result", result);
               Toast.hide();
               Keyboard.dismiss();
-
+              
               // Calc PromoSuccess Screen content
               const redeemedCoupons = result.data.redeemPromo.redeemedCoupons;
-              const redeemedCoupon = redeemedCoupons[redeemedCoupons.length-1];
+              const redeemedCoupon = redeemedCoupons[redeemedCoupons.length - 1];
               
               let codeSuccessScreen = redeemedCoupon.coupon.codeSuccessScreen;
               let restaurantName = redeemedCoupon.restaurantName;
-  
+              
               Amplitude.logEventWithProperties("Redeem coupon succeeded", {...redeemedCoupon});
               
               Actions.promoSuccess({codeSuccessScreen, restaurantName});
@@ -157,16 +157,16 @@ export default compose(
       },
       userSkipPromo: props => () => {
         Keyboard.dismiss();
-        setTimeout(async() => {
-          const notificationPermissionAsked = await getIfPermissionAsked("notification");
-          if (notificationPermissionAsked) {
+        setTimeout(async () => {
+          if (props.notificationPermissionAsked) {
             Actions.home();
           } else {
             Actions.askNotification();
           }
           props.userChangedScreen();
           Amplitude.logEvent("Skip promo code");
-        },300)}
+        }, 300)
+      }
     }),
     lifecycle({
       componentDidMount() {

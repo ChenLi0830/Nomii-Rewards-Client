@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, AsyncStorage} from 'react-native';
-import {Permissions, Notifications, Amplitude} from 'expo';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Amplitude, Notifications, Permissions} from 'expo';
 import {
+  responsiveFontSize,
   responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize
+  responsiveWidth
 } from 'react-native-responsive-dimensions';
 import {Button} from '../components/common';
 import {userAddPushTokenMutation} from '../graphql/user';
@@ -12,8 +12,8 @@ import {connect} from 'react-redux';
 import {graphql} from 'react-apollo';
 import {Actions} from 'react-native-router-flux';
 import {Toast} from 'antd-mobile';
-import {compose, withHandlers, lifecycle} from 'recompose';
-import {setIfPermissionAsked, getIfPermissionAsked} from './api';
+import {compose, lifecycle, withHandlers} from 'recompose';
+import {userActions} from '../modules';
 
 const styles = new StyleSheet.create({
   wrapperView: {
@@ -70,7 +70,7 @@ const AskNotificationScreen = (props) => {
       <Button onPress={props.onBtnPressed}>
         ENABLE NOTIFICATION
       </Button>
-      <Button onPress={props.onSkipPressed} type = "skip">
+      <Button onPress={props.onSkipPressed} type="skip">
         Not Now
       </Button>
     </View>
@@ -82,22 +82,22 @@ export default compose(
         (state) => ({
           userId: state.user.id,
           location: state.user.location,
-        })
+          locationPermissionAsked: state.user.locationPermissionAsked,
+        }),
+        {updateUser: userActions.updateUser}
     ),
     graphql(userAddPushTokenMutation),
     withHandlers({
       //registerForPushNotificationsAsync
-      onBtnPressed: props => async() => {
-        // Android remote notification permissions are granted during the app
-        // install, so this will only ask on iOS
+      onBtnPressed: props => async () => {
         try {
-          await setIfPermissionAsked("notification");
+          props.updateUser({notificationPermissionAsked: true});
           let {status} = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
           
           // Stop here if the user did not grant permissions
           if (status === 'granted') {
             Toast.loading("Saving...", 0);
-  
+            
             Amplitude.logEvent("User allowed notification request");
             
             // Get the token that uniquely identifies this device
@@ -110,10 +110,7 @@ export default compose(
               }
             });
             
-            AsyncStorage.setItem("@NomiiStore:pushToken", token);
-  
-            const locationPermissionAsked = await getIfPermissionAsked("location");
-            if (locationPermissionAsked) {
+            if (props.locationPermissionAsked) {
               Actions.home();
             } else {
               Actions.askLocation();
@@ -132,8 +129,7 @@ export default compose(
       onSkipPressed: props => async () => {
         Amplitude.logEvent("User skipped notification request");
         
-        const locationPermissionAsked = await getIfPermissionAsked("location");
-        if (locationPermissionAsked) {
+        if (props.locationPermissionAsked) {
           Actions.home();
         } else {
           Actions.askLocation();
@@ -143,6 +139,10 @@ export default compose(
     lifecycle({
       componentDidMount(){
         Amplitude.logEvent("Ask notification screen shows up");
+        if (Platform.OS === "android") {
+          // Android remote notification permissions are granted during the app install
+          this.props.onBtnPressed();
+        }
       }
     }),
 )(AskNotificationScreen);

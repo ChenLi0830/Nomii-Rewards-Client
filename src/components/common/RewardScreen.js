@@ -1,15 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Platform, AsyncStorage} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import {Button} from './Button';
 import {Actions} from 'react-native-router-flux';
-import {graphql} from 'react-apollo';
 import {connect} from 'react-redux';
-import {userAddPushTokenMutation} from '../../graphql/user';
 import {feedbackActions} from '../../modules';
-import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
-import {compose, lifecycle, withHandlers} from 'recompose';
-import {Amplitude} from 'expo';
-import {getIfPermissionAsked} from '../api';
+import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
+import {compose, withHandlers} from 'recompose';
 
 const styles = StyleSheet.create({
   wrapper: {},
@@ -103,14 +99,13 @@ const containerComponent = compose(
     connect(
         state => ({
           userId: state.user.id,
+          notificationPermissionAsked: state.user.notificationPermissionAsked
         }),
         {toggleFeedbackModal: feedbackActions.toggleFeedbackModal}
     ),
     withHandlers({
       btnPressed: props => async () => {
-        let notificationPermissionAsked = await getIfPermissionAsked("notification");
-        // console.log("location screen notificationPermissionAsked", notificationPermissionAsked);
-        if (notificationPermissionAsked) {
+        if (props.notificationPermissionAsked) {
           Actions.home();
           console.log("toggleFeedbackModal from congrats screen");
           props.toggleFeedbackModal(true);

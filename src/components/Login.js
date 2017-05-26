@@ -155,6 +155,7 @@ export default compose(
           // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage
           const notificationPermissionAsked = await getIfPermissionAsked("notification");
           const locationPermissionAsked = await getIfPermissionAsked("location");
+          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           // async upsertUser
           await props.mutate({
@@ -164,8 +165,6 @@ export default compose(
               token: user.token,
             }
           });
-  
-          props.updateUser({id: user.id, name: user.name, notificationPermissionAsked, locationPermissionAsked});
 
           Amplitude.setUserId(user.id);
         } catch (error) {
