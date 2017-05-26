@@ -53,6 +53,7 @@ export default compose(
           // if token is valid and user is persisted, then directly return info from persisted user
           if (expires > getTimeInSec() && props.user && props.user.id) {
             Amplitude.logEvent("login user with persisted data");
+            console.log("login user with persisted data");
             return {name: props.user.name, id: props.user.id, token: token};
           }
       
@@ -66,7 +67,7 @@ export default compose(
           }
           else {
             Amplitude.logEvent("login user with stored token - success");
-            console.log("result", result);
+            console.log("login user with stored token and fetch user from fb");
             const {name, id} = result;
             return {name, id, token};// result is user with token
           }
@@ -83,8 +84,8 @@ export default compose(
         try {
           const user = await props.fetchUser();
   
-          console.log("fetchUser result", user);
-  
+          // console.log("fetchUser result", user);
+          console.log("routerWrapper props.user", props.user);
           // upsert user
           if (user !== null) {
             // update redux user state - legacy issue - store permissionAsked variable into redux store instead of AsyncStorage

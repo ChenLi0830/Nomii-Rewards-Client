@@ -29,11 +29,6 @@ const store = createStore(
     )
 );
 
-// persistent storage
-// persistStore(store, {storage: AsyncStorage});
-
-// const persistor = createPersistor(store, { storage: AsyncStorage });
-
 export default store;
 
 export {promoActions, inputPinActions, appActions, userActions, createPinActions, feedbackActions};
