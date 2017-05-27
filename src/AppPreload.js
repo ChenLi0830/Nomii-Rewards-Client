@@ -8,6 +8,8 @@ import { Font } from 'expo';
 import {branch, compose, lifecycle, withHandlers, pure, renderComponent} from 'recompose';
 import {getPromiseTime} from './components/api';
 import {AppLoading} from './components/common';
+import Sentry from 'sentry-expo';
+
 /**
  * Purpose of this component: initialize APP - fetchUser, PreloadAssets and initAmplitude
  * */
@@ -32,6 +34,22 @@ export default compose(
   
         await Amplitude.initialize(apiKey);
         Amplitude.logEvent("Open Nomii Rewards");
+      },
+      /**
+       * Config Sentry - crash/fatal JS report
+       * */
+      initSentry: props => async () => {
+        let publicDNS;
+        switch (config.slug) {
+          case "nomii-rewards-exponentjs":
+            publicDNS = '803bfb08c172b8c368784b020106cfd7'; // production
+            break;
+          default:
+            publicDNS = 'https://3e2474e12651427396d9ef1c0a79261e@sentry.io/172872'; // staging
+            break;
+        }
+        
+        Sentry.config(publicDNS).install();
       },
       cacheResourcesAsync: props => async () => {
         const images = [
@@ -82,6 +100,7 @@ export default compose(
           getPromiseTime(this.props.cacheResourcesAsync(), "cacheResourcesAsync"),
           getPromiseTime(this.props.initAmplitude(), "initAmplitude"),
           getPromiseTime(this.props.initAppVariables(), "initAppVariables"),
+          getPromiseTime(this.props.initSentry(), "initSentry"),
         ]);
   
         this.setState({
