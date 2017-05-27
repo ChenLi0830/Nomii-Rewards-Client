@@ -31,5 +31,17 @@
     "package": "com.nomii.rewards.dev",
     "versionCode": 8
   },
-  "androidShowExponentNotificationInShellApp": false
+  "androidShowExponentNotificationInShellApp": false,
+  "hooks": {
+    "postPublish": [
+      {
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "nomii",
+          "project": "nomii-rewards-staging",
+          "authToken": "527bb3022e1249d697ea211cd721fe7403c69cb3faba4dae88aeea7668b541dc"
+        }
+      }
+    ]
+  }
 }

@@ -42,7 +42,7 @@ export default compose(
         let publicDNS;
         switch (config.slug) {
           case "nomii-rewards-exponentjs":
-            publicDNS = '803bfb08c172b8c368784b020106cfd7'; // production
+            publicDNS = 'https://b09bb6294d254b009ba84d60ed5881b3@sentry.io/172874'; // production
             break;
           default:
             publicDNS = 'https://3e2474e12651427396d9ef1c0a79261e@sentry.io/172872'; // staging
