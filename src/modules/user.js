@@ -1,6 +1,8 @@
 import {Actions} from 'react-native-router-flux';
-import { Toast } from 'antd-mobile';
+import { Toast} from 'antd-mobile';
 import dismissKeyboard from 'dismissKeyboard';
+import {Amplitude, Location} from 'expo';
+import {Platform} from 'react-native';
 
 // Action types
 const UPDATE_USER_ID = "UPDATE_USER_ID";
@@ -34,6 +36,50 @@ export const updateUserPushToken = (pushToken) => ({
   payload: pushToken,
 });
 
+/**
+ * start to watch user location
+ */
+export const userWatchLocationStart = () => {
+  return async (dispatch) => {
+    // Keep track of User's location
+    const options = {
+      enableHighAccuracy: true,
+      timeInterval: 5000,
+      distanceInterval: 5
+    };
+  
+    await Location.watchPositionAsync(options, (updateResult) => {
+      console.log("updateResult", updateResult);
+      dispatch(updateUserLocation(updateResult.coords));
+    });
+  
+    // iOS will update location right away while android will wait, the current location is
+    // obtained here for android
+    if (Platform.OS === 'android' && Platform.Version < 24) {
+      //Get instant location
+      let location = {};
+    
+      await Promise.race([
+        Location.getCurrentPositionAsync({enableHighAccuracy: true}),
+        new Promise((resolve, reject) => setTimeout(
+            () => reject(new Error("Get Location Timeout")), 5000))
+      ])
+          .then(result => {
+            console.log("result", result);
+            location = result;
+          })
+          .catch(error => {
+            if (Platform.OS === "android"){
+              console.log("Platform.Version", Platform.Version);
+            }
+            console.log("Location.getCurrentPositionAsync error", error);
+            Toast.offline("There is something wrong with\nyour system location settings",3);
+          });
+    
+      dispatch(updateUserLocation(location.coords));
+    }
+  }
+};
 
 // Reducer
 const initialState = {

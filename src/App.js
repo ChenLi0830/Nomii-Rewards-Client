@@ -43,25 +43,21 @@ const App = (props) => {
 export default compose(
     withState('rehydrated', 'updateRehydrated', false),
     withHandlers({
-      rehydrateReduxStore: props => async() => {
-        try {
-          await persistStore(
-              store,
-              {
-                storage: AsyncStorage,
-                whitelist: ['user',],
-                debounce: 2000,
-              }
-          )
-        } catch (error) {
-          console.log("rehydrateStore error", error);
-        }
+      rehydrateReduxStore: props => () => {
+        persistStore(
+            store,
+            {
+              storage: AsyncStorage,
+              whitelist: ['user'],
+              // debounce: 2000,
+            },
+            () => props.updateRehydrated(true)
+        )
       }
     }),
     lifecycle({
-      async componentWillMount(){
-        await getPromiseTime(this.props.rehydrateReduxStore(), "rehydrateReduxStore");
-        this.props.updateRehydrated(true);
+      componentWillMount(){
+        this.props.rehydrateReduxStore()
       },
     }),
     branch(

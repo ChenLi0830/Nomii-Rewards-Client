@@ -7,8 +7,8 @@ import HomeCards from './components/HomeCards';
 import CardList from './components/CardList';
 import PromoCode from './components/PromoCode';
 import PromoSuccess from './components/PromoSuccess';
-import {RewardScreen} from './components/common';
-import AssignPIN from './components/AssignPIN'
+import {RewardScreen, WithLoadingComponent} from './components/common';
+import AssignPIN from './components/AssignPIN';
 import ShowStats from './components/ShowStats';
 import AskLocationScreen from './components/AskLocationScreen';
 import AskNotificationScreen from './components/AskNotificationScreen';
@@ -164,6 +164,5 @@ export default compose(
         }
       },
     }),
-    // withState('restaurantTitle'),
     onlyUpdateForKeys([]),
 )(RouterComponent);

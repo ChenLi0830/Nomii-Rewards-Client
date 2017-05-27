@@ -1,10 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, AsyncStorage} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {Button} from './common';
 import {Actions} from 'react-native-router-flux';
-import {responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
+import {responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import {compose, withHandlers} from 'recompose';
-import {getIfPermissionAsked} from './api';
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
 
@@ -85,13 +84,12 @@ const PromoSuccess = (props) => {
 
 export default compose(
     connect(
-        null,
+        (state) => ({notificationPermissionAsked: state.user.notificationPermissionAsked}),
         {toggleFeedbackModal: feedbackActions.toggleFeedbackModal}
     ),
     withHandlers({
       btnClick: props => async () => {
-        const notificationPermissionAsked = await getIfPermissionAsked("notification");
-        if (notificationPermissionAsked) {
+        if (props.notificationPermissionAsked) {
           Actions.home();
           // coupon is for a specific restaurant
           if (props.restaurantName){
