@@ -138,17 +138,23 @@ export default compose(
     }),
     lifecycle({
       async componentWillMount(){
-        // Upsert user
-        const promises = [
-          getPromiseTime(this.props.getLocation(), "getLocation"),
-          getPromiseTime(this.props.upsertUser(), "fetchUser + upsertUser"),
-        ];
-        await Promise.all(promises);
+        try {
+          // Upsert user
+          const promises = [
+            getPromiseTime(this.props.getLocation(), "getLocation"),
+            getPromiseTime(this.props.upsertUser(), "fetchUser + upsertUser"),
+          ];
+          await Promise.all(promises)
   
-        // Async prefetch user data if fbUser exist
-        await getPromiseTime(this.props.user && this.props.user.id && this.props.prefetchQueries(), "prefetchUserQuery");
-        
-        this.setState({isReady: true});
+          // Async prefetch user data if fbUser exist
+          await getPromiseTime(this.props.user && this.props.user.id && this.props.prefetchQueries(), "prefetchUserQuery");
+  
+          this.setState({isReady: true});
+        }
+        catch(error) {
+          alert("Network request failed");
+          console.log("render RouterWrapper error", error);
+        }
       }
     }),
     branch(
