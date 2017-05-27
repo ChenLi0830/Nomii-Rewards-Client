@@ -12,6 +12,7 @@ import {Amplitude} from 'expo';
 import _ from 'lodash';
 import {Loading} from '../common/index';
 import { Tabs, WhiteSpace } from 'antd-mobile';
+import SimpleChart from './BarChart';
 const TabPane = Tabs.TabPane;
 
 
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "flex-start",
     marginLeft: responsiveWidth(10),
+    color: "rgba(0,0,0,0.7)"
   },
   statsContainerView:{
     marginTop: responsiveHeight(2),
@@ -209,6 +211,10 @@ const MainDashboard = (props) => {
           Friday, May 12
         </Text>
     
+        <View style={styles.statsContainerView}>
+          <SimpleChart/>
+        </View>
+      
         <View style={styles.statsContainerView}>
           {boxes}
         </View>
