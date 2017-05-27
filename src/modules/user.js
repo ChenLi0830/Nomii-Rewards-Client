@@ -49,13 +49,13 @@ export const userWatchLocationStart = () => {
     };
   
     await Location.watchPositionAsync(options, (updateResult) => {
-      // console.log("updateResult", updateResult);
+      console.log("updateResult", updateResult);
       dispatch(updateUserLocation(updateResult.coords));
     });
   
     // iOS will update location right away while android will wait, the current location is
     // obtained here for android
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android' && Platform.Version < 24) {
       //Get instant location
       let location = {};
     
@@ -65,9 +65,14 @@ export const userWatchLocationStart = () => {
             () => reject(new Error("Get Location Timeout")), 5000))
       ])
           .then(result => {
+            console.log("result", result);
             location = result;
           })
           .catch(error => {
+            if (Platform.OS === "android"){
+              console.log("Platform.Version", Platform.Version);
+            }
+            console.log("Location.getCurrentPositionAsync error", error);
             Toast.offline("There is something wrong with\nyour system location settings",3);
           });
     
