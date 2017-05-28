@@ -2,18 +2,9 @@ import React, {Component} from 'react';
 import{ StyleSheet, View} from 'react-native';
 import Chart from 'react-native-chart';
 import {responsiveWidth, responsiveHeight, responsiveFontSize} from 'react-native-responsive-dimensions';
+import HightlightContainer from './HightlightContainer';
 
 const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: 'white',
-    width: responsiveWidth(90),
-    height: responsiveHeight(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: responsiveFontSize(1),
-  },
   container: {
     width: responsiveWidth(86),
     height: responsiveHeight(22),
@@ -40,27 +31,27 @@ const data = [
 class SimpleChart extends Component {
   render() {
     return (
-        <View style={styles.wrapper}>
-          <View style={styles.container}>
-            <Chart
-                style={styles.chart}
-                data={data}
-                verticalGridStep={5}
-                type="bar"
-                showDataPoint={true}
-                lineWidth={0}
-                axisLineWidth={0}
-                cornerRadius={2}
-                widthPercent={2.5}
-                hideVerticalGridLines={true}
-                gridColor='#eee'
-                color={'#E31155'}
-                labelFontSize={responsiveFontSize(1.5)}
-                axisLabelColor="#485465"
-                animationDuration={3000}
-            />
-          </View>
-        </View>
+    <HightlightContainer>
+      <View style={styles.container}>
+        <Chart
+            style={styles.chart}
+            data={data}
+            verticalGridStep={5}
+            type="bar"
+            showDataPoint={true}
+            lineWidth={0}
+            axisLineWidth={0}
+            cornerRadius={2}
+            widthPercent={2.5}
+            hideVerticalGridLines={true}
+            gridColor='#eee'
+            color={'#E31155'}
+            labelFontSize={responsiveFontSize(1.5)}
+            axisLabelColor="#485465"
+            animationDuration={3000}
+        />
+      </View>
+    </HightlightContainer>
     );
   }
 }
