@@ -65,92 +65,6 @@ const styles = StyleSheet.create({
     color: "#3c434c",
     // fontWeight: "600",
   },
-  
-  
-  
-  
-  
-  
-  
-  assignPINTitle: {
-    color: '#262626',
-    fontSize: 30,
-    textAlign: 'center',
-    fontWeight: "bold",
-  },
-  PINList: {
-    marginVertical: 30,
-    borderTopWidth: 1,
-    borderTopColor: "#ECF0F1",
-    width: responsiveWidth(100),
-  },
-  // statsTitle: {
-  //   color: '#262626',
-  //   fontSize: 24,
-  //   textAlign: 'center',
-  //   fontWeight: "bold",
-  // },
-  // statsNumber: {
-  //   color: '#009FE3',
-  //   fontSize: 40,
-  //   textAlign: 'center',
-  //   fontWeight: "normal",
-  // },
-  image: {
-    width: responsiveWidth(40),
-  },
-  button: {
-    marginTop: 20,
-  },
-  tabListView: {
-    width: responsiveWidth(100),
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#DCDCDC",
-    marginVertical: responsiveHeight(100) > 600 ? 10 : 0,
-  },
-  tabView: {
-    // borderBottomWidth: 2,
-    // borderBottomColor: "#080808",
-    width: 150,
-    alignItems: "center",
-    height: 35,
-    justifyContent: "space-between",
-  },
-  tabText: {
-    fontSize: 18,
-    fontWeight: "300",
-  },
-  tabSelected: {
-    width: 120,
-    borderBottomWidth: 2,
-    borderBottomColor: "#080808",
-    bottom: -2,
-  },
-  assignPINView: {
-    marginVertical: 40,
-  },
-  assignPINView2: {
-    marginBottom: responsiveHeight(2),
-    justifyContent: "space-around",
-    flex: 1.5,
-    alignItems: "center",
-    // backgroundColor: "yellow",
-  },
-  
-  introView: {
-    justifyContent: "center",
-    flex: 1,
-    alignItems: "center",
-    // backgroundColor: "green",
-    // marginTop: 0,
-  },
-  text: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "#808080",
-    // fontWeight:
-  }
 });
 
 const MainDashboard = (props) => {
@@ -216,7 +130,7 @@ const MainDashboard = (props) => {
   ];
   
   return <View style={styles.wrapper}>
-    <ScrollView style={styles.scrollView}>
+    <ScrollView>
       <View>
         <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} barStyle = {{borderBottomColor: "#f9f9f9"}}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
@@ -238,6 +152,7 @@ const MainDashboard = (props) => {
 
       <View>
         <FlatList
+            ListHeaderComponent={()=><View style={{borderTopWidth:1, borderTopColor:"#eee"}}/>}
             data={listSource}
             renderItem={({item}) => <FlatListItem onPress={item.onPress}>{item.listTitle}</FlatListItem>}
         />
@@ -257,17 +172,12 @@ export default compose(
             daysToCoverList: [5000, 30],
             endTo: getTimeInSec()
           },
-          // fetchPolicy: 'cache-and-network',
         }
       },
     }),
     WithLoadingComponent,
     withState('selectedTab', 'updateTab', '0'),
     withHandlers({
-      onAddPIN: props => () => {
-        Amplitude.logEvent('Add PIN btn is pressed');
-        Actions.assignPin({restaurant: props.data.restaurant});
-      },
       onTabClick: props => (key) => {
         props.updateTab(key);
       },
