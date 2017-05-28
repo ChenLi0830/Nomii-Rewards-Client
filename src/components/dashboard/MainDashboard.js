@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {Image, StyleSheet, Text, View, ScrollView, ListView} from 'react-native';
 import {Button, WithLoadingComponent} from '../common/index';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   dateView: {
     alignItems: 'center',
     backgroundColor: "#f9f9f9",
-    paddingVertical: responsiveHeight(6),
+    paddingVertical: responsiveHeight(4),
   },
   dateText:{
     fontSize: responsiveFontSize(2.8),
@@ -35,21 +35,21 @@ const styles = StyleSheet.create({
     color: "rgba(0,0,0,0.7)"
   },
   statsContainerView:{
-    marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(1),
     alignItems: 'center',
   },
   statsRow:{
     width: responsiveWidth(80),
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: responsiveWidth(4),
+    marginBottom: responsiveWidth(2),
   },
   statsBox:{
-    width: responsiveWidth(38),
+    width: responsiveWidth(39),
     backgroundColor: "#fff",
-    borderRadius: responsiveFontSize(1.5),
+    borderRadius: responsiveFontSize(1),
     borderWidth: 1,
-    borderColor: "#e4e4e4",
+    borderColor: "#eee",
     alignItems: "center",
     justifyContent: "space-around",
     height: responsiveHeight(15),
@@ -210,10 +210,6 @@ const MainDashboard = (props) => {
         <Text style={styles.dateText}>
           Friday, May 12
         </Text>
-    
-        <View style={styles.statsContainerView}>
-          <SimpleChart/>
-        </View>
       
         <View style={styles.statsContainerView}>
           {boxes}
