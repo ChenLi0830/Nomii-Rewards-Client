@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, ScrollView, ListView} from 'react-native';
+import {Image, StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
 import {Button, WithLoadingComponent} from '../common/index';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
@@ -13,6 +13,7 @@ import _ from 'lodash';
 import {Loading} from '../common/index';
 import { Tabs, WhiteSpace } from 'antd-mobile';
 import SimpleChart from './BarChart';
+import FlatListItem from '../common/FlatListItem';
 const TabPane = Tabs.TabPane;
 
 
@@ -166,18 +167,7 @@ const MainDashboard = (props) => {
   statisticList[2] = statisticList[0];statisticList[3] = statisticList[1];
   
   console.log("statisticList", statisticList);
-  
-  const PINList = PINs.map(PIN => {
-    // PIN usage count within certain period
-    const statistics = statisticList[parseInt(props.selectedTab)];
-    let PINCountOverDays = _.find(statistics.PINsCount, {employeeName: PIN.employeeName});
-    // If the count is available, use this number instead of PIN's total usage number
-    
-    return <EmployeePINItem key={PIN.code} restaurantId={id}
-                            code = {PIN.code} employeeName = {PIN.employeeName}
-                            usageCount={PINCountOverDays ? PINCountOverDays.count: 0}/>;
-  });
-  
+
   const tabContents = statisticList.map((statistic,i) => {
     
     const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
@@ -217,6 +207,13 @@ const MainDashboard = (props) => {
       </View>
   });
   
+  const listSource = [
+    {key: 0, listTitle: "Ratings", onPress: ()=>Actions.rating()},
+    {key: 1, listTitle: "Customer Satisfaction", onPress: ()=>Actions.satisfaction()},
+    {key: 2, listTitle: "Complains", onPress: ()=>Actions.complains()},
+    {key: 3, listTitle: "Comments", onPress: ()=>Actions.comments()},
+    {key: 4, listTitle: "Manage PINs", onPress: ()=>Actions.managePINs()},
+  ];
   
   return <View style={styles.wrapper}>
     <ScrollView style={styles.scrollView}>
@@ -238,22 +235,14 @@ const MainDashboard = (props) => {
         </Tabs>
       </View>
       
-      
-      <View style={styles.assignPINView}>
-        <Text style={styles.assignPINTitle}>
-          Assigned PINs
-        </Text>
-        
-        <View style={styles.PINList}>
-          {PINList}
-        </View>
-        
-        <Button style={styles.button} type="primary"
-                onPress={props.onAddPIN}>
-          ADD NEW PIN
-        </Button>
+
+      <View>
+        <FlatList
+            data={listSource}
+            renderItem={({item}) => <FlatListItem onPress={item.onPress}>{item.listTitle}</FlatListItem>}
+        />
       </View>
-    
+      
     </ScrollView>
   </View>
 };

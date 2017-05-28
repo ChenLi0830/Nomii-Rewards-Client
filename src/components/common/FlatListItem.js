@@ -19,13 +19,10 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2.2),
     color: "#E12059"
   },
-  icon:{
-  
-  },
 });
 
 const FlatListItem = (props) => {
-  return <TouchableHighlight onPress={()=>console.log("pressed")} underlayColor="#fafafa">
+  return <TouchableHighlight onPress={props.onPress} underlayColor="#eee">
     <View style={styles.wrapper}>
       <Text style={styles.text}>
         {props.children}
