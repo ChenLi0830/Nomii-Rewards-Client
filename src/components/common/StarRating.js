@@ -91,6 +91,8 @@ class StarRating extends Component {
       starsLeft--;
     }
     
+    if (this.props.horizontalReverse) starButtons.reverse();
+    
     return (
         <View style={styles.starRatingContainer}>
           {starButtons}
@@ -113,6 +115,7 @@ StarRating.propTypes = {
   starSize: PropTypes.number,
   starStyle: View.propTypes.style,
   buttonStyle: View.propTypes.style,
+  horizontalReverse: PropTypes.bool,
 };
 
 StarRating.defaultProps = {
@@ -128,6 +131,7 @@ StarRating.defaultProps = {
   starSize: 40,
   starStyle: {},
   buttonStyle: {},
+  horizontalReverse: false,
 };
 
 export {StarRating};
