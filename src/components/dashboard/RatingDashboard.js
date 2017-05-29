@@ -16,7 +16,7 @@ import BarChart from './BarChart';
 import HightlightContainer from './HightlightContainer';
 import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
-import {DashboardUserComplaint} from './UserFeedback';
+import {DashboardUserRating} from './UserFeedback';
 
 const TabPane = Tabs.TabPane;
 
@@ -28,19 +28,19 @@ const styles = StyleSheet.create({
     marginTop: 120,
     backgroundColor: "#f9f9f9",
   },
+  periodTabBar:{
+    height: responsiveHeight(6),
+    backgroundColor: "white",
+  },
   dateView: {
     alignItems: 'center',
     backgroundColor: "#f9f9f9",
     paddingVertical: responsiveHeight(3),
   },
   starTabBar:{
+    height: responsiveHeight(7),
     borderTopColor: "#eee",
     borderTopWidth: 1,
-    borderBottomColor: "#eee",
-    backgroundColor: "white",
-  },
-  periodTabBar:{
-    borderBottomColor: "#f9f9f9",
     backgroundColor: "white",
   },
 });
@@ -99,14 +99,14 @@ const RatingDashboard = (props) => {
     const statsNumbers = [20, 9, 1280, 31];
 
     return <View style={styles.dateView} key={i}>
-      <DashboardUserComplaint/>
+      <DashboardUserRating/>
     </View>
   });
   
   return <View style={styles.wrapper}>
     <ScrollView style={{backgroundColor: "#f9f9f9",}}>
       <View>
-        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} barStyle = {styles.periodTabBar}
+        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
           <TabPane tab="Day" key="day">
             {tabContents[0]}
@@ -124,7 +124,7 @@ const RatingDashboard = (props) => {
       </View>
   
       <View>
-        <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick} barStyle = {styles.starTabBar}
+        <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick} underlineColor="#eee" barStyle = {styles.starTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
           <TabPane tab="5 stars" key="5">
             {tabStarContents[0]}

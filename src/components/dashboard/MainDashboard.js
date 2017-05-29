@@ -12,7 +12,9 @@ import {Amplitude} from 'expo';
 import _ from 'lodash';
 import {Loading} from '../common/index';
 import { Tabs, WhiteSpace } from 'antd-mobile';
-import SimpleChart from './BarChart';
+import BarChart from './BarChart';
+import HightlightContainer from './HightlightContainer';
+import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
 const TabPane = Tabs.TabPane;
 
@@ -22,6 +24,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     marginTop: 120,
+  },
+  periodTabBar:{
+    height: responsiveHeight(6),
+    backgroundColor: "white",
   },
   dateView: {
     alignItems: 'center',
@@ -132,7 +138,7 @@ const MainDashboard = (props) => {
   return <View style={styles.wrapper}>
     <ScrollView>
       <View>
-        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} barStyle = {{borderBottomColor: "#f9f9f9"}}
+        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
           <TabPane tab="Day" key="0">
             {tabContents[0]}

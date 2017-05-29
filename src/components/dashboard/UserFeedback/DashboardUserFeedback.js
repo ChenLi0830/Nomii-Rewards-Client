@@ -132,11 +132,15 @@ const DashboardUserFeedback = ({userName="Angelica Leon Elizalde", imageURL="htt
             
           </View>
           
-          <View style={styles.tagsView}>
-            <Text style={styles.tagText}>
-              Complaints: {tags.join(", ")}
-            </Text>
-          </View>
+          {
+            showResolved
+            &&
+            <View style={styles.tagsView}>
+              <Text style={styles.tagText}>
+                Complaints: {tags.join(", ")}
+              </Text>
+            </View>
+          }
         </View>
   
         <View style={styles.userMidView}>
@@ -153,19 +157,23 @@ const DashboardUserFeedback = ({userName="Angelica Leon Elizalde", imageURL="htt
       </View>
     </View>
     
-    <View style={styles.resolveView}>
-      <View style={styles.contactView}>
-        <Text style={styles.contactText}>
-          {contactInfo}
-        </Text>
+    {
+      showResolved
+          &&
+      <View style={styles.resolveView}>
+        <View style={styles.contactView}>
+          <Text style={styles.contactText}>
+            {contactInfo}
+          </Text>
+        </View>
+    
+        <View style={styles.resolveBtnView}>
+          <Text style={styles.resolveBtnText}>
+            {isResolved ? "Mark as unresolved" : "Resolve"}
+          </Text>
+        </View>
       </View>
-      
-      <View style={styles.resolveBtnView}>
-        <Text style={styles.resolveBtnText}>
-          {isResolved ? "Mark as unresolved" : "Resolve"}
-        </Text>
-      </View>
-    </View>
+    }
   </View>
 };
 
