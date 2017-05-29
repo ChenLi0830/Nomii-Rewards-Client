@@ -6,7 +6,7 @@ import {compose, withHandlers, withState} from 'recompose';
 import {Button} from './common';
 import {connect} from 'react-redux';
 import {feedbackActions} from '../modules';
-import {getTimeInSec} from './api';
+import {calcHowLongAgo} from './api';
 
 let styles = StyleSheet.create({
   wrapper: {
@@ -65,23 +65,13 @@ const ratingToReview = {
   5: "Excellent",
 };
 
-const calcDisplayTime = (visitedAt) => {
-  const timeStamp = getTimeInSec();
-  const timeDifInSec = timeStamp - visitedAt;
-  if (timeDifInSec < 60) return `just now`;
-  const timeDifInMin = Math.floor(timeDifInSec/60);
-  if (timeDifInMin < 60) return `${timeDifInMin} ${timeDifInMin>1 ? "mins" : "min"} ago`;
-  const timeDifInHour = Math.floor(timeDifInMin/60);
-  if (timeDifInHour < 24) return `${timeDifInHour} ${timeDifInHour>1 ? "hours" : "hour"} ago`;
-  const timeDifInDay = Math.floor(timeDifInHour/24);
-  return `${timeDifInDay} ${timeDifInDay>1 ? "days" : "day"} ago`;
-};
+
 
 const FeedbackContent1 = (props) => {
   // props.awaitFeedback
   const {visitedAt, stampCountOfCard, employeeName, restaurant, skipCount} = props.awaitFeedback;
   
-  const visitedDisplayTime = calcDisplayTime(visitedAt);
+  const visitedDisplayTime = calcHowLongAgo(visitedAt);
   
   return (
       <View style={styles.wrapper}>

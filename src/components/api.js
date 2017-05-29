@@ -103,6 +103,21 @@ const getPromiseTime = async (promise, name) => {
   }
 };
 
+/**
+ * Calculate the display time of how long it is since prevTimeStamp
+ * */
+const calcHowLongAgo = (prevTimeStamp) => {
+  const timeStamp = getTimeInSec();
+  const timeDifInSec = timeStamp - prevTimeStamp;
+  if (timeDifInSec < 60) return `just now`;
+  const timeDifInMin = Math.floor(timeDifInSec/60);
+  if (timeDifInMin < 60) return `${timeDifInMin} ${timeDifInMin>1 ? "mins" : "min"} ago`;
+  const timeDifInHour = Math.floor(timeDifInMin/60);
+  if (timeDifInHour < 24) return `${timeDifInHour} ${timeDifInHour>1 ? "hours" : "hour"} ago`;
+  const timeDifInDay = Math.floor(timeDifInHour/24);
+  return `${timeDifInDay} ${timeDifInDay>1 ? "days" : "day"} ago`;
+};
+
 export {
   sortCardsByDistance,
   sortCardsByUrgency,
@@ -114,4 +129,5 @@ export {
   setIfPermissionAsked,
   getExpireInDays,
   getPromiseTime,
+  calcHowLongAgo,
 };
