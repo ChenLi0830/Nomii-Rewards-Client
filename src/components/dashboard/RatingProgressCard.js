@@ -21,7 +21,7 @@ const rowStyles = StyleSheet.create({
     marginBottom: responsiveHeight(0.5),
   },
   textView:{
-    width: responsiveWidth(6),
+    width: responsiveWidth(8),
   },
   text: {
     textAlign: "left",
@@ -76,13 +76,13 @@ const RatingRow = ({rating, progress = 70, total = 100}) => {
     
     <View style={rowStyles.textView}>
       <Text style={rowStyles.text}>
-        {progress}
+        {Math.round((progress / total) * 100)}%
       </Text>
     </View>
   </View>
 };
 
-const RatingCard = ({progressList = [70,12,3,5,10], total=100, rating = 4.3}) => {
+const RatingCard = ({progressList = [80,12,13,5,10], total=120, rating = 4.3}) => {
   let RatingRows = progressList.map((progress, i) => (
       <RatingRow key = {i} rating={5-i} progress={progress} total = {total}/>
   ));
