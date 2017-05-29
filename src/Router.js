@@ -22,7 +22,7 @@ import {branch, compose, onlyUpdateForKeys, renderComponent, withHandlers} from 
 import {getTimeInSec} from './components/api';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
-import {DashboardNavBarTitle, MainDashboard} from './components/dashboard';
+import {DashboardMainNavBar, MainDashboard, DashboardNavBar} from './components/dashboard';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
@@ -132,7 +132,11 @@ const RouterComponent = (props) => {
         
         <Scene key="businessDashboard" initial navigationBarStyle={styles.dashboardNavBar}>
           <Scene key="mainDash" component={MainDashboard}
-                 renderTitle={() => <DashboardNavBarTitle/>}
+                 renderTitle={() => <DashboardMainNavBar/>}
+                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+  
+          <Scene key="ratingDash" component={MainDashboard} initial
+                 renderTitle={() => <DashboardNavBar title="Ratings"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
         </Scene>
       </Scene>

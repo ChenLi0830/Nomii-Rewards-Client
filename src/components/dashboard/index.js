@@ -1,6 +1,8 @@
 import MainDashboard from './MainDashboard';
-import DashboardNavBarTitle from './DashboardNavBarTitle';
+import DashboardMainNavBar from './DashboardMainNavBar';
+import DashboardNavBar from './DashboardNavBar';
 export {
   MainDashboard,
-  DashboardNavBarTitle
+  DashboardMainNavBar,
+  DashboardNavBar
 }
