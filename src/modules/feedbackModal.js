@@ -104,7 +104,7 @@ const reducer = (state = initialState, action) => {
         return {...state, showFeedbackModal: false};
       }
       else {
-        return {...initialState, showFeedbackModal: true};
+        return {...initialState, showFeedbackModal: true, contact: state.contact, contactName: state.contactName};
       }
     case "SET_FEEDBACK_RATING":
       return {...state, rating: action.payload};
