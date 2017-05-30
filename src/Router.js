@@ -22,7 +22,7 @@ import {branch, compose, onlyUpdateForKeys, renderComponent, withHandlers} from 
 import {getTimeInSec} from './components/api';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
-import {DashboardMainNavBar, MainDashboard, DashboardNavBar} from './components/dashboard';
+import {DashboardMainNavBar, MainDashboard, DashboardNavBar, RatingDashboard, ComplaintDashboard} from './components/dashboard';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#EDEDED",
     marginTop: 20,
     height: 100,
-    marginHorizontal: responsiveWidth(2),
+    marginHorizontal: responsiveWidth(3),
   },
   cardListNavBar: {
     backgroundColor: null,
@@ -135,8 +135,11 @@ const RouterComponent = (props) => {
                  renderTitle={() => <DashboardMainNavBar/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
   
-          <Scene key="ratingDash" component={MainDashboard} initial
+          <Scene key="ratingDash" component={RatingDashboard}
                  renderTitle={() => <DashboardNavBar title="Ratings"/>}
+                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          <Scene key="complaintDash" component={ComplaintDashboard} initial
+                 renderTitle={() => <DashboardNavBar title="Complaints"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
         </Scene>
       </Scene>
