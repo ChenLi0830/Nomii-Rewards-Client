@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DashboardUserFeedback = ({userName="Angelica Leon Elizalde", imageURL="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/15873523_10154240946525318_3382655087574399935_n.jpg?oh=bf426df3a0b99f39cbe7a9947a6715e7&oe=59B4D59E", comment="We used to love coming here... today was a big disappointment! 1:20 waiting time, portions were smaller than usual (almost half), tacos were cold...what happened?", rating = 4, showResolved = false, isResolved=false, contactInfo="6041234567", leftAt=getTimeInSec(), tags=["Service", "Food", "Speed", "Attitude", "Cleanliness"]}) => {
+const DashboardUserFeedback = ({userName="Angelica Leon Elizalde", imageURL="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/15873523_10154240946525318_3382655087574399935_n.jpg?oh=bf426df3a0b99f39cbe7a9947a6715e7&oe=59B4D59E", comment="We used to love coming here... today was a big disappointment! 1:20 waiting time, portions were smaller than usual (almost half), tacos were cold...what happened?", rating = 4, showResolved = false, isResolved=false, contactInfo="1 6044013925", leftAt=getTimeInSec(), tags=["Service", "Food", "Speed", "Attitude", "Cleanliness"]}) => {
   return <View style = {[styles.wrapper, showResolved && {paddingBottom: 0}]}>
     
     <View style={styles.userView}>

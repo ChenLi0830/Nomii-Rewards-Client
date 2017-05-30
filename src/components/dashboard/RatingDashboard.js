@@ -12,7 +12,6 @@ import {Amplitude} from 'expo';
 import _ from 'lodash';
 import {Loading} from '../common/index';
 import { Tabs, WhiteSpace } from 'antd-mobile';
-import BarChart from './BarChart';
 import HightlightContainer from './HightlightContainer';
 import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
@@ -95,9 +94,6 @@ const RatingDashboard = (props) => {
   });
   
   const tabStarContents = statisticList.map((statistic,i) => {
-    const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
-    const statsNumbers = [20, 9, 1280, 31];
-
     return <View style={styles.dateView} key={i}>
       <DashboardUserRating/>
     </View>

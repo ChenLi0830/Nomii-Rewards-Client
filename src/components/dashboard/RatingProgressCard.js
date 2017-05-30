@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {responsiveWidth, responsiveFontSize, responsiveHeight} from 'react-native-responsive-dimensions';
 import {StarRating} from '../common';
+import HightlightContainer from './HightlightContainer';
 
 const barStyles = StyleSheet.create({
   containerBar:{
@@ -86,7 +87,7 @@ const RatingCard = ({progressList = [80,12,13,5,10], total=120, rating = 4.3}) =
   let RatingRows = progressList.map((progress, i) => (
       <RatingRow key = {i} rating={5-i} progress={progress} total = {total}/>
   ));
-  return <View>
+  return <HightlightContainer>
     <View style={cardStyles.headerView}>
       <View style={cardStyles.ratingView}>
         <Text style={cardStyles.text}>
@@ -102,7 +103,7 @@ const RatingCard = ({progressList = [80,12,13,5,10], total=120, rating = 4.3}) =
     </View>
     
     {RatingRows}
-  </View>
+  </HightlightContainer>
 };
 
 

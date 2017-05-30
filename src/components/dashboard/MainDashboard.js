@@ -12,7 +12,6 @@ import {Amplitude} from 'expo';
 import _ from 'lodash';
 import {Loading} from '../common/index';
 import { Tabs, WhiteSpace } from 'antd-mobile';
-import BarChart from './BarChart';
 import HightlightContainer from './HightlightContainer';
 import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
