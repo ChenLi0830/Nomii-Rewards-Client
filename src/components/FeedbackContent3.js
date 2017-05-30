@@ -4,9 +4,13 @@ import {InputBox} from './common';
 import {responsiveFontSize, responsiveWidth, responsiveHeight} from 'react-native-responsive-dimensions';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Button, BackButton} from './common';
-import {compose, lifecycle} from 'recompose';
+import {compose, lifecycle, withHandlers} from 'recompose';
 import {connect} from 'react-redux';
 import {feedbackActions, appActions} from '../modules';
+import GLP from 'google-libphonenumber';
+let AsYouTypeFormatter = GLP.AsYouTypeFormatter;
+let formatter = new AsYouTypeFormatter('US');
+
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -70,12 +74,12 @@ const FeedbackContent3 = (props) => {
                     placeholder="Name"/>
         </View>
         <View>
-          <InputBox text={props.contact}
+          <InputBox text={formatter.currentOutput_}
                     width={responsiveWidth(76)}
                     //height={responsiveHeight(5)}
-                    onChange={props.changeContact}
+                    onChange={props.onChangeContact}
                     keyboardType="numeric"
-                    maxLength={10}
+                    maxLength={15}
                     placeholder="Phone Number"/>
         </View>
       </View>
@@ -103,6 +107,16 @@ export default compose(
           prevFeedbackStep: feedbackActions.prevFeedbackStep,
         }
     ),
+    withHandlers({
+      onChangeContact: props => (value) => {
+        props.changeContact(value);
+        formatter.clear();
+        for(let number of value){
+          formatter.inputDigit(number);
+        }
+        console.log("formatter", formatter);
+      }
+    }),
     lifecycle({
       componentWillMount () {
         const keyboardShow = Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow";

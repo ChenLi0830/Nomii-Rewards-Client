@@ -3,6 +3,9 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import {responsiveWidth, responsiveFontSize, responsiveHeight} from 'react-native-responsive-dimensions';
 import {getTimeInSec, calcHowLongAgo} from '../../api';
 import {StarRating} from '../../common';
+import GLP from 'google-libphonenumber';
+let PNF = GLP.PhoneNumberFormat;
+let phoneUtil = GLP.PhoneNumberUtil.getInstance();
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -163,7 +166,7 @@ const DashboardUserFeedback = ({userName="Angelica Leon Elizalde", imageURL="htt
       <View style={styles.resolveView}>
         <View style={styles.contactView}>
           <Text style={styles.contactText}>
-            {contactInfo}
+            {phoneUtil.format(phoneUtil.parse(contactInfo, 'CA'), PNF.NATIONAL)}
           </Text>
         </View>
     
