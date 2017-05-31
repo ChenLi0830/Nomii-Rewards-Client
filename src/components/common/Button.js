@@ -9,6 +9,7 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       default: "#37447f",
       ghost: "#FFF",
       primary: "#3b74b6",
+      primary2: "rgba(225,32,89,0.9)",
       skip: "rgba(0,0,0,0)",
       disabled: "#77ace9",
     };
@@ -55,6 +56,11 @@ const styles = new StyleSheet.create({
     backgroundColor: "#4A90E2",
     overflow: null,
   },
+  primary2:{
+    backgroundColor: "rgba(225,32,89,0.9)",
+    overflow: null,
+    height: 50,
+  },
   disabled:{
     backgroundColor: "#77ace9",
   },
@@ -71,6 +77,11 @@ const styles = new StyleSheet.create({
     // fontWeight: "",
   },
   primaryText: {
+    color: "#FFF",
+    fontWeight: "bold",
+    // fontWeight: "",
+  },
+  primary2Text: {
     color: "#FFF",
     fontWeight: "bold",
     // fontWeight: "",
