@@ -91,6 +91,7 @@ export default compose(
             require('../public/images/card-screens/circle-empty-highlight-red.png'),
             require('../public/images/card-screens/circle-empty-highlight-teal.png'),
             require('../public/images/card-screens/circle-1 check.png'),
+            require('../public/images/Group.png'),
           ];
           for (let image of images) {
             await Asset.fromModule(image).downloadAsync();
