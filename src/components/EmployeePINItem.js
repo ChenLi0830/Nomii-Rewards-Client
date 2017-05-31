@@ -4,6 +4,8 @@ import { Tabs, WhiteSpace, SwipeAction } from 'antd-mobile';
 import {removePINMutation} from '../graphql/PIN';
 import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {compose, withHandlers} from 'recompose';
 
 const styles = StyleSheet.create({
   textWrapper: {
@@ -13,8 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomWidth:1,
     borderBottomColor: "#ECF0F1",
-    // alignItems: 'center',
-    // paddingVertical: height * 0.1,
+    paddingHorizontal: responsiveWidth(5),
   },
   userInfo:{
     flex: 2,
@@ -29,19 +30,22 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   userTextView:{
+    marginLeft: responsiveWidth(2),
     // flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "space-between",
+    paddingVertical: 8,
   },
   name:{
-    color: "#95A5A6",
+    color: "rgba(0,0,0,0.6)",
     fontWeight: "600",
     fontSize: 18,
   },
   PINCount:{
-    color: "#009FE3",
+    color: "#95A5A6",
     fontSize: 18,
   },
   prefixPIN: {
+    // color: "#95A5A6",
     color: "#95A5A6",
     fontSize: 24,
   },
@@ -51,12 +55,13 @@ const styles = StyleSheet.create({
     // fontWeight: "600",
   },
   avatar:{
-    backgroundColor: "#D8D8D8",
+    backgroundColor: "#bdc3e0",
+    // backgroundColor: "rgba(225,32,89,0.9)",
     width: 48,
     borderRadius: 30,
     height: 48,
     margin: 10,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   nameAbbrev:{
     backgroundColor: "rgba(0,0,0,0)",
@@ -66,66 +71,26 @@ const styles = StyleSheet.create({
   }
 });
 
-const calcInitials = (employeeName) => {
-  employeeName = employeeName.toUpperCase();
-  let abbrev = "";
-  const names = employeeName.split(" ");
-  if (names.length <= 3){
-    // Use initial if names < 3
-    names.forEach(name => abbrev += name[0])
-  } else {
-    // Use just first letter otherwise
-    abbrev = names[0][0];
-  }
-  return abbrev;
-};
-
-const removePIN = (mutate, restaurantId, code) => {
-  Toast.loading('Deleting...', 0);
-  const variables = {
-    restaurantId: restaurantId,
-    PIN: code,
-  };
-  mutate({variables: {...variables}})
-      .then(result => {
-        Toast.hide();
-      })
-      .catch(error => {
-        // console.log("error", error);
-        Toast.fail("Something is wrong\nPlease try again", 2);
-      })
-};
-
-const removePINAlert = (mutate, restaurantId, code) => {
-  Alert.alert(
-      'Unassign Employee',
-      'Are you sure you want to remove this employee?',
-      [
-        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-        {text: 'Remove', onPress: () => removePIN(mutate, restaurantId, code), style: 'destructive'},
-      ],
-      { cancelable: false }
-  )
-};
-
-const EmployeePIN = ({code, employeeName, usageCount, mutate, restaurantId, data}) => {
+const EmployeePIN = (props) => {
+  const {code, employeeName, usageCount, mutate, restaurantId, data} = props;
   // console.log("EmployeePIN props", props);
   console.log("code, employeeName, usageCount restaurantId", code, employeeName, usageCount, restaurantId);
-  const nameInitial = calcInitials(employeeName);
+  const nameInitial = props.calcInitials(employeeName);
   
-  return <View style={{flex: 1}}>
-    <SwipeAction
-        autoClose
-        right={[
-          {
-            text: 'delete',
-            onPress: () => removePINAlert(mutate, restaurantId, code, data),
-            style: { backgroundColor: '#F50000', color: 'white' },
-          },
-        ]}
-        onOpen={() => console.log('global open')}
-        onClose={() => console.log('global close')}
-    >
+  const swipeButtons = [
+    {
+      text: 'edit',
+      onPress: () => props.editPINAlert(restaurantId, code),
+      style: { backgroundColor: '#d1d1d1', color: 'white' },
+    },
+    {
+      text: 'delete',
+      onPress: () => props.removePINAlert(restaurantId, code),
+      style: { backgroundColor: '#E12059', color: 'white' },
+    },
+  ];
+  
+  return <SwipeAction autoClose right={swipeButtons}>
       <View style={styles.textWrapper}>
         <View style={styles.userInfo}>
           <View style={styles.avatar}>
@@ -145,9 +110,63 @@ const EmployeePIN = ({code, employeeName, usageCount, mutate, restaurantId, data
       
       </View>
     </SwipeAction>
-  </View>
 };
 
-
-
-export default graphql(removePINMutation)(EmployeePIN);
+export default compose(
+    graphql(removePINMutation),
+    withHandlers({
+      calcInitials: props => (employeeName) => {
+        employeeName = employeeName.toUpperCase();
+        let abbrev = "";
+        const names = employeeName.split(" ");
+        if (names.length <= 3){
+          // Use initial if names < 3
+          names.forEach(name => abbrev += name[0])
+        } else {
+          // Use just first letter otherwise
+          abbrev = names[0][0];
+        }
+        return abbrev;
+      },
+      removePIN: props => (restaurantId, code) => {
+        Toast.loading('Deleting...', 0);
+        props.mutate({
+          variables: {
+            restaurantId: restaurantId,
+            PIN: code,
+          }
+        })
+            .then(result => {
+              Toast.hide();
+            })
+            .catch(error => {
+              // console.log("error", error);
+              Toast.fail("Something is wrong\nPlease try again", 2);
+            })
+      }
+    }),
+    withHandlers({
+      removePINAlert: props => (restaurantId, code) => {
+        Alert.alert(
+            'Unassign Employee',
+            'Are you sure you want to remove this employee?',
+            [
+              {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+              {text: 'Remove', onPress: () => props.removePIN(restaurantId, code), style: 'destructive'},
+            ],
+            { cancelable: false }
+        )
+      },
+      editPINAlert: props => (restaurantId, code) => {
+        Alert.alert(
+            'Edit Employee',
+            'Are you sure you want to edit this employee?',
+            [
+              {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+              {text: 'Edit', onPress: () => alert("under development"), style: 'destructive'},
+            ],
+            { cancelable: false }
+        )
+      }
+    }),
+)(EmployeePIN);
