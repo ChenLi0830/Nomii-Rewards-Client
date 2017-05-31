@@ -1,8 +1,8 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, ScrollView, Text, StyleSheet, View} from 'react-native';
 import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../../graphql/restaurant';
-import {compose, lifecycle, withHandlers, withState} from 'recompose';
+import {compose, lifecycle, withHandlers, withState, branch, renderComponent} from 'recompose';
 import EmployeePINItem from '../EmployeePINItem';
 import {getTimeInSec} from '../api';
 import {Amplitude} from 'expo';
@@ -84,4 +84,8 @@ export default compose(
         console.log("nextProps", nextProps);
       },
     }),
+    branch(
+        props => props.data.restaurant.PINs.length === 0 || true,
+        renderComponent(()=><View><Text>No PINs</Text></View>)
+    )
 )(ManagePINsDashboard);
