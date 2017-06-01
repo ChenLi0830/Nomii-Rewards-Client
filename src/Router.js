@@ -22,7 +22,8 @@ import {branch, compose, onlyUpdateForKeys, renderComponent, withHandlers} from 
 import {getTimeInSec} from './components/api';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
-import {DashboardMainNavBar, MainDashboard, DashboardNavBar, RatingDashboard, ComplaintDashboard, ManagePINsDashboard} from './components/dashboard';
+import {DashboardMainNavBar, MainDashboard, DashboardNavBar, RatingDashboard, ComplaintDashboard,
+  ManagePINsDashboard, UpsertPIN, DashboardBackBtn} from './components/dashboard';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
@@ -144,6 +145,12 @@ const RouterComponent = (props) => {
           <Scene key="managePINsDash" component={ManagePINsDashboard} initial
                  renderTitle={() => <DashboardNavBar title="Manage PINs"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          <Scene key="createPIN" component={UpsertPIN}
+                 renderBackButton={()=><DashboardBackBtn backText="Manage PINs"/>}
+                 renderTitle={() => <DashboardNavBar title="Create PINs"/>}/>
+          <Scene key="editPIN" component={UpsertPIN}
+                 renderBackButton={()=><DashboardBackBtn/>}
+                 renderTitle={() => <DashboardNavBar title="Edit PINs"/>}/>
         </Scene>
       </Scene>
   );

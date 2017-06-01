@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ScrollView, Text, StyleSheet, View} from 'react-native';
+import {Image, Text, FlatList, ScrollView, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../../graphql/restaurant';
 import {compose, lifecycle, withHandlers, withState, branch, renderComponent} from 'recompose';
@@ -7,15 +7,16 @@ import EmployeePINItem from '../EmployeePINItem';
 import {getTimeInSec} from '../api';
 import {Amplitude} from 'expo';
 import {Button, WithLoadingComponent} from '../common';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {responsiveWidth, responsiveHeight, responsiveFontSize} from 'react-native-responsive-dimensions';
 import _ from 'lodash';
+import {Actions} from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     alignItems: 'center',
     marginTop: 120,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fafafa",
   },
   assignPINView: {
     marginVertical: 20,
@@ -23,6 +24,52 @@ const styles = StyleSheet.create({
   PINList: {
     marginBottom: 30,
     width: responsiveWidth(100),
+  },
+});
+
+const noPINStyles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 120,
+    backgroundColor: "#fafafa",
+    paddingTop: responsiveHeight(3),
+  },
+  card:{
+    backgroundColor: 'white',
+    width: responsiveWidth(90),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: "#eee",
+    borderRadius: responsiveFontSize(1),
+  },
+  cardTopView: {
+    paddingVertical: responsiveHeight(3),
+    height: responsiveHeight(25),
+    alignItems: "center",
+  },
+  topViewText:{
+    color: "rgba(0,0,0,0.6)",
+    fontSize: responsiveFontSize(2),
+  },
+  employeeImg:{
+    width: responsiveWidth(45),
+    height: responsiveHeight(16),
+  },
+  cardBotView: {
+    backgroundColor: "rgba(225,32,89,0.9)",
+    height: responsiveHeight(7),
+    width: responsiveWidth(90),
+    borderBottomLeftRadius: responsiveFontSize(1),
+    borderBottomRightRadius: responsiveFontSize(1),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  botViewText:{
+    fontSize: 16,
+    color: "#FFF",
+    fontWeight: "bold",
   },
 });
 
@@ -41,12 +88,12 @@ const ManagePINsDashboard = (props) => {
   });
   
   return <View style={styles.wrapper}>
-    <ScrollView style={{backgroundColor: "#f9f9f9",}}>
+    <ScrollView style={{backgroundColor: "#fafafa",}}>
       <View style={styles.PINList}>
         {PINList}
       </View>
       
-      <Button style={styles.button} type="primary2" rounded={false} shadow={false}
+      <Button type="primary2" rounded={false} shadow={false}
               onPress={props.onAddPIN}>
         Create PIN
       </Button>
@@ -54,6 +101,27 @@ const ManagePINsDashboard = (props) => {
   </View>
 };
 
+const noPINsDashboard = (props) => {
+  return <View style={noPINStyles.wrapper}>
+    <TouchableOpacity style={noPINStyles.card} onPress={props.onAddPIN}>
+      <View style={noPINStyles.cardTopView}>
+        <Image style={noPINStyles.employeeImg}
+               resizeMode="contain"
+               source={require('../../../public/images/Group.png')}/>
+        
+        <Text style={noPINStyles.topViewText}>
+          Assign PIN numbers to your staff
+        </Text>
+      </View>
+      
+      <View style={noPINStyles.cardBotView}>
+        <Text style={noPINStyles.botViewText}>
+          Create PIN
+        </Text>
+      </View>
+    </TouchableOpacity>
+  </View>
+};
 
 // Container
 export default compose(
@@ -71,6 +139,11 @@ export default compose(
     WithLoadingComponent,
     withState('selectedTab', 'updateTab', '0'),
     withHandlers({
+      onAddPIN: props => () => {
+        console.log("Add PIN btn is pressed");
+        Amplitude.logEvent('Add PIN btn is pressed');
+        Actions.createPIN({restaurant: props.data.restaurant});
+      },
       onTabClick: props => (key) => {
         props.updateTab(key);
       },
@@ -86,6 +159,6 @@ export default compose(
     }),
     branch(
         props => props.data.restaurant.PINs.length === 0 || true,
-        renderComponent(()=><View><Text>No PINs</Text></View>)
-    )
+        renderComponent(noPINsDashboard)
+    ),
 )(ManagePINsDashboard);

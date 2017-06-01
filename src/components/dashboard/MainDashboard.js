@@ -44,6 +44,16 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
     alignItems: 'center',
   },
+  couponView:{
+    height: responsiveHeight(3),
+    justifyContent: "flex-start",
+  },
+  couponText: {
+    fontSize: responsiveFontSize(2),
+    color: "#bbbbbb",
+    textAlign: 'center',
+    // top: -18,
+  },
   statsRow:{
     width: responsiveWidth(80),
     flexDirection: "row",
@@ -122,6 +132,12 @@ const MainDashboard = (props) => {
       
         <View style={styles.statsContainerView}>
           {boxes}
+        </View>
+  
+        <View style={styles.couponView}>
+          <Text style={styles.couponText}>
+            {`Coupons redeemed: ${statistic.couponsCount}`}
+          </Text>
         </View>
       </View>
   });

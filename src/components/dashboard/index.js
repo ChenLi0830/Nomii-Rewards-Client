@@ -4,6 +4,8 @@ import DashboardNavBar from './DashboardNavBar';
 import RatingDashboard from './RatingDashboard';
 import ComplaintDashboard from './ComplaintDashboard';
 import ManagePINsDashboard from './ManagePINsDashboard';
+import UpsertPIN from './UpsertPIN';
+import DashboardBackBtn from './DashboardBackBtn';
 
 export {
   MainDashboard,
@@ -12,4 +14,6 @@ export {
   RatingDashboard,
   ComplaintDashboard,
   ManagePINsDashboard,
+  UpsertPIN,
+  DashboardBackBtn
 }
