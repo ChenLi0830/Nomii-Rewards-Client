@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 // Action types
 const USER_CHANGE_EMPLOYEE_NAME = "USER_CHANGE_EMPLOYEE_NAME";
+const USER_CHANGE_PIN = "USER_CHANGE_PIN";
 const USER_GENERATE_NEW_PIN = "USER_GENERATE_NEW_PIN";
 const CREATE_EMPLOYEE_SUCCESS = "CREATE_EMPLOYEE_SUCCESS";
 
@@ -12,6 +13,11 @@ const CREATE_EMPLOYEE_SUCCESS = "CREATE_EMPLOYEE_SUCCESS";
 export const changeEmployeeName = (name) => ({
   type: USER_CHANGE_EMPLOYEE_NAME,
   payload: name,
+});
+
+export const changePin = (pin) => ({
+  type: USER_CHANGE_PIN,
+  payload: pin,
 });
 
 export const createEmployeeSuccess = () => ({
@@ -60,6 +66,9 @@ const reducer = (state = initialState, action) => {
     case "USER_CHANGE_EMPLOYEE_NAME":
       // console.log("new name", action.payload);
       return {...state, employeeName: action.payload};
+    case "USER_CHANGE_PIN":
+      // console.log("new name", action.payload);
+      return {...state, pin: action.payload};
     case "USER_GENERATE_NEW_PIN":
       // console.log("creating new pin ", action.payload)
       return {...state, pin: action.payload};
