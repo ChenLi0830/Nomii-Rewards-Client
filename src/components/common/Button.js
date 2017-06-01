@@ -3,7 +3,6 @@ import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const Button = ({onPress, children, style, type="primary", rounded=true, shadow=true, disabled=false}) => {
-  if (disabled) type = "disabled";
   
   const underlayColor = {
       default: "#37447f",
@@ -11,7 +10,6 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       primary: "#3b74b6",
       primary2: "rgba(225,32,89,0.9)",
       skip: "rgba(0,0,0,0)",
-      disabled: "#77ace9",
     };
   
   return <View>
@@ -32,6 +30,19 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
       {children}
     </Text>
   </TouchableHighlight>
+    
+    {
+      disabled
+        &&
+      <View style={[
+        styles.buttonBase,
+        styles[type],
+        style,
+        {borderRadius: rounded ? 50 : 7},
+        type!=="skip" && shadow && styles.shadowStyle,
+        {backgroundColor: "#fff", opacity: 0.3, top: -50}
+      ]}/>
+    }
   </View>
 };
 
@@ -41,7 +52,7 @@ const styles = new StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 45,
+    height: 50,
     width: responsiveWidth(90),
   },
   default: {
@@ -59,11 +70,11 @@ const styles = new StyleSheet.create({
   primary2:{
     backgroundColor: "rgba(225,32,89,0.9)",
     overflow: null,
-    height: 50,
+    // height: 50,
   },
-  disabled:{
-    backgroundColor: "#77ace9",
-  },
+  // disabled:{
+  //   backgroundColor: "#77ace9",
+  // },
   textBase: {
     textAlign: "center",
     fontSize: 16,
@@ -90,10 +101,10 @@ const styles = new StyleSheet.create({
     color: "#5c5c5c",
     fontSize: 13,
   },
-  disabledText:{
-    color: "#fff",
-    fontWeight: "bold",
-  },
+  // disabledText:{
+  //   color: "#fff",
+  //   fontWeight: "bold",
+  // },
   shadowStyle:{
     elevation: 2,
     shadowColor: "#000000",
