@@ -133,10 +133,10 @@ const UpsertPIN = (props) => {
   return <View style={styles.wrapper}>
     <Tabs activeKey={props.step} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
           activeUnderlineColor="#f9f9f9" activeTextColor="#f9f9f9">
-      <TabPane key="0">
+      <TabPane tab="0" key="0">
         {step1}
       </TabPane>
-      <TabPane key="1">
+      <TabPane tab="1" key="1">
         {step2}
       </TabPane>
     </Tabs>
