@@ -142,12 +142,14 @@ const MainDashboard = (props) => {
       </View>
   });
   
+  
+  
   const listSource = [
-    {key: 0, listTitle: "Ratings", onPress: ()=>Actions.rating()},
-    {key: 1, listTitle: "Customer Satisfaction", onPress: ()=>Actions.satisfaction()},
-    {key: 2, listTitle: "Complains", onPress: ()=>Actions.complains()},
-    {key: 3, listTitle: "Comments", onPress: ()=>Actions.comments()},
-    {key: 4, listTitle: "Manage PINs", onPress: ()=>Actions.managePINs()},
+    {key: 0, listTitle: "Ratings", onPress: ()=>Actions.ratingDash()},
+    {key: 1, listTitle: "Customer Satisfaction", onPress: ()=>Actions.satisfactionDash()},
+    {key: 2, listTitle: "Complains", onPress: ()=>Actions.complaintDash()},
+    // {key: 3, listTitle: "Comments", onPress: ()=>Actions.comments()},
+    {key: 3, listTitle: "Manage PINs", onPress: ()=>Actions.managePINsDash()},
   ];
   
   return <View style={styles.wrapper}>

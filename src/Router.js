@@ -132,26 +132,29 @@ const RouterComponent = (props) => {
                navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
         
         <Scene key="businessDashboard" initial navigationBarStyle={styles.dashboardNavBar}>
-          <Scene key="mainDash" component={MainDashboard}
+          <Scene key="mainDash" component={MainDashboard} initial
                  renderTitle={() => <DashboardMainNavBar/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
   
           <Scene key="ratingDash" component={RatingDashboard}
+                 renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Ratings"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
           <Scene key="complaintDash" component={ComplaintDashboard}
+                 renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Complaints"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
           <Scene key="managePINsDash" component={ManagePINsDashboard}
+                 renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Manage PINs"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
           <Scene key="createPIN" component={UpsertPIN}
                  renderBackButton={()=><DashboardBackBtn backText="Manage PINs"/>}
                  renderTitle={() => <DashboardNavBar title="Create PINs"/>}/>
           <Scene key="editPIN" component={UpsertPIN}
-                 renderBackButton={()=><DashboardBackBtn/>}
+                 renderBackButton={()=><DashboardBackBtn backText="Manage PINs"/>}
                  renderTitle={() => <DashboardNavBar title="Edit PINs"/>}/>
-          <Scene key="customerSatisfaction" component={CustomerSatisfaction} initial
+          <Scene key="satisfactionDash" component={CustomerSatisfaction}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Customer Satisfaction"/>}/>
         </Scene>
