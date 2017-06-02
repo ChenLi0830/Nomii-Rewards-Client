@@ -126,7 +126,7 @@ export default compose(
       },
     }),
     WithLoadingComponent,
-    withState('selectedTab', 'updateTab', 'day'),
+    withState('selectedTab', 'updateTab', 'week'),
     withState('selectedTabResolve', 'updateTabResolve', 'unresolved'),
     withHandlers({
       onTabClick: props => (key) => {

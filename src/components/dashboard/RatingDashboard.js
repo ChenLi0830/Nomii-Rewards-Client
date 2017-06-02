@@ -158,7 +158,7 @@ export default compose(
       },
     }),
     WithLoadingComponent,
-    withState('selectedTab', 'updateTab', 'day'),
+    withState('selectedTab', 'updateTab', 'week'),
     withState('selectedTabStar', 'updateTabStar', '5'),
     withHandlers({
       onTabClick: props => (key) => {

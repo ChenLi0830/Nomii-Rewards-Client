@@ -186,7 +186,7 @@ export default compose(
     //   },
     // }),
     WithLoadingComponent,
-    withState('selectedTab', 'updateTab', 'day'),
+    withState('selectedTab', 'updateTab', 'week'),
     withHandlers({
     }),
     lifecycle({
