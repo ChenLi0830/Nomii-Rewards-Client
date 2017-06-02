@@ -40,7 +40,7 @@ const Button = ({onPress, children, style, type="primary", rounded=true, shadow=
         style,
         {borderRadius: rounded ? 50 : 7},
         type!=="skip" && shadow && styles.shadowStyle,
-        {backgroundColor: "#fff", opacity: 0.3, top: -50}
+        {backgroundColor: "#fff", opacity: 0.3, top: -50, marginBottom: -50,}
       ]}/>
     }
   </View>
