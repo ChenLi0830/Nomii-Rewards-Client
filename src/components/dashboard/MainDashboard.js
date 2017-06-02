@@ -17,7 +17,6 @@ import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
 const TabPane = Tabs.TabPane;
 
-
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
@@ -81,6 +80,13 @@ const styles = StyleSheet.create({
     // fontWeight: "600",
   },
 });
+
+const periodToNum = {
+  "day": 0,
+  "week": 0,
+  "month": 0,
+  "year": 0,
+};
 
 const MainDashboard = (props) => {
   console.log("MainDashboard props", props);
@@ -155,18 +161,18 @@ const MainDashboard = (props) => {
   return <View style={styles.wrapper}>
     <ScrollView>
       <View>
-        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
+        <Tabs activeKey={props.selectedTab} defaultActiveKey = "week" onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
-          <TabPane tab="Day" key="0">
+          <TabPane tab="Day" key="day">
             {tabContents[0]}
           </TabPane>
-          <TabPane tab="Week" key="1">
+          <TabPane tab="Week" key="week">
             {tabContents[1]}
           </TabPane>
-          <TabPane tab="Month" key="2">
+          <TabPane tab="Month" key="month">
             {tabContents[1]}
           </TabPane>
-          <TabPane tab="Year" key="3">
+          <TabPane tab="Year" key="year">
             {tabContents[1]}
           </TabPane>
         </Tabs>
@@ -199,7 +205,7 @@ export default compose(
       },
     }),
     WithLoadingComponent,
-    withState('selectedTab', 'updateTab', '0'),
+    withState('selectedTab', 'updateTab', 'week'),
     withHandlers({
       onTabClick: props => (key) => {
         props.updateTab(key);

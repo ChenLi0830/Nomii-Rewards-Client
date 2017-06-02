@@ -79,7 +79,7 @@ const RatingDashboard = (props) => {
   return <View style={styles.wrapper}>
     <ScrollView style={{backgroundColor: "#f9f9f9",}}>
       <View>
-        <Tabs activeKey={props.selectedTab} onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
+        <Tabs activeKey={props.selectedTab} defaultActiveKey = "week" onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
           <TabPane tab="Day" key="day">
             {tabContents[0]}
