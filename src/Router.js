@@ -23,7 +23,7 @@ import {getTimeInSec} from './components/api';
 import {graphql} from 'react-apollo';
 import {getUserQuery} from './graphql/user';
 import {DashboardMainNavBar, MainDashboard, DashboardNavBar, RatingDashboard, ComplaintDashboard,
-  ManagePINsDashboard, UpsertPIN, DashboardBackBtn} from './components/dashboard';
+  ManagePINsDashboard, UpsertPIN, DashboardBackBtn, CustomerSatisfaction} from './components/dashboard';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
@@ -142,7 +142,7 @@ const RouterComponent = (props) => {
           <Scene key="complaintDash" component={ComplaintDashboard}
                  renderTitle={() => <DashboardNavBar title="Complaints"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
-          <Scene key="managePINsDash" component={ManagePINsDashboard} initial
+          <Scene key="managePINsDash" component={ManagePINsDashboard}
                  renderTitle={() => <DashboardNavBar title="Manage PINs"/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
           <Scene key="createPIN" component={UpsertPIN}
@@ -151,6 +151,9 @@ const RouterComponent = (props) => {
           <Scene key="editPIN" component={UpsertPIN}
                  renderBackButton={()=><DashboardBackBtn/>}
                  renderTitle={() => <DashboardNavBar title="Edit PINs"/>}/>
+          <Scene key="customerSatisfaction" component={CustomerSatisfaction} initial
+                 renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
+                 renderTitle={() => <DashboardNavBar title="Customer Satisfaction"/>}/>
         </Scene>
       </Scene>
   );

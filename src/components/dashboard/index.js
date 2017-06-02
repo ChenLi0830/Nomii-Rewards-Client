@@ -6,6 +6,7 @@ import ComplaintDashboard from './ComplaintDashboard';
 import ManagePINsDashboard from './ManagePINsDashboard';
 import UpsertPIN from './UpsertPIN';
 import DashboardBackBtn from './DashboardBackBtn';
+import CustomerSatisfaction from './CustomerSatisfaction';
 
 export {
   MainDashboard,
@@ -15,5 +16,6 @@ export {
   ComplaintDashboard,
   ManagePINsDashboard,
   UpsertPIN,
-  DashboardBackBtn
+  DashboardBackBtn,
+  CustomerSatisfaction,
 }
