@@ -16,6 +16,7 @@ import HightlightContainer from './HightlightContainer';
 import RatingProgressCard from './RatingProgressCard';
 import FlatListItem from '../common/FlatListItem';
 const TabPane = Tabs.TabPane;
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -98,13 +99,10 @@ const MainDashboard = (props) => {
     </View>
   }
   
-  const {PINs, id, statistics: statisticList} = props.data.restaurant;
-  statisticList[2] = statisticList[0];statisticList[3] = statisticList[1];
+  let {PINs, id, statistics: statisticList} = props.data.restaurant;
   
-  console.log("statisticList", statisticList);
-
+  // const tabContents = [...statisticList, ...statisticList].map((statistic,i) => {
   const tabContents = statisticList.map((statistic,i) => {
-    
     const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Visits"];
     const statsNumbers = [20, 9, 1280, 31];
     let boxes = [];
@@ -131,9 +129,14 @@ const MainDashboard = (props) => {
       )
     }
     
+    console.log("i", i);
+    
     return <View style={styles.dateView} key={i}>
         <Text style={styles.dateText}>
-          Friday, May 12
+          {i === 0 && moment().format("dddd, MMM D")}
+          {i === 1 && moment().subtract(7, "days").format("MMM D") + " - " + moment().format("MMM D")}
+          {i === 2 && moment().subtract(30, "days").format("MMM D") + " - " + moment().format("MMM D")}
+          {i === 3 && moment().subtract(365, "days").format("ll") + " - " + moment().format("ll")}
         </Text>
       
         <View style={styles.statsContainerView}>
@@ -169,7 +172,7 @@ const MainDashboard = (props) => {
             {tabContents[1]}
           </TabPane>
           <TabPane tab="Month" key="month">
-            {tabContents[1]}
+            {tabContents[0]}
           </TabPane>
           <TabPane tab="Year" key="year">
             {tabContents[1]}

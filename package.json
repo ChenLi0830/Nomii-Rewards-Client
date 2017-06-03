@@ -11,6 +11,7 @@
     "google-libphonenumber": "^2.0.15",
     "graphql-tag": "^2.1.0",
     "lodash": "4.17.4",
+    "moment": "^2.18.1",
     "react": "16.0.0-alpha.6",
     "react-apollo": "^1.2.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
