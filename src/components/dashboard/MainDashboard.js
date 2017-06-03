@@ -153,8 +153,7 @@ const MainDashboard = (props) => {
   const listSource = [
     {key: 0, listTitle: "Ratings", onPress: ()=>Actions.ratingDash()},
     {key: 1, listTitle: "Customer Satisfaction", onPress: ()=>Actions.satisfactionDash()},
-    {key: 2, listTitle: "Complains", onPress: ()=>Actions.complaintDash()},
-    // {key: 3, listTitle: "Comments", onPress: ()=>Actions.comments()},
+    {key: 2, listTitle: "Complaints", onPress: ()=>Actions.complaintDash()},
     {key: 3, listTitle: "Manage PINs", onPress: ()=>Actions.managePINsDash()},
   ];
   

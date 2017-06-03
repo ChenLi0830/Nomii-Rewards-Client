@@ -57,10 +57,10 @@ const CustomerSatisfactionItem = (props) => {
       <Text style={itemStyles.name}>{props.name}</Text>
     </View>
     <View style={itemStyles.rightCol}>
-      <Text style={itemStyles.number}>{props.preValue}</Text>
+      <Text style={itemStyles.number}>{props.preValue}%</Text>
     </View>
     <View style={itemStyles.rightCol}>
-      <Text style={[itemStyles.number, {color: curNumberColor}]}>{props.curValue}</Text>
+      <Text style={[itemStyles.number, {color: curNumberColor}]}>{props.curValue}%</Text>
     </View>
   </View>
 };

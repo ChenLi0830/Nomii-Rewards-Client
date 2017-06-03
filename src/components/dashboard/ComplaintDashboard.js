@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
+import {Image, StyleSheet, Alert, Text, View, ScrollView, FlatList} from 'react-native';
 import {Button, WithLoadingComponent} from '../common/index';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
