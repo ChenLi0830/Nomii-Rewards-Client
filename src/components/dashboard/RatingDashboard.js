@@ -87,9 +87,7 @@ const RatingDashboard = (props) => {
     }
     
     return <View style={styles.dateView} key={i}>
-      <HightlightContainer>
-        <RatingProgressCard/>
-      </HightlightContainer>
+      <RatingProgressCard/>
     </View>
   });
   

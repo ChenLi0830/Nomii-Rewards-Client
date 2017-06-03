@@ -36,6 +36,7 @@ const cardStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    width: responsiveWidth(80),
     marginHorizontal: responsiveWidth(2),
     marginBottom: responsiveHeight(1),
   },

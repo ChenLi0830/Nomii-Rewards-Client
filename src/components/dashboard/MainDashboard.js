@@ -105,7 +105,7 @@ const MainDashboard = (props) => {
 
   const tabContents = statisticList.map((statistic,i) => {
     
-    const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
+    const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Visits"];
     const statsNumbers = [20, 9, 1280, 31];
     let boxes = [];
     for (let i=0; i<2; i++){
