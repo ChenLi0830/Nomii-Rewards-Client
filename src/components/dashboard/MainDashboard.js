@@ -101,10 +101,13 @@ const MainDashboard = (props) => {
   
   let {PINs, id, statistics: statisticList} = props.data.restaurant;
   
-  // const tabContents = [...statisticList, ...statisticList].map((statistic,i) => {
   const tabContents = statisticList.map((statistic,i) => {
+    const {newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating} = statistic;
+    
+    console.log("newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating", newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating);
     const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Visits"];
-    const statsNumbers = [20, 9, 1280, 31];
+    const statsNumbers = [newUserCount, returnUserCount, statisticList[3].newUserCount, newVisitCount+returnVisitCount];
+    
     let boxes = [];
     for (let i=0; i<2; i++){
       boxes.push(
@@ -136,7 +139,7 @@ const MainDashboard = (props) => {
           {i === 0 && moment().format("dddd, MMM D")}
           {i === 1 && moment().subtract(7, "days").format("MMM D") + " - " + moment().format("MMM D")}
           {i === 2 && moment().subtract(30, "days").format("MMM D") + " - " + moment().format("MMM D")}
-          {i === 3 && moment().subtract(365, "days").format("ll") + " - " + moment().format("ll")}
+          {i === 3 && moment().subtract(365, "days").format("MMM YYYY") + " - " + moment().format("MMM YYYY")}
         </Text>
       
         <View style={styles.statsContainerView}>
@@ -150,8 +153,6 @@ const MainDashboard = (props) => {
         </View>
       </View>
   });
-  
-  
   
   const listSource = [
     {key: 0, listTitle: "Ratings", onPress: ()=>Actions.ratingDash()},
@@ -172,14 +173,13 @@ const MainDashboard = (props) => {
             {tabContents[1]}
           </TabPane>
           <TabPane tab="Month" key="month">
-            {tabContents[0]}
+            {tabContents[2]}
           </TabPane>
           <TabPane tab="Year" key="year">
-            {tabContents[1]}
+            {tabContents[3]}
           </TabPane>
         </Tabs>
       </View>
-      
 
       <View>
         <FlatList
@@ -200,7 +200,7 @@ export default compose(
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCoverList: [5000, 30],
+            daysToCoverList: [1, 7, 30, 365],
             endTo: getTimeInSec()
           },
         }

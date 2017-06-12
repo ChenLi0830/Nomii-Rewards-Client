@@ -65,11 +65,12 @@ query getRestaurantStats($restaurantId: ID, $daysToCoverList: [Float], $endTo: I
       returnUserCount,
       newVisitCount,
       returnVisitCount,
+      couponsCount,
+      averageRating,
       PINsCount{
         employeeName,
         count
       },
-      couponsCount
     }
   }
 }
@@ -95,4 +96,31 @@ query getRestaurantVisitStatistics($restaurantId: ID, $daysToCover: Float, $endT
 }
 `;
 
-export {createRestaurantMutation, getAllRestaurantCardsQuery, getRestaurantQuery, getRestaurantStatsQuery, restaurantCreateFeedbackTag, getRestaurantVisitStatsQuery};
+const getRatingFeedbacksQuery = gql`
+query getRatingFeedbacks($restaurantId: ID, $daysToCover: Float){
+  ratingFeedBacks(restaurantId: $restaurantId, daysToCover: $daysToCover){
+    restaurantName,
+    userId,
+    userName,
+    userVisitedRestaurantAt,
+    rating,
+    tags{
+      content,
+    },
+    comment,
+    userContactName,
+    userContact,
+    userPictureURL,
+  }
+}
+`;
+
+export {
+  createRestaurantMutation,
+  getAllRestaurantCardsQuery,
+  getRestaurantQuery,
+  getRestaurantStatsQuery,
+  restaurantCreateFeedbackTag,
+  getRestaurantVisitStatsQuery,
+  getRatingFeedbacksQuery,
+};
