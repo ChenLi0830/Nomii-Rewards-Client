@@ -1,7 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, Platform, Text} from 'react-native';
-import {Image} from 'react-native-animatable';
-import {StarRating} from '../common'
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StarRating, WithLoadingComponent} from '../common';
+import {graphql} from 'react-apollo';
+import {getRestaurantStatsQuery} from '../../graphql/restaurant';
+import {getTimeInSec} from '../api';
+import {compose} from 'recompose';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -17,13 +20,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  ratingView:{
+  ratingView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 5,
   },
-  ratingNumber:{
+  ratingNumber: {
     color: "#515151",
     fontSize: 28,
     fontWeight: "600",
@@ -31,18 +34,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const DashboardNavBarTitle = () => {
+const DashboardNavBarTitle = (props) => {
+  console.log("DashboardNavBarTitle props", props);
+  console.log("props.data.restaurant.statistics[3].averageRating",props.data.restaurant.statistics[3].averageRating)
+  const rating = props.data.restaurant.statistics[3].averageRating;
   return <View style={styles.wrapper}>
     <Text style={styles.title}>
-      The Bubble Tea Shop
+      {props.data.restaurant.name}
     </Text>
     
-    <View style = {styles.ratingView}>
-      <Text style={styles.ratingNumber}>4.3</Text>
+    <View style={styles.ratingView}>
+      <Text style={styles.ratingNumber}>{rating.toFixed(2)}</Text>
       <StarRating starColor={"#FFCC00"} emptyStarColor={"#FFCC00"}
-                  disabled rating={4.3} starSize={13} starStyle = {{marginRight: 3}}/>
+                  disabled rating={rating} starSize={13} starStyle={{marginRight: 3}}/>
     </View>
   </View>
 };
 
-export default DashboardNavBarTitle;
+// Container
+export default compose(
+    graphql(getRestaurantStatsQuery, {
+      options: (props) => {
+        return {
+          variables: {
+            restaurantId: props.restaurantId,
+            daysToCoverList: [1, 7, 30, 365],
+            endTo: getTimeInSec()
+          },
+        }
+      },
+    }),
+    WithLoadingComponent,
+)(DashboardNavBarTitle);

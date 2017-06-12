@@ -134,7 +134,7 @@ const RouterComponent = (props) => {
         <Scene key="businessDashboard" navigationBarStyle={styles.dashboardNavBar}>
           <Scene key="mainDash" component={MainDashboard}
                  renderBackButton={()=><DashboardBackBtn/>}
-                 renderTitle={() => <DashboardMainNavBar/>}
+                 renderTitle={() => <DashboardMainNavBar restaurantId = {user.ownedRestaurants[0]}/>}
                  ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
   
           <Scene key="ratingDash" component={RatingDashboard}

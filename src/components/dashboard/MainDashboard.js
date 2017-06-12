@@ -104,7 +104,6 @@ const MainDashboard = (props) => {
   const tabContents = statisticList.map((statistic,i) => {
     const {newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating} = statistic;
     
-    console.log("newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating", newUserCount, returnUserCount, newVisitCount, returnVisitCount, couponsCount, averageRating);
     const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Visits"];
     const statsNumbers = [newUserCount, returnUserCount, statisticList[3].newUserCount, newVisitCount+returnVisitCount];
     
