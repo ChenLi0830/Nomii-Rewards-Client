@@ -1,24 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, Text, ListView, View, ScrollView, FlatList} from 'react-native';
-import {Button, WithLoadingComponent} from '../common/index';
-import {Actions} from 'react-native-router-flux';
+import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
+import {Loading, WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery, getRestaurantStatsQuery} from '../../graphql/restaurant';
-import EmployeePINItem from '../EmployeePINItem';
 import {getTimeInSec} from '../api';
-import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
-import {responsiveWidth, responsiveHeight, responsiveFontSize} from 'react-native-responsive-dimensions';
+import {branch, compose, lifecycle, renderComponent, withHandlers, withState} from 'recompose';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
-import _ from 'lodash';
-import {Loading} from '../common/index';
-import { Tabs, WhiteSpace } from 'antd-mobile';
-import HightlightContainer from './HightlightContainer';
+import {Tabs} from 'antd-mobile';
 import RatingProgressCard from './RatingProgressCard';
-import FlatListItem from '../common/FlatListItem';
 import {DashboardUserRating} from './UserFeedback';
 
 const TabPane = Tabs.TabPane;
-
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -27,7 +20,7 @@ const styles = StyleSheet.create({
     marginTop: 120,
     backgroundColor: "#f9f9f9",
   },
-  periodTabBar:{
+  periodTabBar: {
     height: responsiveHeight(6),
     backgroundColor: "white",
   },
@@ -36,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     paddingVertical: responsiveHeight(3),
   },
-  starTabBar:{
+  starTabBar: {
     height: responsiveHeight(7),
     borderTopColor: "#eee",
     borderTopWidth: 1,
@@ -59,9 +52,9 @@ const renderStarRow = (feedback) => {
       <View style={styles.dateView}>
         <DashboardUserRating userName={feedback.userName}
                              imageURL={feedback.userPictureURL}
-                             comment = {feedback.comment}
+                             comment={feedback.comment}
                              rating={feedback.rating}
-                             leftAt = {feedback.createdAt}/>
+                             leftAt={feedback.createdAt}/>
       </View>
   )
 };
@@ -76,20 +69,21 @@ const RatingDashboard = (props) => {
   
   let {statistics: statisticList} = props.stats.restaurant;
   // separate feedbacks based on ratingStars
-  let tabStarContents = [[],[],[],[],[]];
+  let tabStarContents = [[], [], [], [], []];
   ratingFeedBacks.map(feedback => {
-    let index = feedback.rating-1;
+    let index = feedback.rating - 1;
     tabStarContents[index].push(feedback);
   });
   
   console.log("tabStarContents", tabStarContents);
   
   // get feedback charts
-  const tabContents = statisticList.map((statistic,i) => {
+  const tabContents = statisticList.map((statistic, i) => {
     return <View style={styles.dateView} key={i}>
-      <RatingProgressCard progressList = {tabStarContents.map(starContent => starContent.length).reverse()}
-                          total = {tabStarContents.reduce((total, starContent) => total + starContent.length, 0)}
-                          rating = {statisticList[periodToNum[props.selectedTab]].averageRating}/>
+      <RatingProgressCard
+          progressList={tabStarContents.map(starContent => starContent.length).reverse()}
+          total={tabStarContents.reduce((total, starContent) => total + starContent.length, 0)}
+          rating={statisticList[periodToNum[props.selectedTab]].averageRating}/>
     </View>
   });
   
@@ -107,8 +101,10 @@ const RatingDashboard = (props) => {
   return <View style={styles.wrapper}>
     <ScrollView style={{backgroundColor: "#f9f9f9",}}>
       <View>
-        <Tabs activeKey={props.selectedTab} defaultActiveKey = "week" onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
-              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
+        <Tabs activeKey={props.selectedTab} defaultActiveKey="week" onTabClick={props.onTabClick}
+              underlineColor="#f9f9f9" barStyle={styles.periodTabBar}
+              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
+              animated>
           <TabPane tab="Day" key="day">
             {tabContents[0]}
           </TabPane>
@@ -123,10 +119,12 @@ const RatingDashboard = (props) => {
           </TabPane>
         </Tabs>
       </View>
-  
+      
       <View style={{height: responsiveHeight(70)}}>
-        <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick} underlineColor="#eee" barStyle = {styles.starTabBar}
-              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
+        <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick}
+              underlineColor="#eee" barStyle={styles.starTabBar}
+              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
+              animated>
           <TabPane tab="5 stars" key="5">
             {starListViews[4]}
           </TabPane>
@@ -197,13 +195,16 @@ export default compose(
         
         const timeStampNow = getTimeInSec();
         
-        for (const feedback of allfeedBacks){
-          if ((timeStampNow - feedback.createdAt) <= 1 * 24 * 3600) feedBackByTimePeriod[0].push(feedback);
-          if ((timeStampNow - feedback.createdAt) <= 7 * 24 * 3600) feedBackByTimePeriod[1].push(feedback);
-          if ((timeStampNow - feedback.createdAt) <= 30 * 24 * 3600) feedBackByTimePeriod[2].push(feedback);
+        for (const feedback of allfeedBacks) {
+          if ((timeStampNow - feedback.createdAt) <= 1 * 24 * 3600) feedBackByTimePeriod[0].push(
+              feedback);
+          if ((timeStampNow - feedback.createdAt) <= 7 * 24 * 3600) feedBackByTimePeriod[1].push(
+              feedback);
+          if ((timeStampNow - feedback.createdAt) <= 30 * 24 * 3600) feedBackByTimePeriod[2].push(
+              feedback);
           feedBackByTimePeriod[3].push(feedback);
         }
-  
+        
         console.log("feedBackByTimePeriod", feedBackByTimePeriod);
       },
       componentDidMount() {
