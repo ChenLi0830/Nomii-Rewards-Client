@@ -51,6 +51,9 @@ const periodToNum = {
   "year": 3,
 };
 
+// categorize feedbacks into different time periods
+let feedBackByTimePeriod = [[], [], [], []];
+
 const renderStarRow = (feedback) => {
   return (
       <View style={styles.dateView}>
@@ -67,7 +70,8 @@ const RatingDashboard = (props) => {
   console.log("RatingDashboard props", props);
   // props.data.restaurant.statistics
   
-  const {ratingFeedBacks} = props.data;
+  let ratingFeedBacks = feedBackByTimePeriod[periodToNum[props.selectedTab]];
+  
   console.log("ratingFeedBacks", ratingFeedBacks);
   
   let {statistics: statisticList} = props.stats.restaurant;
@@ -80,6 +84,7 @@ const RatingDashboard = (props) => {
   
   console.log("tabStarContents", tabStarContents);
   
+  // get feedback charts
   const tabContents = statisticList.map((statistic,i) => {
     return <View style={styles.dateView} key={i}>
       <RatingProgressCard progressList = {tabStarContents.map(starContent => starContent.length).reverse()}
@@ -88,6 +93,7 @@ const RatingDashboard = (props) => {
     </View>
   });
   
+  // get feedback lists
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const starDataSources = tabStarContents.map(starContent => ds.cloneWithRows(starContent));
   const starListViews = starDataSources.map(dataSource => {
@@ -184,6 +190,22 @@ export default compose(
       },
     }),
     lifecycle({
+      componentWillMount(){
+        // ratingFeedBacks sorted based on createAt
+        const allfeedBacks = [...this.props.data.ratingFeedBacks].reverse();
+        console.log("allfeedBacks", allfeedBacks);
+        
+        const timeStampNow = getTimeInSec();
+        
+        for (const feedback of allfeedBacks){
+          if ((timeStampNow - feedback.createdAt) <= 1 * 24 * 3600) feedBackByTimePeriod[0].push(feedback);
+          if ((timeStampNow - feedback.createdAt) <= 7 * 24 * 3600) feedBackByTimePeriod[1].push(feedback);
+          if ((timeStampNow - feedback.createdAt) <= 30 * 24 * 3600) feedBackByTimePeriod[2].push(feedback);
+          feedBackByTimePeriod[3].push(feedback);
+        }
+  
+        console.log("feedBackByTimePeriod", feedBackByTimePeriod);
+      },
       componentDidMount() {
         Amplitude.logEvent('Restaurant stats screen shows');
       },
