@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   container: {
     width: responsiveWidth(86),
     height: responsiveHeight(22),
+    marginTop: responsiveHeight(5),
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: responsiveHeight(3),
@@ -19,13 +20,34 @@ const styles = StyleSheet.create({
   },
 });
 
+// const _data = [
+//   ['4am', 7],
+//   ['8am', 4.5],
+//   ['12pm', 3],
+//   ['4pm', 4],
+//   ['8pm', 5],
+//   ['12am', 6.5],
+// ];
+
+// const _data = [
+//   ['Jan', 7],
+//   ['Feb', 4.5],
+//   ['Mar', 3],
+//   ['Apr', 4],
+//   ['May', 5],
+//   ['Jun', 6.5],
+//   ['Jul', 7],
+//   ['Aug', 4.5],
+//   ['Sep', 3],
+//   ['Oct', 4],
+//   ['Nov', 5],
+//   ['Dec', 6.5],
+// ];
 const _data = [
-  ['4am', 7],
-  ['8am', 4.5],
-  ['12pm', 3],
-  ['4pm', 4],
-  ['8pm', 5],
-  ['12am', 6.5],
+  ['Week 1', 7],
+  ['Week 2', 4.5],
+  ['Week 3', 3],
+  ['Week 4', 4],
 ];
 
 const ComplaintBarChart = ({data = _data}) => {

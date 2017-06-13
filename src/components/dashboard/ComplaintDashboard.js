@@ -1,22 +1,16 @@
 import React from 'react';
-import {Image, StyleSheet, Alert, Text, View, ScrollView, FlatList} from 'react-native';
-import {Button, WithLoadingComponent} from '../common/index';
-import {Actions} from 'react-native-router-flux';
+import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
-import {getRestaurantStatsQuery} from '../../graphql/restaurant';
-import EmployeePINItem from '../EmployeePINItem';
-import {getTimeInSec} from '../api';
-import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
-import {responsiveWidth, responsiveHeight, responsiveFontSize} from 'react-native-responsive-dimensions';
+import {getRatingFeedbacksQuery} from '../../graphql/restaurant';
+import {categorizeFeedbacksByPeriod, getTimeInSec} from '../api';
+import {compose, lifecycle, withHandlers, withState} from 'recompose';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
-import _ from 'lodash';
-import {Loading} from '../common/index';
-import { Tabs, WhiteSpace } from 'antd-mobile';
+import {Tabs} from 'antd-mobile';
 import ComplaintBarChart from './ComplaintBarChart';
-import HightlightContainer from './HightlightContainer';
-import RatingProgressCard from './RatingProgressCard';
-import FlatListItem from '../common/FlatListItem';
 import {DashboardUserComplaint} from './UserFeedback';
+import moment from 'moment';
 
 
 const TabPane = Tabs.TabPane;
@@ -29,7 +23,7 @@ const styles = StyleSheet.create({
     marginTop: 120,
     backgroundColor: "#f9f9f9",
   },
-  periodTabBar:{
+  periodTabBar: {
     height: responsiveHeight(6),
     backgroundColor: "white",
   },
@@ -38,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     paddingVertical: responsiveHeight(3),
   },
-  starTabBar:{
+  starTabBar: {
     height: responsiveHeight(7),
     borderTopColor: "#eee",
     borderTopWidth: 1,
@@ -46,31 +40,24 @@ const styles = StyleSheet.create({
   },
 });
 
-const RatingDashboard = (props) => {
-  console.log("MainDashboard props", props);
+// categorize feedbacks into different time periods
+let feedBackByTimePeriod = [[], [], [], []];
+let chartData = [[], [], [], []];
+
+const ComplaintDashboard = (props) => {
+  console.log("ComplaintDashboard props", props);
+  console.log("feedBackByTimePeriod", feedBackByTimePeriod);
   
-  if (!props.data.restaurant) {
-    console.log("user doesn't own restaurant! props.restaurant", props.data.restaurant);
-    return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-      <Text>User doesn't own this restaurant</Text>
-    </View>
-  }
-  
-  const {PINs, id, statistics: statisticList} = props.data.restaurant;
-  statisticList[2] = statisticList[0];statisticList[3] = statisticList[1];
-  
-  console.log("statisticList", statisticList);
-  
-  const tabContents = statisticList.map((statistic,i) => {
+  const tabContents = [1,2,3,4].map((statistic, i) => {
     return <View style={styles.dateView} key={i}>
-        <ComplaintBarChart/>
+      <ComplaintBarChart data={chartData[i]}/>
     </View>
   });
   
-  const tabResolveContents = statisticList.map((statistic,i) => {
+  const tabResolveContents = [1,2,3,4].map((statistic, i) => {
     const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
     const statsNumbers = [20, 9, 1280, 31];
-
+    
     return <View style={styles.dateView} key={i}>
       <DashboardUserComplaint/>
     </View>
@@ -79,8 +66,10 @@ const RatingDashboard = (props) => {
   return <View style={styles.wrapper}>
     <ScrollView style={{backgroundColor: "#f9f9f9",}}>
       <View>
-        <Tabs activeKey={props.selectedTab} defaultActiveKey = "week" onTabClick={props.onTabClick} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
-              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
+        <Tabs activeKey={props.selectedTab} defaultActiveKey="week" onTabClick={props.onTabClick}
+              underlineColor="#f9f9f9" barStyle={styles.periodTabBar}
+              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
+              animated>
           <TabPane tab="Day" key="day">
             {tabContents[0]}
           </TabPane>
@@ -88,17 +77,19 @@ const RatingDashboard = (props) => {
             {tabContents[1]}
           </TabPane>
           <TabPane tab="Month" key="month">
-            {tabContents[1]}
+            {tabContents[2]}
           </TabPane>
           <TabPane tab="Year" key="year">
-            {tabContents[1]}
+            {tabContents[3]}
           </TabPane>
         </Tabs>
       </View>
-  
+      
       <View>
-        <Tabs activeKey={props.selectedTabResolve} onTabClick={props.onTabResolveClick} underlineColor="#eee" barStyle = {styles.starTabBar}
-              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
+        <Tabs activeKey={props.selectedTabResolve} onTabClick={props.onTabResolveClick}
+              underlineColor="#eee" barStyle={styles.starTabBar}
+              activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
+              animated>
           <TabPane tab="Unresolved" key="unresolved">
             {tabResolveContents[0]}
           </TabPane>
@@ -114,13 +105,13 @@ const RatingDashboard = (props) => {
 
 // Container
 export default compose(
-    graphql(getRestaurantStatsQuery, {
+    graphql(getRatingFeedbacksQuery, {
       options: (props) => {
+        console.log("getRatingFeedbacksQuery props", props);
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCoverList: [5000, 30],
-            endTo: getTimeInSec()
+            daysToCover: 365,
           },
         }
       },
@@ -137,6 +128,45 @@ export default compose(
       },
     }),
     lifecycle({
+      componentWillMount(){
+        feedBackByTimePeriod = categorizeFeedbacksByPeriod(this.props.data.ratingFeedBacks);
+        let numOfCols = [6, 7, 4, 12];
+        let nowTimeStamp = getTimeInSec();
+        let dayInSec = 24 * 3600;
+        let feedbackCountByPeriod = [[], [], [], []];
+        let feedbackColNameByPeriod = [[], [], [], []];
+        let colFormat = ['HH a', 'ddd', 'MMMM Do', 'MMM'];
+        
+        let startOfPeriod = [nowTimeStamp - dayInSec, nowTimeStamp - 7*dayInSec, nowTimeStamp - 30*dayInSec, nowTimeStamp - 365*dayInSec];
+        feedBackByTimePeriod.forEach((feedbacks, i)=>{
+          let spanInSec = (nowTimeStamp - startOfPeriod[i]) / numOfCols[i];
+          
+          feedbacks.forEach(feedback => {
+            let colIndex = Math.trunc((feedback.createdAt - startOfPeriod[i]) / spanInSec);
+            feedbackCountByPeriod[i][colIndex] = ~~feedbackCountByPeriod[i][colIndex]+1;
+          });
+          
+          for (let k=0; k<numOfCols[i]; k++){
+            if (i===1 || i===3){//week or year
+              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+            }
+            else if (i===0){// day
+              const start = moment().subtract(spanInSec * (k+1) - 3600, "seconds").format(colFormat[i]);
+              const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + " - " + end;
+            }
+            else {// Month
+              const start = moment().subtract(spanInSec * (k+1) - 3600 * 24, "seconds").format(colFormat[i]);
+              const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + "-" + end;
+            }
+          }
+          
+          for (let k=0; k<numOfCols[i]; k++){
+            chartData[i][k] = [feedbackColNameByPeriod[i][k], feedbackCountByPeriod[i][k]];
+          }
+        });
+      },
       componentDidMount() {
         Amplitude.logEvent('Restaurant stats screen shows');
       },
@@ -145,4 +175,4 @@ export default compose(
         console.log("nextProps", nextProps);
       },
     }),
-)(RatingDashboard);
+)(ComplaintDashboard);
