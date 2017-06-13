@@ -193,12 +193,11 @@ export default compose(
               'Are you sure you want to mark this complaint as resolved?',
               [
                 {
-                  text: 'Cancel', onPress: () => {
-                }, style: 'cancel'
+                  text: 'Cancel', onPress: () => {}, style: 'cancel'
                 },
                 {
                   text: 'Resolve',
-                  onPress: () => alert("mark as resolved")/*props.removePIN(restaurantId, code)*/,
+                  onPress: () => props.resolveFeedback(props.leftAt),
                   style: 'default'
                 },
               ],
@@ -211,12 +210,11 @@ export default compose(
               'Are you sure you want to mark this complaint as unresolved?',
               [
                 {
-                  text: 'Cancel', onPress: () => {
-                }, style: 'cancel'
+                  text: 'Cancel', onPress: () => {}, style: 'cancel'
                 },
                 {
                   text: 'Unresolve',
-                  onPress: () => alert("mark as unresolved")/*props.removePIN(restaurantId, code)*/,
+                  onPress: () => props.unresolveFeedback(props.leftAt)/*props.removePIN(restaurantId, code)*/,
                   style: 'default',
                 },
               ],

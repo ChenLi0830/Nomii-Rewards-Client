@@ -3,6 +3,7 @@ import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
 import {WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery} from '../../graphql/restaurant';
+import {resolveFeedback, unresolveFeedback} from '../../graphql/feedback';
 import {categorizeFeedbacksByPeriod, getPeriodIndex, getTimeInSec} from '../api';
 import {compose, lifecycle, withHandlers, withState} from 'recompose';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
@@ -11,7 +12,8 @@ import {Tabs} from 'antd-mobile';
 import ComplaintBarChart from './ComplaintBarChart';
 import {DashboardUserComplaint} from './UserFeedback';
 import moment from 'moment';
-
+import {Toast} from 'antd-mobile';
+import _ from 'lodash';
 
 const TabPane = Tabs.TabPane;
 
@@ -40,18 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const renderFeedbackRow = (feedback) => {
-  return <View style={styles.dateView}>
-    <DashboardUserComplaint userName={feedback.userName}
-                            imageURL={feedback.userPictureURL}
-                            comment={feedback.comment}
-                            rating={feedback.rating}
-                            leftAt={feedback.createdAt}
-                            isResolved={feedback.isResolved}
-                            contactInfo = {feedback.userContact}
-                            tags = {feedback.tags.map(tag => tag.content)}/>
-  </View>
-};
+let renderFeedbackRow;
 
 // categorize feedbacks into different time periods
 let feedBackByTimePeriod = [[], [], [], []];
@@ -60,6 +51,77 @@ let tabCharts;
 const ComplaintDashboard = (props) => {
   console.log("ComplaintDashboard props", props);
   console.log("feedBackByTimePeriod", feedBackByTimePeriod);
+  
+  // Initialization
+  let complaints = props.data.ratingFeedBacks.filter(feedback => {
+    return feedback.userContact && typeof feedback.userContact === "string" && feedback.userContact.length > 0
+  });
+  
+  feedBackByTimePeriod = categorizeFeedbacksByPeriod(complaints);
+  let numOfCols = [6, 7, 4, 12];
+  let nowTimeStamp = getTimeInSec();
+  let dayInSec = 24 * 3600;
+  let feedbackCountByPeriod = [[], [], [], []];
+  let feedbackColNameByPeriod = [[], [], [], []];
+  let colFormat = ['HH a', 'ddd', 'MMMM Do', 'MMM'];
+  let chartDataList = [[], [], [], []];
+  
+  let startOfPeriod = [nowTimeStamp - dayInSec, nowTimeStamp - 7 * dayInSec,
+    nowTimeStamp - 30 * dayInSec, nowTimeStamp - 365 * dayInSec];
+  feedBackByTimePeriod.forEach((feedbacks, i) => {
+    let spanInSec = (nowTimeStamp - startOfPeriod[i]) / numOfCols[i];
+    
+    feedbacks.forEach(feedback => {
+      let colIndex = Math.trunc((feedback.createdAt - startOfPeriod[i]) / spanInSec);
+      feedbackCountByPeriod[i][colIndex] = ~~feedbackCountByPeriod[i][colIndex] + 1;
+    });
+    
+    for (let k = 0; k < numOfCols[i]; k++) {
+      if (i === 1 || i === 3) {//week or year
+        feedbackColNameByPeriod[i][numOfCols[i] - k - 1] =
+            moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+      }
+      else if (i === 0) {// day
+        const start = moment().subtract(spanInSec * (k + 1) - 3600, "seconds")
+            .format(colFormat[i]);
+        const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+        feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + " - " + end;
+      }
+      else {// Month
+        const start = moment().subtract(spanInSec * (k + 1) - 3600 * 24, "seconds")
+            .format(colFormat[i]);
+        const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
+        feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + "-" + end;
+      }
+    }
+    
+    for (let k = 0; k < numOfCols[i]; k++) {
+      chartDataList[i][k] = [feedbackColNameByPeriod[i][k], feedbackCountByPeriod[i][k]];
+    }
+  });
+  
+  tabCharts = chartDataList.map((chartData, i) => {
+    return <View style={styles.dateView} key={i}>
+      <ComplaintBarChart data={chartData}/>
+    </View>
+  });
+  
+  // defined renderFeedbackRow
+  renderFeedbackRow = (feedback) => {
+    return <View style={styles.dateView}>
+      <DashboardUserComplaint userName={feedback.userName}
+                              imageURL={feedback.userPictureURL}
+                              comment={feedback.comment}
+                              rating={feedback.rating}
+                              leftAt={feedback.createdAt}
+                              isResolved={feedback.isResolved}
+                              contactInfo = {feedback.userContact}
+                              tags = {feedback.tags.map(tag => tag.content)}
+                              resolveFeedback = {props.resolveFeedback}
+                              unresolveFeedback = {props.unresolveFeedback}
+      />
+    </View>
+  };
   
   let ratingFeedBacks = feedBackByTimePeriod[getPeriodIndex(props.selectedTab)];
   
@@ -137,6 +199,12 @@ export default compose(
       },
     }),
     WithLoadingComponent,
+    graphql(resolveFeedback, {
+      name : 'resolveFeedbackMutation'
+    }),
+    graphql(unresolveFeedback, {
+      name: 'unresolveFeedbackMutation'
+    }),
     withState('selectedTab', 'updateTab', 'week'),
     withState('selectedTabResolve', 'updateTabResolve', 'unresolved'),
     withHandlers({
@@ -146,62 +214,84 @@ export default compose(
       onTabResolveClick: props => (key) => {
         props.updateTabResolve(key);
       },
+      resolveFeedback: props => (createdAt) => {
+        Toast.loading('Loading...', 0);
+  
+        props.resolveFeedbackMutation({
+          variables: {
+            restaurantId: props.ownedRestaurant,
+            createdAt: createdAt,
+          },
+          update: (store, response) => {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: getRatingFeedbacksQuery,
+              variables: {
+                restaurantId: props.ownedRestaurant,
+                daysToCover: 365,
+              },
+            });
+            
+            // get new data for the store
+            let newData = JSON.parse(JSON.stringify(data));
+            let feedback = _.find(newData.ratingFeedBacks, {createdAt: createdAt});
+            feedback.isResolved = true;
+            
+            // put newData into store
+            store.writeQuery({
+              query: getRatingFeedbacksQuery,
+              variables: {
+                restaurantId: props.ownedRestaurant,
+                daysToCover: 365,
+              },
+              data: newData });
+          },
+        })
+            .then(result => {
+              Toast.hide();
+            })
+      },
+      unresolveFeedback: props => (createdAt) => {
+        Toast.loading('Loading...', 0);
+    
+        props.unresolveFeedbackMutation({
+          variables: {
+            restaurantId: props.ownedRestaurant,
+            createdAt: createdAt,
+          },
+          update: (store, response) => {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: getRatingFeedbacksQuery,
+              variables: {
+                restaurantId: props.ownedRestaurant,
+                daysToCover: 365,
+              },
+            });
+    
+            // get new data for the store
+            let newData = JSON.parse(JSON.stringify(data));
+            let feedback = _.find(newData.ratingFeedBacks, {createdAt: createdAt});
+            feedback.isResolved = false;
+    
+            // put newData into store
+            store.writeQuery({
+              query: getRatingFeedbacksQuery,
+              variables: {
+                restaurantId: props.ownedRestaurant,
+                daysToCover: 365,
+              },
+              data: newData });
+          },
+        })
+            .then(result => {
+              Toast.hide();
+            })
+      }
     }),
     lifecycle({
       componentWillMount(){
-        // get complaints from all ratingFeedbacks
-        let complaints = this.props.data.ratingFeedBacks.filter(feedback => {
-          return feedback.userContact && typeof feedback.userContact === "string" && feedback.userContact.length > 0
-        });
-        
-        feedBackByTimePeriod = categorizeFeedbacksByPeriod(complaints);
-        let numOfCols = [6, 7, 4, 12];
-        let nowTimeStamp = getTimeInSec();
-        let dayInSec = 24 * 3600;
-        let feedbackCountByPeriod = [[], [], [], []];
-        let feedbackColNameByPeriod = [[], [], [], []];
-        let colFormat = ['HH a', 'ddd', 'MMMM Do', 'MMM'];
-        let chartDataList = [[], [], [], []];
-        
-        let startOfPeriod = [nowTimeStamp - dayInSec, nowTimeStamp - 7 * dayInSec,
-          nowTimeStamp - 30 * dayInSec, nowTimeStamp - 365 * dayInSec];
-        feedBackByTimePeriod.forEach((feedbacks, i) => {
-          let spanInSec = (nowTimeStamp - startOfPeriod[i]) / numOfCols[i];
-          
-          feedbacks.forEach(feedback => {
-            let colIndex = Math.trunc((feedback.createdAt - startOfPeriod[i]) / spanInSec);
-            feedbackCountByPeriod[i][colIndex] = ~~feedbackCountByPeriod[i][colIndex] + 1;
-          });
-          
-          for (let k = 0; k < numOfCols[i]; k++) {
-            if (i === 1 || i === 3) {//week or year
-              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] =
-                  moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
-            }
-            else if (i === 0) {// day
-              const start = moment().subtract(spanInSec * (k + 1) - 3600, "seconds")
-                  .format(colFormat[i]);
-              const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
-              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + " - " + end;
-            }
-            else {// Month
-              const start = moment().subtract(spanInSec * (k + 1) - 3600 * 24, "seconds")
-                  .format(colFormat[i]);
-              const end = moment().subtract(spanInSec * k, "seconds").format(colFormat[i]);
-              feedbackColNameByPeriod[i][numOfCols[i] - k - 1] = start + "-" + end;
-            }
-          }
-          
-          for (let k = 0; k < numOfCols[i]; k++) {
-            chartDataList[i][k] = [feedbackColNameByPeriod[i][k], feedbackCountByPeriod[i][k]];
-          }
-        });
-        
-        tabCharts = chartDataList.map((chartData, i) => {
-          return <View style={styles.dateView} key={i}>
-            <ComplaintBarChart data={chartData}/>
-          </View>
-        });
+      
       },
       
       componentDidMount() {

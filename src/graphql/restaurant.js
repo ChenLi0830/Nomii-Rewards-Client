@@ -112,6 +112,7 @@ query getRatingFeedbacks($restaurantId: ID, $daysToCover: Float){
     userContact,
     userPictureURL,
     createdAt,
+    isResolved,
   }
 }
 `;
