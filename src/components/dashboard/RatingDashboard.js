@@ -3,7 +3,7 @@ import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
 import {Loading, WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery, getRestaurantStatsQuery} from '../../graphql/restaurant';
-import {getTimeInSec, categorizeFeedbacksByPeriod} from '../api';
+import {getTimeInSec, categorizeFeedbacksByPeriod, getPeriodIndex} from '../api';
 import {branch, compose, lifecycle, renderComponent, withHandlers, withState} from 'recompose';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
@@ -37,13 +37,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const periodToNum = {
-  "day": 0,
-  "week": 1,
-  "month": 2,
-  "year": 3,
-};
-
 // categorize feedbacks into different time periods
 let feedBackByTimePeriod = [[], [], [], []];
 
@@ -63,7 +56,7 @@ const RatingDashboard = (props) => {
   console.log("RatingDashboard props", props);
   // props.data.restaurant.statistics
   
-  let ratingFeedBacks = feedBackByTimePeriod[periodToNum[props.selectedTab]];
+  let ratingFeedBacks = feedBackByTimePeriod[getPeriodIndex(props.selectedTab)];
   
   console.log("ratingFeedBacks", ratingFeedBacks);
   
@@ -78,19 +71,19 @@ const RatingDashboard = (props) => {
   console.log("tabStarContents", tabStarContents);
   
   // get feedback charts
-  const tabContents = statisticList.map((statistic, i) => {
+  const tabCharts = statisticList.map((statistic, i) => {
     return <View style={styles.dateView} key={i}>
       <RatingProgressCard
           progressList={tabStarContents.map(starContent => starContent.length).reverse()}
           total={tabStarContents.reduce((total, starContent) => total + starContent.length, 0)}
-          rating={statisticList[periodToNum[props.selectedTab]].averageRating}/>
+          rating={statisticList[getPeriodIndex(props.selectedTab)].averageRating}/>
     </View>
   });
   
   // get feedback lists
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const starDataSources = tabStarContents.map(starContent => ds.cloneWithRows(starContent));
-  const starListViews = starDataSources.map(dataSource => {
+  const tabFeedbacks = starDataSources.map(dataSource => {
     return <ListView dataSource={dataSource}
                      enableEmptySections
                      renderRow={renderStarRow}
@@ -106,16 +99,16 @@ const RatingDashboard = (props) => {
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
               animated>
           <TabPane tab="Day" key="day">
-            {tabContents[0]}
+            {tabCharts[0]}
           </TabPane>
           <TabPane tab="Week" key="week">
-            {tabContents[1]}
+            {tabCharts[1]}
           </TabPane>
           <TabPane tab="Month" key="month">
-            {tabContents[2]}
+            {tabCharts[2]}
           </TabPane>
           <TabPane tab="Year" key="year">
-            {tabContents[3]}
+            {tabCharts[3]}
           </TabPane>
         </Tabs>
       </View>
@@ -126,19 +119,19 @@ const RatingDashboard = (props) => {
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
               animated>
           <TabPane tab="5 stars" key="5">
-            {starListViews[4]}
+            {tabFeedbacks[4]}
           </TabPane>
           <TabPane tab="4 stars" key="4">
-            {starListViews[3]}
+            {tabFeedbacks[3]}
           </TabPane>
           <TabPane tab="3 stars" key="3">
-            {starListViews[2]}
+            {tabFeedbacks[2]}
           </TabPane>
           <TabPane tab="2 stars" key="2">
-            {starListViews[1]}
+            {tabFeedbacks[1]}
           </TabPane>
           <TabPane tab="1 star" key="1">
-            {starListViews[0]}
+            {tabFeedbacks[0]}
           </TabPane>
         </Tabs>
       </View>

@@ -141,6 +141,20 @@ const categorizeFeedbacksByPeriod = (ratingFeedBacks) => {
   return feedBackByTimePeriod;
 };
 
+/**
+ * get the index of a time period, used in dashboard
+ * @param{('day'|'week'|'month'|'year')} period
+ * */
+const getPeriodIndex = (period) => {
+  const periodToNum = {
+    "day": 0,
+    "week": 1,
+    "month": 2,
+    "year": 3,
+  };
+  return periodToNum[period];
+};
+
 export {
   sortCardsByDistance,
   sortCardsByUrgency,
@@ -154,4 +168,5 @@ export {
   getPromiseTime,
   calcHowLongAgo,
   categorizeFeedbacksByPeriod,
+  getPeriodIndex,
 };
