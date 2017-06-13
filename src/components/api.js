@@ -118,6 +118,29 @@ const calcHowLongAgo = (prevTimeStamp) => {
   return `${timeDifInDay} ${timeDifInDay>1 ? "days" : "day"} ago`;
 };
 
+/**
+ * categorize feedBacks by time period, used in Dashboard
+ * @param{Object[]} ratingFeedBacks
+ * */
+const categorizeFeedbacksByPeriod = (ratingFeedBacks) => {
+  const timeStampNow = getTimeInSec();
+  const allfeedBacks = [...ratingFeedBacks].reverse();
+  
+  let feedBackByTimePeriod = [[], [], [], []];
+  
+  for (const feedback of allfeedBacks) {
+    if ((timeStampNow - feedback.createdAt) <= 1 * 24 * 3600) feedBackByTimePeriod[0].push(
+        feedback);
+    if ((timeStampNow - feedback.createdAt) <= 7 * 24 * 3600) feedBackByTimePeriod[1].push(
+        feedback);
+    if ((timeStampNow - feedback.createdAt) <= 30 * 24 * 3600) feedBackByTimePeriod[2].push(
+        feedback);
+    feedBackByTimePeriod[3].push(feedback);
+  }
+  
+  return feedBackByTimePeriod;
+};
+
 export {
   sortCardsByDistance,
   sortCardsByUrgency,
@@ -130,4 +153,5 @@ export {
   getExpireInDays,
   getPromiseTime,
   calcHowLongAgo,
+  categorizeFeedbacksByPeriod,
 };

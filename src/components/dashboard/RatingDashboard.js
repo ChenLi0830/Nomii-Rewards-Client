@@ -3,7 +3,7 @@ import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
 import {Loading, WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery, getRestaurantStatsQuery} from '../../graphql/restaurant';
-import {getTimeInSec} from '../api';
+import {getTimeInSec, categorizeFeedbacksByPeriod} from '../api';
 import {branch, compose, lifecycle, renderComponent, withHandlers, withState} from 'recompose';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {Amplitude} from 'expo';
@@ -189,23 +189,7 @@ export default compose(
     }),
     lifecycle({
       componentWillMount(){
-        // ratingFeedBacks sorted based on createAt
-        const allfeedBacks = [...this.props.data.ratingFeedBacks].reverse();
-        console.log("allfeedBacks", allfeedBacks);
-        
-        const timeStampNow = getTimeInSec();
-        
-        for (const feedback of allfeedBacks) {
-          if ((timeStampNow - feedback.createdAt) <= 1 * 24 * 3600) feedBackByTimePeriod[0].push(
-              feedback);
-          if ((timeStampNow - feedback.createdAt) <= 7 * 24 * 3600) feedBackByTimePeriod[1].push(
-              feedback);
-          if ((timeStampNow - feedback.createdAt) <= 30 * 24 * 3600) feedBackByTimePeriod[2].push(
-              feedback);
-          feedBackByTimePeriod[3].push(feedback);
-        }
-        
-        console.log("feedBackByTimePeriod", feedBackByTimePeriod);
+        feedBackByTimePeriod = categorizeFeedbacksByPeriod(this.props.data.ratingFeedBacks)
       },
       componentDidMount() {
         Amplitude.logEvent('Restaurant stats screen shows');
