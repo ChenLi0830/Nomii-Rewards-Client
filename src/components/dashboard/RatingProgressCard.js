@@ -92,7 +92,7 @@ const RatingCard = ({progressList = [80,12,13,5,10], total=120, rating = 4.3}) =
     <View style={cardStyles.headerView}>
       <View style={cardStyles.ratingView}>
         <Text style={cardStyles.text}>
-          {rating}
+          {rating.toFixed(2)}
         </Text>
         <StarRating starColor={"#FFCC00"} emptyStarColor={"#FFCC00"}
                     disabled rating={rating} starSize={responsiveFontSize(2.5)} starStyle = {{marginRight: responsiveFontSize(0.7)}}/>

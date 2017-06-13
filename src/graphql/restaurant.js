@@ -111,6 +111,7 @@ query getRatingFeedbacks($restaurantId: ID, $daysToCover: Float){
     userContactName,
     userContact,
     userPictureURL,
+    createdAt,
   }
 }
 `;

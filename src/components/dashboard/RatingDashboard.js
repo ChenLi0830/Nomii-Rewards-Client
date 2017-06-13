@@ -1,9 +1,9 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
+import {Image, StyleSheet, Text, ListView, View, ScrollView, FlatList} from 'react-native';
 import {Button, WithLoadingComponent} from '../common/index';
 import {Actions} from 'react-native-router-flux';
 import {graphql} from 'react-apollo';
-import {getRestaurantStatsQuery} from '../../graphql/restaurant';
+import {getRatingFeedbacksQuery, getRestaurantStatsQuery} from '../../graphql/restaurant';
 import EmployeePINItem from '../EmployeePINItem';
 import {getTimeInSec} from '../api';
 import {compose, lifecycle, withHandlers, branch, renderComponent, withState} from 'recompose';
@@ -44,57 +44,58 @@ const styles = StyleSheet.create({
   },
 });
 
+const periodToNum = {
+  "day": 0,
+  "week": 1,
+  "month": 2,
+  "year": 3,
+};
+
+const renderStarRow = (feedback) => {
+  return (
+      <View style={styles.dateView}>
+        <DashboardUserRating userName={feedback.userName}
+                             imageURL={feedback.userPictureURL}
+                             comment = {feedback.comment}
+                             rating={feedback.rating}
+                             leftAt = {feedback.createdAt}/>
+      </View>
+  )
+};
+
 const RatingDashboard = (props) => {
-  console.log("MainDashboard props", props);
+  console.log("RatingDashboard props", props);
+  // props.data.restaurant.statistics
   
-  if (!props.data.restaurant) {
-    console.log("user doesn't own restaurant! props.restaurant", props.data.restaurant);
-    return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-      <Text>User doesn't own this restaurant</Text>
-    </View>
-  }
+  const {ratingFeedBacks} = props.data;
+  console.log("ratingFeedBacks", ratingFeedBacks);
   
-  const {PINs, id, statistics: statisticList} = props.data.restaurant;
-  statisticList[2] = statisticList[0];statisticList[3] = statisticList[1];
+  let {statistics: statisticList} = props.stats.restaurant;
+  // separate feedbacks based on ratingStars
+  let tabStarContents = [[],[],[],[],[]];
+  ratingFeedBacks.map(feedback => {
+    let index = feedback.rating-1;
+    tabStarContents[index].push(feedback);
+  });
   
-  console.log("statisticList", statisticList);
+  console.log("tabStarContents", tabStarContents);
   
   const tabContents = statisticList.map((statistic,i) => {
-    const statsTitles = ["New\nCustomers", "Return\nCustomers", "Total\nCustomers", "Stamps"];
-    const statsNumbers = [20, 9, 1280, 31];
-    let boxes = [];
-    for (let i=0; i<2; i++){
-      boxes.push(
-          <View style={styles.statsRow} key={i}>
-            <View style={styles.statsBox}>
-              <Text style={styles.statsTitle}>
-                {statsTitles[i*2]}
-              </Text>
-              <Text style={styles.statsNumber}>
-                {statsNumbers[i*2]}
-              </Text>
-            </View>
-            <View style={styles.statsBox}>
-              <Text style={styles.statsTitle}>
-                {statsTitles[i*2+1]}
-              </Text>
-              <Text style={styles.statsNumber}>
-                {statsNumbers[i*2+1]}
-              </Text>
-            </View>
-          </View>
-      )
-    }
-    
     return <View style={styles.dateView} key={i}>
-      <RatingProgressCard/>
+      <RatingProgressCard progressList = {tabStarContents.map(starContent => starContent.length).reverse()}
+                          total = {tabStarContents.reduce((total, starContent) => total + starContent.length, 0)}
+                          rating = {statisticList[periodToNum[props.selectedTab]].averageRating}/>
     </View>
   });
   
-  const tabStarContents = statisticList.map((statistic,i) => {
-    return <View style={styles.dateView} key={i}>
-      <DashboardUserRating/>
-    </View>
+  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  const starDataSources = tabStarContents.map(starContent => ds.cloneWithRows(starContent));
+  const starListViews = starDataSources.map(dataSource => {
+    return <ListView dataSource={dataSource}
+                     enableEmptySections
+                     renderRow={renderStarRow}
+                     style={styles.list}>
+    </ListView>
   });
   
   return <View style={styles.wrapper}>
@@ -109,31 +110,31 @@ const RatingDashboard = (props) => {
             {tabContents[1]}
           </TabPane>
           <TabPane tab="Month" key="month">
-            {tabContents[1]}
+            {tabContents[2]}
           </TabPane>
           <TabPane tab="Year" key="year">
-            {tabContents[1]}
+            {tabContents[3]}
           </TabPane>
         </Tabs>
       </View>
   
-      <View>
+      <View style={{height: responsiveHeight(70)}}>
         <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick} underlineColor="#eee" barStyle = {styles.starTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable animated>
           <TabPane tab="5 stars" key="5">
-            {tabStarContents[0]}
+            {starListViews[4]}
           </TabPane>
           <TabPane tab="4 stars" key="4">
-            {tabStarContents[0]}
+            {starListViews[3]}
           </TabPane>
           <TabPane tab="3 stars" key="3">
-            {tabStarContents[0]}
+            {starListViews[2]}
           </TabPane>
           <TabPane tab="2 stars" key="2">
-            {tabStarContents[0]}
+            {starListViews[1]}
           </TabPane>
           <TabPane tab="1 star" key="1">
-            {tabStarContents[0]}
+            {starListViews[0]}
           </TabPane>
         </Tabs>
       </View>
@@ -149,8 +150,24 @@ export default compose(
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCoverList: [5000, 30],
+            daysToCoverList: [1, 7, 30, 365],
             endTo: getTimeInSec()
+          },
+        }
+      },
+      name: "stats",
+    }),
+    branch(
+        props => props.stats.loading || (props.stats && props.stats.loading),
+        renderComponent(Loading),
+    ),
+    graphql(getRatingFeedbacksQuery, {
+      options: (props) => {
+        console.log("getRatingFeedbacksQuery props", props);
+        return {
+          variables: {
+            restaurantId: props.ownedRestaurant,
+            daysToCover: 365,
           },
         }
       },
