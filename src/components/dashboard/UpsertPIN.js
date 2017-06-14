@@ -3,6 +3,7 @@ import {Image, Text, FlatList, ScrollView, Animated, TextInput, StyleSheet, View
 import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../../graphql/restaurant';
 import {compose, lifecycle, withHandlers, withState, branch, renderComponent} from 'recompose';
+import {Toast} from 'antd-mobile';
 import EmployeePINItem from '../EmployeePINItem';
 import {getTimeInSec} from '../api';
 import {Amplitude} from 'expo';
@@ -10,6 +11,7 @@ import {Button, WithLoadingComponent} from '../common';
 import {responsiveWidth, responsiveHeight, responsiveFontSize} from 'react-native-responsive-dimensions';
 import _ from 'lodash';
 import {Actions} from 'react-native-router-flux';
+import {createPINMutation, editPINMutation} from '../../graphql/PIN';
 import {connect} from 'react-redux';
 import {createPinActions} from '../../modules';
 import {Tabs} from 'antd-mobile';
@@ -100,6 +102,7 @@ const UpsertPIN = (props) => {
       Next
     </Button>
   </View>;
+  
   const step2 = <View style={{alignItems: "center"}}>
     <View style={styles.card}>
       <View style={styles.cardTopView}>
@@ -125,7 +128,7 @@ const UpsertPIN = (props) => {
     </View>
     
     <Button style={styles.button} type="primary2" rounded={false} shadow={false} disabled={props.PIN.length !== 4}
-            onPress={()=>alert("submit")}>
+            onPress={props.onSubmit}>
       Submit
     </Button>
   </View>;
@@ -143,7 +146,6 @@ const UpsertPIN = (props) => {
   </View>
 };
 
-// export default UpsertPIN;
 export default compose(
     connect(
         state => ({
@@ -153,7 +155,56 @@ export default compose(
         {
           changeEmployeeName: createPinActions.changeEmployeeName,
           changePin: createPinActions.changePin,
+          createEmployeeSuccess: createPinActions.createEmployeeSuccess,
         },
     ),
     withState('step', 'updateStep', "0"),
+    graphql(createPINMutation, {
+      name: "createPINMutation"
+    }),
+    graphql(editPINMutation, {
+      name: "editPINMutation"
+    }),
+    withHandlers({
+      onSubmit: props => async () => {
+        const {ownedRestaurant, oldPIN, PIN, employeeName} = props;
+        Toast.loading('Creating...', 0);
+        if (props.editPIN){
+          console.log("editPIN restaurantId, oldPIN, PIN, employeeName", ownedRestaurant, oldPIN, PIN, employeeName);
+          await props.editPINMutation({
+            variables: {
+              restaurantId: ownedRestaurant,
+              oldPIN: oldPIN,
+              newPIN: PIN,
+              employeeName: employeeName,
+            }
+          });
+        }
+        else {
+          console.log("create PIN, restaurantId, oldPIN, PIN, employeeName", ownedRestaurant, oldPIN, PIN, employeeName);
+          await props.createPINMutation({
+            variables: {
+              restaurantId: ownedRestaurant,
+              PIN: PIN,
+              employeeName: employeeName,
+            }
+          });
+        }
+  
+        Toast.hide();
+        Actions.managePINsDash();
+      },
+    }),
+    lifecycle({
+      componentWillMount(){
+        if (this.props.editPIN){
+          this.props.changeEmployeeName(this.props.oldEmployeeName);
+          this.props.changePin(this.props.oldPIN);
+        }
+        else {
+          this.props.changeEmployeeName("");
+          this.props.changePin("");
+        }
+      }
+    }),
 )(UpsertPIN);

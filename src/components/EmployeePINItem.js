@@ -6,6 +6,7 @@ import {graphql} from 'react-apollo';
 import {Toast} from 'antd-mobile';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {compose, withHandlers} from 'recompose';
+import {Actions} from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
   textWrapper: {
@@ -80,7 +81,7 @@ const EmployeePIN = (props) => {
   const swipeButtons = [
     {
       text: 'edit',
-      onPress: () => props.editPINAlert(restaurantId, code),
+      onPress: () => props.editPINAlert(restaurantId, employeeName, code),
       style: { backgroundColor: '#d1d1d1', color: 'white' },
     },
     {
@@ -157,13 +158,14 @@ export default compose(
             { cancelable: false }
         )
       },
-      editPINAlert: props => (restaurantId, code) => {
+      editPINAlert: props => (restaurantId, employeeName, code) => {
+        console.log("editPINAlert employeeName code", employeeName, code);
         Alert.alert(
             'Edit Employee',
             'Are you sure you want to edit this employee?',
             [
               {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-              {text: 'Edit', onPress: () => alert("under development"), style: 'destructive'},
+              {text: 'Edit', onPress: () => Actions.editPIN({oldEmployeeName: employeeName, oldPIN: code}), style: 'destructive'},
             ],
             { cancelable: false }
         )

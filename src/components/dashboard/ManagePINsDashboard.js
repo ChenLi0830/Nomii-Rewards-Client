@@ -84,7 +84,7 @@ const ManagePINsDashboard = (props) => {
     
     return <EmployeePINItem key={PIN.code} restaurantId={id}
                             code={PIN.code} employeeName={PIN.employeeName}
-                            usageCount={PINCountOverDays ? PINCountOverDays.count : 0}/>;
+                            usageCount={PIN.usageCount}/>;
   });
   
   return <View style={styles.wrapper}>
@@ -158,7 +158,7 @@ export default compose(
       },
     }),
     branch(
-        props => props.data.restaurant.PINs.length === 0 || true,
+        props => props.data.restaurant.PINs.length === 0,
         renderComponent(noPINsDashboard)
     ),
 )(ManagePINsDashboard);

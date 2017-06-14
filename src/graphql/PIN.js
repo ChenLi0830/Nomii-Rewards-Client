@@ -14,6 +14,20 @@ mutation restaurantCreatePin($restaurantId:ID, $PIN:String, $employeeName:String
 }
 `;
 
+const editPINMutation = gql`
+mutation restaurantEditPin($restaurantId: ID, $oldPIN:String, $newPIN: String, $employeeName: String){
+  editPIN(restaurantId: $restaurantId, oldPIN: $oldPIN, newPIN: $newPIN, employeeName: $employeeName){
+    id,
+    PINs{
+      code,
+      employeeName,
+      usageCount,
+      id,
+    },
+  }
+}
+`;
+
 const removePINMutation = gql`
 mutation restaurantPinRemove($restaurantId: ID, $PIN:String){
   removePIN(restaurantId:$restaurantId, PIN: $PIN){
@@ -28,4 +42,4 @@ mutation restaurantPinRemove($restaurantId: ID, $PIN:String){
 }
 `;
 
-export {createPINMutation, removePINMutation};
+export {createPINMutation, removePINMutation, editPINMutation};

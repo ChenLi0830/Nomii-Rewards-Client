@@ -82,13 +82,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const periodToNum = {
-  "day": 0,
-  "week": 0,
-  "month": 0,
-  "year": 0,
-};
-
 const MainDashboard = (props) => {
   console.log("MainDashboard props", props);
   

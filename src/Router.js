@@ -131,34 +131,39 @@ const RouterComponent = (props) => {
         <Scene key="nomiiAdminVisitStats" component={SuperUserRestoVisitStats}
                navigationBarStyle={styles.homeNavBar} title="Nomii Admin"/>
         
-        <Scene key="businessDashboard" navigationBarStyle={styles.dashboardNavBar}>
+        <Scene key="businessDashboard" navigationBarStyle={styles.dashboardNavBar} passProps
+               ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}>
+          
           <Scene key="mainDash" component={MainDashboard}
                  renderBackButton={()=><DashboardBackBtn/>}
                  renderTitle={() => <DashboardMainNavBar restaurantId = {user.ownedRestaurants[0]}/>}
-                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          />
   
           <Scene key="ratingDash" component={RatingDashboard}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Ratings"/>}
-                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          />
           <Scene key="complaintDash" component={ComplaintDashboard}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Complaints"/>}
-                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          />
           <Scene key="managePINsDash" component={ManagePINsDashboard}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
-                 renderTitle={() => <DashboardNavBar title="Manage PINs"/>}
-                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+                 renderTitle={() => <DashboardNavBar title="Manage PINs"/>}/>
+          
           <Scene key="createPIN" component={UpsertPIN}
                  renderBackButton={()=><DashboardBackBtn backText="Manage PINs"/>}
-                 renderTitle={() => <DashboardNavBar title="Create PINs"/>}/>
+                 renderTitle={() => <DashboardNavBar title="Create PINs"/>}
+          />
           <Scene key="editPIN" component={UpsertPIN}
+                 editPIN = {true}
                  renderBackButton={()=><DashboardBackBtn backText="Manage PINs"/>}
-                 renderTitle={() => <DashboardNavBar title="Edit PINs"/>}/>
+                 renderTitle={() => <DashboardNavBar title="Edit PINs"/>}
+          />
           <Scene key="satisfactionDash" component={CustomerSatisfaction}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
                  renderTitle={() => <DashboardNavBar title="Customer Satisfaction"/>}
-                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
+          />
         </Scene>
       </Scene>
   );
