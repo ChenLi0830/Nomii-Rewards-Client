@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, FlatList, ScrollView, Animated, TextInput, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Image, Text, FlatList, ScrollView, Platform, Animated, TextInput, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {graphql} from 'react-apollo';
 import {getRestaurantStatsQuery} from '../../graphql/restaurant';
 import {compose, lifecycle, withHandlers, withState, branch, renderComponent} from 'recompose';
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   },
   botViewText:{
     fontSize: 16,
+    width: responsiveWidth(80),
     color: "#333333",
     fontWeight: "bold",
     textAlign: "center",
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
 });
 
 const UpsertPIN = (props) => {
+  console.log("props", props);
   const step1 = <View style={{alignItems: "center"}}>
     <View style={styles.card}>
       <View style={styles.cardTopView}>
@@ -99,7 +101,7 @@ const UpsertPIN = (props) => {
     </View>
     
     <Button style={styles.button} type="primary2" rounded={false} shadow={false}
-            disabled={props.employeeName.length <= 0} onPress={()=>props.updateStep("1")}>
+            disabled={props.employeeName.length <= 0} onPress={()=>props.updateStep("step2")}>
       Next
     </Button>
   </View>;
@@ -135,15 +137,31 @@ const UpsertPIN = (props) => {
   </View>;
   
   return <View style={styles.wrapper}>
-    <Tabs activeKey={props.step} underlineColor="#f9f9f9" barStyle = {styles.periodTabBar}
-          activeUnderlineColor="#f9f9f9" activeTextColor="#f9f9f9">
-      <TabPane tab="0" key="0">
-        {step1}
-      </TabPane>
-      <TabPane tab="1" key="1">
-        {step2}
-      </TabPane>
-    </Tabs>
+    {
+      Platform.OS === "android"
+        &&
+      (
+          props.step === "step1" ?
+          step1
+          :
+          step2
+      )
+    }
+  
+    {
+      Platform.OS === "ios"
+        &&
+      <Tabs activeKey={props.step} underlineColor="#f9f9f9"
+           barStyle={styles.periodTabBar}
+           activeUnderlineColor="#f9f9f9" activeTextColor="#f9f9f9" swipeable animated>
+        <TabPane tab="0" key="step1">
+          {step1}
+        </TabPane>
+        <TabPane tab="1" key="step2">
+          {step2}
+        </TabPane>
+      </Tabs>
+    }
   </View>
 };
 
@@ -159,7 +177,7 @@ export default compose(
           createEmployeeSuccess: createPinActions.createEmployeeSuccess,
         },
     ),
-    withState('step', 'updateStep', "0"),
+    withState('step', 'updateStep', "step1"),
     graphql(createPINMutation, {
       name: "createPINMutation"
     }),
