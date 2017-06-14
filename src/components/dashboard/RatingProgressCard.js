@@ -78,7 +78,7 @@ const RatingRow = ({rating, progress = 70, total = 100}) => {
     
     <View style={rowStyles.textView}>
       <Text style={rowStyles.text}>
-        {Math.round((progress / total) * 100)}%
+        {total > 0 ? Math.round((progress / total) * 100) + "%" : "N/A"}
       </Text>
     </View>
   </View>
@@ -92,7 +92,7 @@ const RatingCard = ({progressList = [80,12,13,5,10], total=120, rating = 4.3}) =
     <View style={cardStyles.headerView}>
       <View style={cardStyles.ratingView}>
         <Text style={cardStyles.text}>
-          {rating.toFixed(2)}
+          {total > 0 ? rating.toFixed(2) : "N/A"}
         </Text>
         <StarRating starColor={"#FFCC00"} emptyStarColor={"#FFCC00"}
                     disabled rating={rating} starSize={responsiveFontSize(2.5)} starStyle = {{marginRight: responsiveFontSize(0.7)}}/>

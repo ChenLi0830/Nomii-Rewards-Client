@@ -167,32 +167,38 @@ export default compose(
     }),
     withHandlers({
       onSubmit: props => async () => {
-        const {ownedRestaurant, oldPIN, PIN, employeeName} = props;
-        Toast.loading('Creating...', 0);
-        if (props.editPIN){
-          console.log("editPIN restaurantId, oldPIN, PIN, employeeName", ownedRestaurant, oldPIN, PIN, employeeName);
-          await props.editPINMutation({
-            variables: {
-              restaurantId: ownedRestaurant,
-              oldPIN: oldPIN,
-              newPIN: PIN,
-              employeeName: employeeName,
-            }
-          });
+        try {
+          const {ownedRestaurant, oldPIN, PIN, employeeName} = props;
+          Toast.loading('Creating...', 0);
+          
+          if (props.editPIN){
+            await props.editPINMutation({
+              variables: {
+                restaurantId: ownedRestaurant,
+                oldPIN: oldPIN,
+                newPIN: PIN,
+                employeeName: employeeName,
+              }
+            });
+          }
+          else {
+            await props.createPINMutation({
+              variables: {
+                restaurantId: ownedRestaurant,
+                PIN: PIN,
+                employeeName: employeeName,
+              }
+            });
+          }
+          Actions.pop();
         }
-        else {
-          console.log("create PIN, restaurantId, oldPIN, PIN, employeeName", ownedRestaurant, oldPIN, PIN, employeeName);
-          await props.createPINMutation({
-            variables: {
-              restaurantId: ownedRestaurant,
-              PIN: PIN,
-              employeeName: employeeName,
-            }
-          });
+        catch (error){
+          alert(JSON.stringify(error));
+          console.log("error", error);
         }
-  
-        Toast.hide();
-        Actions.managePINsDash();
+        finally{
+          Toast.hide();
+        }
       },
     }),
     lifecycle({

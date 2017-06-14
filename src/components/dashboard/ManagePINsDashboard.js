@@ -130,7 +130,7 @@ export default compose(
         return {
           variables: {
             restaurantId: props.ownedRestaurant,
-            daysToCoverList: [5000, 30],
+            daysToCoverList: [1],
             endTo: getTimeInSec()
           },
         }

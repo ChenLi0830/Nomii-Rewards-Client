@@ -113,7 +113,7 @@ const RatingDashboard = (props) => {
         </Tabs>
       </View>
       
-      <View style={{height: responsiveHeight(70)}}>
+      <View style={{height: responsiveHeight(50)}}>
         <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick}
               underlineColor="#eee" barStyle={styles.starTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
