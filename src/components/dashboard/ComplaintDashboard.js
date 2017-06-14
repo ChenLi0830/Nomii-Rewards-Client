@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ListView, ScrollView, StyleSheet, Linking, View} from 'react-native';
+import {FlatList, ListView, ScrollView, StyleSheet, Platform, Linking, View} from 'react-native';
 import {WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery} from '../../graphql/restaurant';
@@ -168,7 +168,7 @@ const ComplaintDashboard = (props) => {
         </Tabs>
       </View>
       
-      <View style={{height: responsiveHeight(50)}}>
+      <View style={Platform.OS === "ios" && {height: responsiveHeight(50)}}>
         <Tabs activeKey={props.selectedTabResolve} onTabClick={props.onTabResolveClick}
               underlineColor="#eee" barStyle={styles.starTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, ListView, ScrollView, StyleSheet, View, Platform} from 'react-native';
 import {Loading, WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery, getRestaurantStatsQuery} from '../../graphql/restaurant';
@@ -112,8 +112,8 @@ const RatingDashboard = (props) => {
           </TabPane>
         </Tabs>
       </View>
-      
-      <View style={{height: responsiveHeight(50)}}>
+  
+      <View style={Platform.OS === "ios" && {height: responsiveHeight(50)}}>
         <Tabs activeKey={props.selectedTabStar} onTabClick={props.onTabStarClick}
               underlineColor="#eee" barStyle={styles.starTabBar}
               activeUnderlineColor="#e43c5a" activeTextColor="#e43c5a" textColor="#e43c5a" swipeable
