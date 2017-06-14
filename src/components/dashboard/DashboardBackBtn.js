@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {responsiveFontSize, responsiveHeight, responsiveWidth} from 'react-native-responsive-dimensions';
 import {Actions} from 'react-native-router-flux';
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: "row",
     alignItems: "center",
-    top: -20,
+    top: Platform.OS === "android" ? 0 : -20,
     left: -responsiveWidth(3)
   },
   text:{
