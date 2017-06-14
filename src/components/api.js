@@ -142,6 +142,35 @@ const categorizeFeedbacksByPeriod = (ratingFeedBacks) => {
 };
 
 /**
+ * categorize feedBacks by time period from previous period, namely, yesterday, last week, last month and last year, used in Dashboard
+ * @param{Object[]} ratingFeedBacks
+ * */
+const categorizeFeedbacksFromPrevPeriod = (ratingFeedBacks) => {
+  const timeStampNow = getTimeInSec();
+  const allfeedBacks = [...ratingFeedBacks].reverse();
+  
+  let feedBackByTimePeriod = [[], [], [], []];
+  
+  for (const feedback of allfeedBacks) {
+    let timeDifference = timeStampNow - feedback.createdAt;
+    if (0 <= (timeDifference - 1 * 24 * 3600) && (timeDifference - 1 * 24 * 3600) <= 1 * 24 * 3600) {
+      feedBackByTimePeriod[0].push(feedback);
+    }
+    if (0 <= (timeDifference - 7 * 24 * 3600) && (timeDifference - 7 * 24 * 3600) <= 7 * 24 * 3600) {
+      feedBackByTimePeriod[1].push(feedback);
+    }
+    if (0 <= (timeDifference - 30 * 24 * 3600) && (timeDifference - 30 * 24 * 3600) <= 30 * 24 * 3600) {
+      feedBackByTimePeriod[2].push(feedback);
+    }
+    if (0 <= (timeDifference - 365 * 24 * 3600) && (timeDifference - 365 * 24 * 3600) <= 365 * 24 * 3600) {
+      feedBackByTimePeriod[3].push(feedback);
+    }
+  }
+  
+  return feedBackByTimePeriod;
+};
+
+/**
  * get the index of a time period, used in dashboard
  * @param{('day'|'week'|'month'|'year')} period
  * */
@@ -168,5 +197,6 @@ export {
   getPromiseTime,
   calcHowLongAgo,
   categorizeFeedbacksByPeriod,
+  categorizeFeedbacksFromPrevPeriod,
   getPeriodIndex,
 };

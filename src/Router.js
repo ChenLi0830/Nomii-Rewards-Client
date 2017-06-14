@@ -157,7 +157,8 @@ const RouterComponent = (props) => {
                  renderTitle={() => <DashboardNavBar title="Edit PINs"/>}/>
           <Scene key="satisfactionDash" component={CustomerSatisfaction}
                  renderBackButton={()=><DashboardBackBtn backText="Dashboard"/>}
-                 renderTitle={() => <DashboardNavBar title="Customer Satisfaction"/>}/>
+                 renderTitle={() => <DashboardNavBar title="Customer Satisfaction"/>}
+                 ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>
         </Scene>
       </Scene>
   );
