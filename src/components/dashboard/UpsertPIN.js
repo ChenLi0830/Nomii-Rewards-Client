@@ -93,6 +93,7 @@ const UpsertPIN = (props) => {
             autoCorrect={false}
             autoCapitalize="words"
             underlineColorAndroid='rgba(0,0,0,0)'
+            blurOnSubmit
         />
       </View>
     </View>

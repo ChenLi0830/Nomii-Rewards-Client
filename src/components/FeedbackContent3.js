@@ -9,8 +9,7 @@ import {connect} from 'react-redux';
 import {feedbackActions, appActions} from '../modules';
 import GLP from 'google-libphonenumber';
 let AsYouTypeFormatter = GLP.AsYouTypeFormatter;
-let formatter = new AsYouTypeFormatter('US');
-
+let formatter = new AsYouTypeFormatter('CA');
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -114,7 +113,6 @@ export default compose(
         for(let number of value){
           formatter.inputDigit(number);
         }
-        console.log("formatter", formatter);
       }
     }),
     lifecycle({
