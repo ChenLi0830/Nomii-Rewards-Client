@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ListView, ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, ListView, ScrollView, StyleSheet, Linking, View} from 'react-native';
 import {WithLoadingComponent} from '../common/index';
 import {graphql} from 'react-apollo';
 import {getRatingFeedbacksQuery} from '../../graphql/restaurant';
@@ -119,6 +119,7 @@ const ComplaintDashboard = (props) => {
                               tags = {feedback.tags.map(tag => tag.content)}
                               resolveFeedback = {props.resolveFeedback}
                               unresolveFeedback = {props.unresolveFeedback}
+                              callNumber = {props.callNumber}
       />
     </View>
   };
@@ -213,6 +214,18 @@ export default compose(
       },
       onTabResolveClick: props => (key) => {
         props.updateTabResolve(key);
+      },
+      callNumber: props => (number) => {
+        console.log("calling number", number);
+        number = number.replace(/\D/g,'');
+        Linking.openURL(`tel:${number}`)
+            .then(result => {
+              console.log("result", result);
+            })
+            .catch(err => {
+              console.log("err", err);
+            })
+  
       },
       resolveFeedback: props => (createdAt) => {
         Toast.loading('Loading...', 0);

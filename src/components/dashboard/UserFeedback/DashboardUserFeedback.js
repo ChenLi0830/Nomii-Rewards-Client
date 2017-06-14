@@ -168,11 +168,11 @@ const DashboardUserFeedback = (props) => {
       showResolved
           &&
       <View style={styles.resolveView}>
-        <View style={styles.contactView}>
+        <TouchableOpacity style={styles.contactView} onPress={()=>props.callNumber(contactInfo)}>
           <Text style={styles.contactText}>
             {phoneUtil.format(phoneUtil.parse(contactInfo, 'CA'), PNF.NATIONAL)}
           </Text>
-        </View>
+        </TouchableOpacity>
   
         <TouchableOpacity onPress={props.resolveAlert} style={styles.resolveBtnView}>
           <Text style={styles.resolveBtnText}>
