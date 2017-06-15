@@ -85,9 +85,9 @@ const RouterComponent = (props) => {
                onLeft={() => {
                  Actions.promoCode()
                }}
-               rightButtonImage={(user && (user.ownedRestaurants.length > 0 || user.isNomiiAdmin)) ?
+               rightButtonImage={(user && (user.ownedRestaurants.length > 0 || (user.isNomiiAdmin && false))) ?
                    require('../public/images/insight-icon.png') : null}
-               onRight={() => user.isNomiiAdmin ? Actions.nomiiAdminScreen() : Actions.businessDashboard()}
+               onRight={() => (user.isNomiiAdmin && false)? Actions.nomiiAdminScreen() : Actions.businessDashboard()}
                renderTitle={() => <NavBarLogo/>}/>
         
         <Scene key="cardList" component={CardList}
@@ -136,7 +136,7 @@ const RouterComponent = (props) => {
           
           <Scene key="mainDash" component={MainDashboard}
                  renderBackButton={()=><DashboardBackBtn/>}
-                 renderTitle={() => <DashboardMainNavBar restaurantId = {user.ownedRestaurants[0]}/>}
+                 renderTitle={() => <DashboardMainNavBar ownedRestaurant={props.SUPickedRestaurant || user && user.ownedRestaurants[0]}/>}
           />
   
           <Scene key="ratingDash" component={RatingDashboard}

@@ -44,9 +44,9 @@ const DashboardNavBarTitle = (props) => {
     </Text>
     
     <View style={styles.ratingView}>
-      <Text style={styles.ratingNumber}>{rating.toFixed(2)}</Text>
+      <Text style={styles.ratingNumber}>{rating > 1 ? rating.toFixed(2) : "-"}</Text>
       <StarRating starColor={"#FFCC00"} emptyStarColor={"#FFCC00"}
-                  disabled rating={rating} starSize={13} starStyle={{marginRight: 3}}/>
+                  disabled rating={rating > 1 ? rating : 5} starSize={13} starStyle={{marginRight: 3}}/>
     </View>
   </View>
 };
@@ -57,7 +57,7 @@ export default compose(
       options: (props) => {
         return {
           variables: {
-            restaurantId: props.restaurantId,
+            restaurantId: props.ownedRestaurant,
             daysToCoverList: [1, 7, 30, 365],
             endTo: getTimeInSec()
           },

@@ -151,7 +151,7 @@ export default compose(
           // easing: Easing.elastic(2), // Springy
         }).start(()=>{
               Toast.hide();
-              Actions.statistics({ownedRestaurant: restaurantId});
+              Actions.businessDashboard({ownedRestaurant: restaurantId});
             }
         );
       },
