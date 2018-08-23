@@ -1,4 +1,6 @@
 # Nomii Rewards Client
+Nomii Rewards is a mobile app that digitizes stamp cards for resturants. 
+
 Tech Stack: React Native, Expo, GraphQL(Apollo)
 
 <p float="left">
