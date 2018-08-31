@@ -3,6 +3,8 @@ Nomii Rewards is a mobile app that digitizes stamp cards for resturants for iOS 
 
 Tech Stack: React Native, Expo, GraphQL(Apollo), AWS DynamoDB
 
+### Screenshots
+
 <p float="left">
 
 <img width="299" alt="screen shot 2018-08-23 at 10 27 29 am" src="https://user-images.githubusercontent.com/9557418/44543029-4322fc80-a6c3-11e8-8f22-f965815c1d32.png">
