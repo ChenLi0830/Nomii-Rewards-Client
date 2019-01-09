@@ -9,6 +9,7 @@ Tech Stack: React Native, Expo, GraphQL(Apollo), AWS DynamoDB
 
 <img width="299" alt="screen shot 2018-08-23 at 10 27 29 am" src="https://user-images.githubusercontent.com/9557418/44543029-4322fc80-a6c3-11e8-8f22-f965815c1d32.png">
 
+<img width="299" alt="screen shot 2018-08-23 at 10 27 29 am" src="https://user-images.githubusercontent.com/9557418/50906743-9f6c8b80-13da-11e9-811b-bb4730433544.png">
 
 <img width="298" alt="screen shot 2018-08-23 at 10 29 07 am" src="https://user-images.githubusercontent.com/9557418/44543030-4322fc80-a6c3-11e8-9a04-c9bc767e6020.png">
 
@@ -20,6 +21,9 @@ Tech Stack: React Native, Expo, GraphQL(Apollo), AWS DynamoDB
 
 <img width="300" alt="screen shot 2018-08-23 at 10 22 26 am" src="https://user-images.githubusercontent.com/9557418/44543025-4322fc80-a6c3-11e8-996d-483faac2f0ec.png">
 </p>
+
+<img width="299" alt="screen shot 2018-08-23 at 10 27 29 am" src="https://user-images.githubusercontent.com/9557418/44543034-43bb9300-a6c3-11e8-8140-58f0e6c64196.png">
+
 
 
 ## Development
